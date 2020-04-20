@@ -15,6 +15,9 @@ make env
 ```
 
 ## Development Server
+To run the development server, create a `local_settings.py` file as a sibling of `settings.py`. Add a `SECRET_KEY` value
+with some random stuff (e.g `SECRET_KEY = 'sjfio3u903RaggleFraggle'`).
+
 The Django local development can be run via:
 
 ```bash
