@@ -1,0 +1,12 @@
+language: python
+python:
+  - "3.6"
+install:
+  - pip install -r requirements.txt
+  - pip install coverage
+before_script:
+  - cd wellregistry
+script:
+  - coverage run --source='.' manage.py test
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
