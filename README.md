@@ -6,3 +6,19 @@
 
 
 Application for management of groundwater monitoring locations.
+
+## Local Environment Setup
+A local development environment can be setup by running:
+
+```bash
+make env
+```
+
+## Development Server
+The Django local development can be run via:
+
+```bash
+make watch
+```
+
+

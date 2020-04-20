@@ -6,3 +6,4 @@
 *.sqlite3
 **/__pycache__/
 **.coverage
+**local_settings.py
