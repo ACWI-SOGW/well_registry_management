@@ -11,5 +11,5 @@ watch:
 
 env:
 	@echo 'Creating local environment....'
-	virtualenv --python=python3.6 --no-download env
+	virtualenv --python=python3.8 --no-download env
 	$(PIP) install -r requirements.txt
