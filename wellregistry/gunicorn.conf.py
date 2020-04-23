@@ -1,3 +1,7 @@
+"""
+Gunicorn configuration
+
+"""
 import multiprocessing
 
 
