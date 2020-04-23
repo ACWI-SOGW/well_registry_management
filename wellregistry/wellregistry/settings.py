@@ -30,7 +30,7 @@ except ImportError:
     SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-debug_setting = os.getenv('DEBUG', 'False')
+debug_setting = os.getenv('DEBUG', 'True')
 try:
     DEBUG = bool(strtobool(debug_setting))
 except ValueError:
