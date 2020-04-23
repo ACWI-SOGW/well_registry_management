@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
+import ast
+from distutils.util import strtobool
 import os
 
 from django.core.management.utils import get_random_secret_key
@@ -29,10 +30,20 @@ except ImportError:
     SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+debug_setting = os.getenv('DEBUG', 'False')
+try:
+    DEBUG = bool(strtobool(debug_setting))
+except ValueError:
+    DEBUG = False
 
-ALLOWED_HOSTS = []
+allowed_hosts = os.getenv('ALLOWED_HOSTS', '[]')
 
+try:
+    ALLOWED_HOSTS = ast.literal_eval(allowed_hosts)
+    if not isinstance(ALLOWED_HOSTS, list):
+        raise TypeError('ALLOWED_HOSTS must be a list.')
+except ValueError:
+    ALLOWED_HOSTS = []
 
 # Application definition
 
