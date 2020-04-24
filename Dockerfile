@@ -7,7 +7,6 @@ WORKDIR $HOME/application
 COPY . $HOME/application
 
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir -r requirements-dev.txt
 
 USER $USER
 
