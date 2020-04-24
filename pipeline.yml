@@ -1,0 +1,28 @@
+# docker image path in artifactory
+artifactoryPath: "groundwater"
+# name of the docker image
+dockerImageName: "wellregistry"
+# name of the git repo
+gitRepoUrl: "https://github.com/ACWI-SOGW/well_registry_management.git"
+# Jenkins credential for pushing back to repo
+gitRepoCredentialsId: "Jenkins-GitHub-Read-Write-Token"
+# name of the deploy job to trigger
+deployJobName: "well-registry-deploy"
+# name of the project
+projectName: "iow-allgemein"
+# maximum amount of RAM for running Docker containers in the service
+memory: 512
+# name of the application or service
+applicationName: "wellregistry"
+# port that is exposed by your container
+containerPort: 8000
+# string parameter specifying a path that ALB should use to verify that your application is alive
+healthCheck: "/registry/status"
+# configuration repository paths
+configRepoPath: "wma/docker/wdfn/well_registry_management"
+configCredentialsId: "wma-eto-eb-rsa"
+urlRules:
+  - type: forward
+    conditions:
+      - "/registry/*"
+    priority: 600
