@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allow_cidr.middleware.AllowCIDRMiddleware'
 ]
 
 ROOT_URLCONF = 'wellregistry.urls'
@@ -85,6 +86,12 @@ TEMPLATES = [
         },
     },
 ]
+
+# use the AllowCIDRMiddleware to support a CIDR range to ensure that an AWS health check can work
+CIDR_RANGES = os.getenv('CIDR_RANGES', None)
+if CIDR_RANGES is not None:
+    CIDR_RANGES = ast.literal_eval(CIDR_RANGES)
+    ALLOWED_CIDR_NETS = CIDR_RANGES
 
 WSGI_APPLICATION = 'wellregistry.wsgi.application'
 
