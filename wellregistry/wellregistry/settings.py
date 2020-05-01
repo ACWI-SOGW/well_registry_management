@@ -100,9 +100,19 @@ WSGI_APPLICATION = 'wellregistry.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    # this could be for integration tests
+    'default': {  # change to 'test'
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # },
+    # # this could be for deployed
+    # 'cloud': {  # change to 'default'
+    #     'ENGINE': 'django.db.backends.posgresql',
+    #     'NAME': os.getenv('DATABASE_NAME', 'database name unset'),
+    #     'USER': os.getenv('USER_NAME', 'user name unset'),
+    #     'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password unset'),
+    #     'HOST': os.getenv('DATABASE_HOST', 'host name unset'),
+    #     'PORT': os.getenv('DATABASE_PORT', '5432'),
     }
 }
 

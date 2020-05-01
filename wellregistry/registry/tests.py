@@ -28,3 +28,4 @@ class TestStatusCheck(TestCase):
         req = self.factory.get('/registry/status')
         resp = status_check(req)
         self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content, '{"status": "up"}')
