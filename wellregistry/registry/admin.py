@@ -2,14 +2,27 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import Registry
 
+# this is the Django property for the admin main page header
 admin.site.site_header = 'NGWMN Well Registry Administration'
 
 
 def check_mark(value):
+    """
+    This is a helper method to create an html formatted entry for the flags in tables.
+    """
     return format_html('&check;') if value == 1 else ''
 
 
 class MultiDBModelAdmin(admin.ModelAdmin):
+    """
+    This is a Django example from
+    https://docs.djangoproject.com/en/3.0/topics/db/multi-db/#s-exposing-multiple-databases-in-django-s-admin-interface
+    It controls the connection used by admin actions. When a database action passes through this instance
+    it selects the database 'using' for the admin connection. It is best practice that admin actions are on
+    a separate connection than standard users.
+    All model admin should have an handler the extends this class.
+    see RegistryAdmin for an example.
+    """
     # A handy constant for the name of the alternate connection.
     using = 'admin_connection'
 
@@ -37,6 +50,11 @@ class MultiDBModelAdmin(admin.ModelAdmin):
 
 
 class RegistryAdmin(MultiDBModelAdmin):
+    """
+    Model class that manages how to display a Registry object in the Django admin.
+    It extends MultiDBModelAdmin so that it utilizes the admin database connection.
+    see MultiDBModelAdmin
+    """
     list_display = ('site_id', 'agency_cd', 'site_no', 'displayed', 'has_qw', 'has_wl', 'insert_date', 'update_date',)
     list_filter = ('agency_cd', 'site_no', 'update_date',)
 
@@ -56,4 +74,5 @@ class RegistryAdmin(MultiDBModelAdmin):
         return check_mark(obj.wl_sn_flag)
 
 
+# below here will maintain all the tables Django admin should be aware
 admin.site.register(Registry, RegistryAdmin)
