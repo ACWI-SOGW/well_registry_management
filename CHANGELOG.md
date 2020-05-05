@@ -6,3 +6,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ##[Unreleased](https://github.com/ACWI-SOGW/well_registry_management/tree/master)
+- Added Registry model and admin prototype interface.
