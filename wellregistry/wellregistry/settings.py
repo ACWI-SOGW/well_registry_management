@@ -100,12 +100,24 @@ WSGI_APPLICATION = 'wellregistry.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    # this could be for integration tests
+    # this will be for integration tests and remain a local sqllite database
+    'testing': {  # change to 'test'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    # this connection will be for users and will connect to the cloud database
+    # they will have CRUD on Registry only and select on lookup tables
     'default': {  # change to 'test'
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    # this connection will have full CRUD on lookup tables to cloud eventually
+    'admin_connection': {  # change to 'test'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # },
-    # # this could be for deployed
+    # this is an example of postgres cloud management
+    # the parameters are found in the docker env variables
     # 'cloud': {  # change to 'default'
     #     'ENGINE': 'django.db.backends.posgresql',
     #     'NAME': os.getenv('DATABASE_NAME', 'database name unset'),
