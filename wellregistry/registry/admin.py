@@ -21,6 +21,9 @@ class MultiDBModelAdmin(admin.ModelAdmin):
     it selects the database 'using' for the admin connection. It is best practice that admin actions are on
     a separate connection than standard users.
     All model admin should have an handler the extends this class.
+    When using more than the 'default' database alias then it is required to set the 'using' value to the database alias
+    to use in a db action. This helper class ensures that the admin access to the registry table uses the connection alias
+    with the appropriate granted access or db roles.
     see RegistryAdmin for an example.
     """
     # A handy constant for the name of the alternate connection.

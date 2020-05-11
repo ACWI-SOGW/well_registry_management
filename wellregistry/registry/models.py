@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+
 # TODO python manage.py makemigrations and migrate
 class Registry(models.Model):
     """
@@ -22,6 +23,7 @@ class Registry(models.Model):
     agency_med = models.CharField(max_length=200)
     site_no = models.CharField(max_length=16)
     site_name = models.CharField(max_length=300)
+    # have to keep an eye on these when in postgres. in sqlite3 they loose the given precision
     dec_lat_va = models.DecimalField(max_digits=11, decimal_places=8)
     dec_long_va = models.DecimalField(max_digits=11, decimal_places=8)
     alt_va = models.DecimalField(max_digits=10, decimal_places=6)
