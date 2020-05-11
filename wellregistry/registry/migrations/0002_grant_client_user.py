@@ -7,8 +7,12 @@ from wellregistry.wellregistry.env import Environment
 
 
 class Migration(migrations.Migration):
-    """Django Migration: grant registry access to client login."""
+    """
+    Django Migration.
 
+    SQL to grant the client access to the registry table.
+
+    """
     initial = False
 
     dependencies = [('migrations', '0001_initial')]

@@ -27,6 +27,8 @@ def revoke_role(role, target):
 
 class Migration(migrations.Migration):
     """
+    SQL to create the database and user roles.
+
     This creates a new database and schema owner in PG for an application specific name.
     The "postgres" database and password is Already created during database install.
     """

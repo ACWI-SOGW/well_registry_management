@@ -3,10 +3,13 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Registry(models.Model):
-    """Django Registry Model.
+    """
+    Django Registry Model.
+
     # python manage.py makemigrations and migrate
     These fields names are nasty but they are to match the original.
     We could refactor later.
+
     """
     # these will become lookups with                    foreign keys
     agency_cd = models.CharField(max_length=20)       # AGENCY_LOV.AGENCY_CD

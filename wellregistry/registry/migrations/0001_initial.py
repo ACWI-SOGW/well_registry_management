@@ -7,9 +7,12 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+    """
+    Django Migration.
 
-    """Django Migration: initial registry ORM."""
+    initial registry ORM.
 
+    """
     initial = False
 
     dependencies = [('migrations', '0000_create_db_users')]
