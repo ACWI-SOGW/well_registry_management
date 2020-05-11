@@ -1,5 +1,5 @@
 """
-    Django Registry Administration
+Django Registry Administration.
 """
 from django.contrib import admin
 from django.utils.html import format_html
@@ -15,7 +15,8 @@ def check_mark(value):
 
 
 class MultiDBModelAdmin(admin.ModelAdmin):
-    """A Django example from djangoproject.
+    """
+    A Django example from djangoproject.
     https://docs.djangoproject.com/en/3.0/topics/db/multi-db/#s-exposing-multiple-databases-in-django-s-admin-interface
     It controls the connection used by admin actions. When a database action passes through this instance
     it selects the database 'using' for the admin connection. It is best practice that admin actions are on
@@ -51,7 +52,8 @@ class MultiDBModelAdmin(admin.ModelAdmin):
 
 
 class RegistryAdmin(MultiDBModelAdmin):
-    """Django Registry Manager.
+    """
+    Django Registry Manager.
     Model class that manages how to display a Registry object in the Django admin.
     It extends MultiDBModelAdmin so that it utilizes the admin database connection.
     see MultiDBModelAdmin
