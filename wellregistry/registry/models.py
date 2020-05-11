@@ -2,9 +2,9 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
-# TODO python manage.py makemigrations and migrate
 class Registry(models.Model):
-    """
+    """Django Registry Model
+    # python manage.py makemigrations and migrate
     These fields names are nasty but they are to match the original.
     We could refactor later.
     """

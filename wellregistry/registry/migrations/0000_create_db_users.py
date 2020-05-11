@@ -1,32 +1,41 @@
+"""
+    migration: initial users and roles
+"""
 from django.db import migrations
-from wellregistry.wellregistry.env import Env
+from wellregistry.wellregistry.env import Environment
 
 
 def create_login_role(username, password):
+    """helper method to construct SQL: create role"""
     return f"CREATE ROLE {username} WITH LOGIN PASSWORD '{password}';"
 
 
 def drop_role(role):
+    """helper method to construct SQL: drop role"""
     return f"DROP ROLE IF EXISTS {role};"
 
 
 def grant_role(role, target):
+    """helper method to construct SQL: grant privilege"""
     return f"GRANT {role} to {target};"
 
 
 def revoke_role(role, target):
+    """helper method to construct SQL: revoke privilege"""
     return f"REVOKE {role} from {target};"
 
 
 class Migration(migrations.Migration):
-    # This creates a new database and schema owner in PG for an application specific name.
-    #     The "postgres" database and password is Already created during database install.
+    """Django Migration:
+    This creates a new database and schema owner in PG for an application specific name.
+    The "postgres" database and password is Already created during database install.
+    """
 
     initial = True
 
     dependencies = []
 
-    env = Env()
+    env = Environment()
 
     operations = [
         # create a login user that will own the application database
@@ -36,13 +45,13 @@ class Migration(migrations.Migration):
 
         # rolls can be granted to others, here the postgres superuser is granted the app db owner roll
         migrations.RunSQL(
-             sql=grant_role(env.APP_DB_OWNER_USERNAME, env.DATABASE_USERNAME),
-             reverse_sql=revoke_role(env.APP_DB_OWNER_USERNAME, env.DATABASE_USERNAME)),
+            sql=grant_role(env.APP_DB_OWNER_USERNAME, env.DATABASE_USERNAME),
+            reverse_sql=revoke_role(env.APP_DB_OWNER_USERNAME, env.DATABASE_USERNAME)),
 
         # create a login user that will own the application schema
         migrations.RunSQL(
-             sql=create_login_role(env.APP_SCHEMA_OWNER_USERNAME, env.APP_SCHEMA_OWNER_PASSWORD),
-             reverse_sql=drop_role(env.APP_DB_OWNER_USERNAME)),
+            sql=create_login_role(env.APP_SCHEMA_OWNER_USERNAME, env.APP_SCHEMA_OWNER_PASSWORD),
+            reverse_sql=drop_role(env.APP_DB_OWNER_USERNAME)),
 
         # the postgres superuser is granted the app db owner roll
         migrations.RunSQL(

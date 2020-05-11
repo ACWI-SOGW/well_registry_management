@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import ast
 from distutils.util import strtobool
 import os
-from .env import Env
+from .Env import Environment
 
 from django.core.management.utils import get_random_secret_key
 
@@ -100,35 +100,35 @@ WSGI_APPLICATION = 'wellregistry.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-env = Env()
+Env = Environment()
 DATABASES = {
     # this connection will be for users and will connect to the cloud database
     # they will have CRUD on Registry only and select on lookup tables
     'default': {  # the connection for the client users
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.APP_DATABASE_NAME,  # 'postgis_25_test',
-        'USER': env.APP_CLIENT_USERNAME,  # 'app_user',
-        'PASSWORD': env.APP_CLIENT_PASSWORD,  # 'app_pwd',
-        'HOST': env.APP_DATABASE_HOST,  # 'localhost',
-        'PORT': env.APP_DATABASE_PORT,  # '5432',
+        'NAME': Env.APP_DATABASE_NAME,  # 'postgis_25_test',
+        'USER': Env.APP_CLIENT_USERNAME,  # 'app_user',
+        'PASSWORD': Env.APP_CLIENT_PASSWORD,  # 'app_pwd',
+        'HOST': Env.APP_DATABASE_HOST,  # 'localhost',
+        'PORT': Env.APP_DATABASE_PORT,  # '5432',
     },
     'admin_connection': {  # used for Django admin
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.APP_DATABASE_NAME,
-        'USER': env.APP_ADMIN_USERNAME,
-        'PASSWORD': env.APP_ADMIN_PASSWORD,
-        'HOST': env.APP_DATABASE_HOST,
-        'PORT': env.APP_DATABASE_PORT,
+        'NAME': Env.APP_DATABASE_NAME,
+        'USER': Env.APP_ADMIN_USERNAME,
+        'PASSWORD': Env.APP_ADMIN_PASSWORD,
+        'HOST': Env.APP_DATABASE_HOST,
+        'PORT': Env.APP_DATABASE_PORT,
     },
     # Because the default connection alias is not a dba,
     # this requires this command 'python manager.py migrate --database=migration'
     'migration': {  # used for Django migration
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.APP_DATABASE_NAME,
-        'USER': env.APP_DB_OWNER_USERNAME,
-        'PASSWORD': env.APP_DB_OWNER_PASSWORD,
-        'HOST': env.APP_DATABASE_HOST,
-        'PORT': env.APP_DATABASE_PORT,
+        'NAME': Env.APP_DATABASE_NAME,
+        'USER': Env.APP_DB_OWNER_USERNAME,
+        'PASSWORD': Env.APP_DB_OWNER_PASSWORD,
+        'HOST': Env.APP_DATABASE_HOST,
+        'PORT': Env.APP_DATABASE_PORT,
     },
     'testing': {  # used for integration tests
         'ENGINE': 'django.db.backends.sqlite3',
