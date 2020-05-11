@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import ast
 from distutils.util import strtobool
 import os
+from .env import Env
 
 from django.core.management.utils import get_random_secret_key
 
@@ -99,33 +100,40 @@ WSGI_APPLICATION = 'wellregistry.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+env = Env()
 DATABASES = {
-    # this will be for integration tests and remain a local sqllite database
-    'testing': {  # change to 'test'
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
     # this connection will be for users and will connect to the cloud database
     # they will have CRUD on Registry only and select on lookup tables
-    'default': {  # change to 'test'
+    'default': {  # the connection for the client users
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env.APP_DATABASE_NAME,  # 'postgis_25_test',
+        'USER': env.APP_CLIENT_USERNAME,  # 'app_user',
+        'PASSWORD': env.APP_CLIENT_PASSWORD,  # 'app_pwd',
+        'HOST': env.APP_DATABASE_HOST,  # 'localhost',
+        'PORT': env.APP_DATABASE_PORT,  # '5432',
+    },
+    'admin_connection': {  # used for Django admin
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env.APP_DATABASE_NAME,
+        'USER': env.APP_ADMIN_USERNAME,
+        'PASSWORD': env.APP_ADMIN_PASSWORD,
+        'HOST': env.APP_DATABASE_HOST,
+        'PORT': env.APP_DATABASE_PORT,
+    },
+    # Because the default connection alias is not a dba,
+    # this requires this command 'python manager.py migrate --database=migration'
+    'migration': {  # used for Django migration
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env.APP_DATABASE_NAME,
+        'USER': env.APP_DB_OWNER_USERNAME,
+        'PASSWORD': env.APP_DB_OWNER_PASSWORD,
+        'HOST': env.APP_DATABASE_HOST,
+        'PORT': env.APP_DATABASE_PORT,
+    },
+    'testing': {  # used for integration tests
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
-    # this connection will have full CRUD on lookup tables to cloud eventually
-    'admin_connection': {  # change to 'test'
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # },
-    # this is an example of postgres cloud management
-    # the parameters are found in the docker env variables
-    # 'cloud': {  # change to 'default'
-    #     'ENGINE': 'django.db.backends.posgresql',
-    #     'NAME': os.getenv('DATABASE_NAME', 'database name unset'),
-    #     'USER': os.getenv('USER_NAME', 'user name unset'),
-    #     'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password unset'),
-    #     'HOST': os.getenv('DATABASE_HOST', 'host name unset'),
-    #     'PORT': os.getenv('DATABASE_PORT', '5432'),
-    }
 }
 
 
