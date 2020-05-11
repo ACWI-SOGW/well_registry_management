@@ -10,12 +10,12 @@ admin.site.site_header = 'NGWMN Well Registry Administration'
 
 
 def check_mark(value):
-    """This is a helper method to create an html formatted entry for the flags in tables."""
+    """Helper method to create an html formatted entry for the flags in tables."""
     return format_html('&check;') if value == 1 else ''
 
 
 class MultiDBModelAdmin(admin.ModelAdmin):
-    """This is a Django example from djangoproject.
+    """A Django example from djangoproject.
     https://docs.djangoproject.com/en/3.0/topics/db/multi-db/#s-exposing-multiple-databases-in-django-s-admin-interface
     It controls the connection used by admin actions. When a database action passes through this instance
     it selects the database 'using' for the admin connection. It is best practice that admin actions are on
@@ -64,22 +64,22 @@ class RegistryAdmin(MultiDBModelAdmin):
 
     @staticmethod
     def site_id(obj):
-        """constructs a site id from agency code and site number"""
+        """Constructs a site id from agency code and site number."""
         return f"{obj.agency_cd}:{obj.site_no}"
 
     @staticmethod
     def displayed(obj):
-        """transforms display boolean to HTML check mark"""
+        """Transforms display boolean to HTML check mark."""
         return check_mark(obj.display_flag)
 
     @staticmethod
     def has_qw(obj):
-        """transforms water quality boolean to HTML check mark"""
+        """Transforms water quality boolean to HTML check mark."""
         return check_mark(obj.qw_sn_flag)
 
     @staticmethod
     def has_wl(obj):
-        """transforms water level boolean to HTML check mark"""
+        """Transforms water level boolean to HTML check mark."""
         return check_mark(obj.wl_sn_flag)
 
 

@@ -1,13 +1,13 @@
 """
-    After the registry table is created,
-    this will grant access to th client login
+After the registry table is created,
+this will grant access to th client login
 """
-from django.db import migrations, models
+from django.db import migrations
 from wellregistry.wellregistry.env import Environment
 
 
 class Migration(migrations.Migration):
-    """Django Migration: grant registry access to client login"""
+    """Django Migration: grant registry access to client login."""
 
     initial = False
 

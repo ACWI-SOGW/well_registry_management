@@ -1,32 +1,32 @@
 """
-    migration: initial users and roles
+migration: initial users and roles
 """
 from django.db import migrations
 from wellregistry.wellregistry.env import Environment
 
 
 def create_login_role(username, password):
-    """helper method to construct SQL: create role"""
+    """Helper method to construct SQL: create role."""
     return f"CREATE ROLE {username} WITH LOGIN PASSWORD '{password}';"
 
 
 def drop_role(role):
-    """helper method to construct SQL: drop role"""
+    """Helper method to construct SQL: drop role."""
     return f"DROP ROLE IF EXISTS {role};"
 
 
 def grant_role(role, target):
-    """helper method to construct SQL: grant privilege"""
+    """Helper method to construct SQL: grant privilege."""
     return f"GRANT {role} to {target};"
 
 
 def revoke_role(role, target):
-    """helper method to construct SQL: revoke privilege"""
+    """Helper method to construct SQL: revoke privilege."""
     return f"REVOKE {role} from {target};"
 
 
 class Migration(migrations.Migration):
-    """Django Migration:
+    """Django Migration.
     This creates a new database and schema owner in PG for an application specific name.
     The "postgres" database and password is Already created during database install.
     """

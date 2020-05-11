@@ -3,7 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Registry(models.Model):
-    """Django Registry Model
+    """Django Registry Model.
     # python manage.py makemigrations and migrate
     These fields names are nasty but they are to match the original.
     We could refactor later.
@@ -69,7 +69,7 @@ class Registry(models.Model):
     update_date = models.DateTimeField()
 
     def __str__(self):
-        # django does not honor tabs \t, multiple spaces '   ', nor &nbsp for formatting
-        str_rep = "%s:%s display:%d qw:%d wl:%d" % \
-              (self.agency_nm, self.site_name, self.display_flag, self.qw_sn_flag, self.wl_sn_flag)
+        """Django does not honor tabs \t, multiple spaces '   ', nor &nbsp for formatting."""
+        str_rep = f"{self.agency_nm}:{self.site_no} display:{self.display_flag} "
+        str_rep += f"qw:{self.qw_sn_flag} wl:{self.wl_sn_flag}"
         return str_rep

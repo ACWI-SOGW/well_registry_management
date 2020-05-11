@@ -1,8 +1,11 @@
+"""
+Environment values convenience class.
+"""
 import os
 
 
 class Environment:
-    """Environment or context variables or parameters"""
+    """Environment or context variables or parameters."""
 
     DATABASE_USERNAME = os.getenv('DATABASE_USERNAME', 'postgres')
     APP_DATABASE_NAME = os.getenv('APP_DATABASE_NAME')
