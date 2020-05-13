@@ -20,7 +20,7 @@ gitRepoCredentialsId: "Jenkins-GitHub-Read-Write-Token"
 # notice that this is within the "iow-allgemein" group which might be necessary for the "projectName" setting.
 deployJobName: "well-registry-deploy"
 
-# name of the project
+# name of the project - identifier of the ECS Cluster to use for this project
 # TODO: but the project is well-registry so what is iow-allgemein?
 # https://jenkins.wma.chs.usgs.gov/job/IOW/job/IOW-ALLGEMEIN/job/well-registry-deploy/
 # The deploy job is within this group and it might be that this informs the pipeline of the path to the deploy job
@@ -29,13 +29,10 @@ projectName: "iow-allgemein"
 # maximum amount of RAM (MB) for running Docker containers in the service
 memory: 512
 
-# name of the application or service
-# TODO: above is a rephrase comment
-# TODO: how is this used? by artifactory? by AWS? by Docker? other?
+# name of the application or service name within the project, projectName
 applicationName: "wellregistry"
 
-# port that is exposed by your container
-# TODO: this is either the app server port or the docker mapped port (probably the later)
+# docker port that is exposed by your container
 containerPort: 8000
 
 # string parameter specifying a path that ALB should use to verify that your application is alive

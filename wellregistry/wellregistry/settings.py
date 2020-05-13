@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import ast
 from distutils.util import strtobool
 import os
-from .Env import Environment
 
 from django.core.management.utils import get_random_secret_key
 
@@ -99,36 +98,60 @@ WSGI_APPLICATION = 'wellregistry.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+DATABASE_USERNAME = os.getenv('DATABASE_USERNAME', 'postgres')
+DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
+APP_DATABASE_NAME = os.getenv('APP_DATABASE_NAME')
+APP_DATABASE_HOST = os.getenv('APP_DATABASE_HOST')
+APP_DATABASE_PORT = os.getenv('APP_DATABASE_PORT', default='5432')
+APP_DB_OWNER_USERNAME = os.getenv('APP_DB_OWNER_USERNAME')
+APP_DB_OWNER_PASSWORD = os.getenv('APP_DB_OWNER_PASSWORD')
+APP_SCHEMA_NAME = os.getenv('APP_SCHEMA_NAME', 'public')
+APP_SCHEMA_OWNER_USERNAME = os.getenv('APP_SCHEMA_OWNER_USERNAME')
+APP_SCHEMA_OWNER_PASSWORD = os.getenv('APP_SCHEMA_OWNER_PASSWORD')
+APP_ADMIN_USERNAME = os.getenv('APP_ADMIN_USERNAME')
+APP_ADMIN_PASSWORD = os.getenv('APP_ADMIN_PASSWORD')
+APP_CLIENT_USERNAME = os.getenv('APP_CLIENT_USERNAME')
+APP_CLIENT_PASSWORD = os.getenv('APP_CLIENT_PASSWORD')
 
-Env = Environment()
 DATABASES = {
     # this connection will be for users and will connect to the cloud database
     # they will have CRUD on Registry only and select on lookup tables
-    'default': {  # the connection for the client users
+    'default': {  # the connection for the client users with the minimum actions
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': Env.APP_DATABASE_NAME,  # 'postgis_25_test',
-        'USER': Env.APP_CLIENT_USERNAME,  # 'app_user',
-        'PASSWORD': Env.APP_CLIENT_PASSWORD,  # 'app_pwd',
-        'HOST': Env.APP_DATABASE_HOST,  # 'localhost',
-        'PORT': Env.APP_DATABASE_PORT,  # '5432',
+        'NAME': APP_DATABASE_NAME,  # 'postgis_25_test',
+        'HOST': APP_DATABASE_HOST,  # 'localhost',
+        'PORT': APP_DATABASE_PORT,  # '5432',
+        'USER': APP_CLIENT_USERNAME,  # 'app_user',
+        'PASSWORD': APP_CLIENT_PASSWORD,  # 'app_pwd',
+        'currentSchema': APP_SCHEMA_NAME,
     },
-    'admin_connection': {  # used for Django admin
+    'django_admin': {  # used for Django admin actions
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': Env.APP_DATABASE_NAME,
-        'USER': Env.APP_ADMIN_USERNAME,
-        'PASSWORD': Env.APP_ADMIN_PASSWORD,
-        'HOST': Env.APP_DATABASE_HOST,
-        'PORT': Env.APP_DATABASE_PORT,
+        'NAME': APP_DATABASE_NAME,
+        'HOST': APP_DATABASE_HOST,
+        'PORT': APP_DATABASE_PORT,
+        'USER': APP_ADMIN_USERNAME,
+        'PASSWORD': APP_ADMIN_PASSWORD,
+        'currentSchema': APP_SCHEMA_NAME,
     },
     # Because the default connection alias is not a dba,
     # this requires this command 'python manager.py migrate --database=migration'
-    'migration': {  # used for Django migration
+    'migration': {  # used for Django migration in app database
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': Env.APP_DATABASE_NAME,
-        'USER': Env.APP_DB_OWNER_USERNAME,
-        'PASSWORD': Env.APP_DB_OWNER_PASSWORD,
-        'HOST': Env.APP_DATABASE_HOST,
-        'PORT': Env.APP_DATABASE_PORT,
+        'NAME': APP_DATABASE_NAME,
+        'HOST': APP_DATABASE_HOST,
+        'PORT': APP_DATABASE_PORT,
+        'USER': APP_DB_OWNER_USERNAME,
+        'PASSWORD': APP_DB_OWNER_PASSWORD,
+        'currentSchema': APP_SCHEMA_NAME,
+    },
+    'postgres': {  # only needed for Django migration 0000_create_db_users
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': APP_DATABASE_NAME,
+        'HOST': APP_DATABASE_HOST,
+        'PORT': APP_DATABASE_PORT,
+        'USER': DATABASE_USERNAME,
+        'PASSWORD': DATABASE_PASSWORD,
     },
     'testing': {  # used for integration tests
         'ENGINE': 'django.db.backends.sqlite3',

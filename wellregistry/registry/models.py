@@ -72,7 +72,8 @@ class Registry(models.Model):
     update_date = models.DateTimeField()
 
     def __str__(self):
-        """Django does not honor tabs \t, multiple spaces '   ', nor &nbsp for formatting."""
+        """Default string."""
+        # Django does not honor tabs \t, multiple spaces '   ', nor &nbsp for formatting
         str_rep = f"{self.agency_nm}:{self.site_no} display:{self.display_flag} "
         str_rep += f"qw:{self.qw_sn_flag} wl:{self.wl_sn_flag}"
         return str_rep
