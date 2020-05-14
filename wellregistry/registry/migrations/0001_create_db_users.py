@@ -125,10 +125,15 @@ class Migration(migrations.Migration):
             sql=grant_role(APP_DB_OWNER_USERNAME, DATABASE_USERNAME),
             reverse_sql=revoke_role(APP_DB_OWNER_USERNAME, DATABASE_USERNAME)),
 
+        # assign the application database owner
+        migrations.RunSQL(
+            sql=f"ALTER DATABASE {APP_DATABASE_NAME} OWNER TO {APP_DB_OWNER_USERNAME};",
+            reverse_sql=f"ALTER DATABASE {APP_DATABASE_NAME} OWNER TO {DATABASE_USERNAME};"),
+
         # create a login user that will own the application schema
         migrations.RunSQL(
             sql=create_login_role(APP_SCHEMA_OWNER_USERNAME, APP_SCHEMA_OWNER_PASSWORD),
-            reverse_sql=drop_role(APP_DB_OWNER_USERNAME)),
+            reverse_sql=drop_role(APP_SCHEMA_OWNER_USERNAME)),
 
         # the postgres superuser is granted the app db owner roll
         migrations.RunSQL(
@@ -139,7 +144,7 @@ class Migration(migrations.Migration):
         # this is how we would like to do it if Django connections were compatible.
         # see 0000_create_database.py for proxy migration workaround.
         # migrations.RunSQL(
-        #     sql=f"COMMIT; CREATE DATABASE {APP_DATABASE_NAME} WITH OWNER = {APP_DB_OWNER_USERNAME};",
+        #     sql=f"CREATE DATABASE {APP_DATABASE_NAME} WITH OWNER = {APP_DB_OWNER_USERNAME};",
         #     reverse_sql=f"DROP DATABASE IF EXISTS {APP_DB_OWNER_USERNAME};"),
 
         # create a application specific schema

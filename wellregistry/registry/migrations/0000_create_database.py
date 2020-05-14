@@ -18,7 +18,6 @@ from wellregistry.settings import DATABASE_PASSWORD
 from wellregistry.settings import DATABASE_HOST
 from wellregistry.settings import DATABASE_PORT
 from wellregistry.settings import APP_DATABASE_NAME
-from wellregistry.settings import APP_DB_OWNER_USERNAME
 
 
 class Migration(migrations.Migration):
@@ -64,10 +63,7 @@ def create_database():
             (SELECT FROM pg_database 
             WHERE datname = '{APP_DATABASE_NAME}');
         """
-        sql_create_db = f"""
-            CREATE DATABASE {APP_DATABASE_NAME} 
-            WITH OWNER = {APP_DB_OWNER_USERNAME};
-        """
+        sql_create_db = f"CREATE DATABASE {APP_DATABASE_NAME};"
 
         cursor.execute(sql_database_not_exists)
         rows = cursor.fetchall()
