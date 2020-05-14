@@ -9,9 +9,9 @@ All subsequent migrations should be run on the 'migration'
 
 """
 import sys
+from django.db import migrations
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-from django.db import migrations
 
 from wellregistry.settings import DATABASE_NAME
 from wellregistry.settings import DATABASE_USERNAME

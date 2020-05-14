@@ -21,6 +21,7 @@ def revoke_role(role, target):
 
 
 def grant_default(schema, defaults, target):
+    """Helper method to construct SQL to grant default privileges."""
     if defaults == 'CRUD':
         defaults = "INSERT, SELECT, UPDATE, DELETE"
 
@@ -33,6 +34,7 @@ def grant_default(schema, defaults, target):
 
 
 def revoke_default(schema, defaults, target):
+    """Helper method to construct SQL to revoke default privileges."""
     if defaults == 'CRUD':
         defaults = "INSERT, SELECT, UPDATE, DELETE"
 
