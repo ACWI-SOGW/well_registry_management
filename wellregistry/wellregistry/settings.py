@@ -127,7 +127,6 @@ DATABASES = {
         'PORT': DATABASE_PORT,  # '5432',
         'USER': APP_CLIENT_USERNAME,  # 'app_user',
         'PASSWORD': APP_CLIENT_PASSWORD,  # 'app_pwd',
-        'currentSchema': APP_SCHEMA_NAME,
     },
     'django_admin': {  # used for Django admin actions
         'ENGINE': 'django.db.backends.postgresql',
@@ -136,7 +135,6 @@ DATABASES = {
         'PORT': DATABASE_PORT,
         'USER': APP_ADMIN_USERNAME,
         'PASSWORD': APP_ADMIN_PASSWORD,
-        'currentSchema': APP_SCHEMA_NAME,
     },
     # Because the default connection alias is not a dba,
     # this requires this command 'python manager.py migrate --database=migration'
@@ -147,19 +145,14 @@ DATABASES = {
         'PORT': DATABASE_PORT,
         'USER': APP_DB_OWNER_USERNAME,
         'PASSWORD': APP_DB_OWNER_PASSWORD,
-        'currentSchema': APP_SCHEMA_NAME,
-        'DISABLE_SERVER_SIDE_CURSORS': True,
-        'AUTOCOMMIT': True,
     },
-    'postgres': {  # only needed for Django migration 0000_create_db_users
+    'postgres': {  # only needed for Django migration 0001_create_db_users
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': DATABASE_NAME,
         'HOST': DATABASE_HOST,
         'PORT': DATABASE_PORT,
         'USER': DATABASE_USERNAME,
         'PASSWORD': DATABASE_PASSWORD,
-        'DISABLE_SERVER_SIDE_CURSORS': True,
-        'AUTOCOMMIT': True,
     },
     'testing': {  # used for integration tests
         'ENGINE': 'django.db.backends.sqlite3',
