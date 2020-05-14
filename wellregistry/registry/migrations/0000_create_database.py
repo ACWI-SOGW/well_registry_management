@@ -10,15 +10,9 @@ All subsequent migrations should be run on the 'migration'
 """
 import sys
 from django.db import migrations
+from django.conf import settings as env
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-
-from wellregistry.settings import DATABASE_NAME
-from wellregistry.settings import DATABASE_USERNAME
-from wellregistry.settings import DATABASE_PASSWORD
-from wellregistry.settings import DATABASE_HOST
-from wellregistry.settings import DATABASE_PORT
-from wellregistry.settings import APP_DATABASE_NAME
 
 
 class Migration(migrations.Migration):
@@ -55,8 +49,8 @@ def create_database():
 
     """
     if 'test' not in sys.argv:
-        with psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USERNAME, password=DATABASE_PASSWORD,
-                              host=DATABASE_HOST, port=DATABASE_PORT) as conn:
+        with psycopg2.connect(database=env.DATABASE_NAME, user=env.DATABASE_USERNAME, password=env.DATABASE_PASSWORD,
+                              host=env.DATABASE_HOST, port=env.DATABASE_PORT) as conn:
             conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
             cursor = conn.cursor()
 
@@ -64,19 +58,19 @@ def create_database():
                 SELECT 1 as needed
                 WHERE NOT EXISTS 
                 (SELECT FROM pg_database 
-                WHERE datname = '{APP_DATABASE_NAME}');
+                WHERE datname = '{env.APP_DATABASE_NAME}');
             """
-            sql_create_db = f"CREATE DATABASE {APP_DATABASE_NAME};"
+            sql_create_db = f"CREATE DATABASE {env.APP_DATABASE_NAME};"
 
             cursor.execute(sql_database_not_exists)
             rows = cursor.fetchall()
 
             if rows:
-                print(f"'{APP_DATABASE_NAME}' database exists!")
+                print(f"'{env.APP_DATABASE_NAME}' database exists!")
             else:
-                print(f"'{APP_DATABASE_NAME}' database needed.")
+                print(f"'{env.APP_DATABASE_NAME}' database needed.")
 
             for row in rows:
                 if row[0] == 1:
                     cursor.execute(sql_create_db)
-                    print(f"'{APP_DATABASE_NAME}' database created.")
+                    print(f"'{env.APP_DATABASE_NAME}' database created.")
