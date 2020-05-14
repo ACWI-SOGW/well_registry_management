@@ -9,20 +9,19 @@ All subsequent migrations should be run on the 'migration'
 
 """
 from django.db import migrations
-from wellregistry.settings import DATABASE_USERNAME
 from wellregistry.settings import APP_DATABASE_NAME
-from wellregistry.settings import APP_DB_OWNER_USERNAME
-from wellregistry.settings import APP_DB_OWNER_PASSWORD
 from wellregistry.settings import APP_SCHEMA_NAME
 from wellregistry.settings import APP_SCHEMA_OWNER_USERNAME
-from wellregistry.settings import APP_SCHEMA_OWNER_PASSWORD
 from wellregistry.settings import APP_ADMIN_USERNAME
+from wellregistry.settings import APP_ADMIN_PASSWORD
+from wellregistry.settings import APP_CLIENT_USERNAME
+from wellregistry.settings import APP_CLIENT_PASSWORD
 
 
 def create_login_role(username, password):
     """Helper method to construct SQL: create role."""
     # "create role if not exists" is not valid syntax
-    return f"DROP ROLE IF EXISTS {username}; CREATE ROLE {username} WITH CREATEROLE LOGIN PASSWORD '{password}';"
+    return f"DROP ROLE IF EXISTS {username}; CREATE ROLE {username} WITH LOGIN PASSWORD '{password}';"
 
 
 def drop_role(role):
@@ -109,47 +108,43 @@ class Migration(migrations.Migration):
 
     initial = False
 
-    dependencies = [('registry', '0000_create_database')]
+    dependencies = [('registry', '0001_create_db_users')]
 
     operations = [
 
-        # create a login user that will own the application database
+        # create a application specific schema within the database the connection is made
         migrations.RunSQL(
-            sql=create_login_role(APP_DB_OWNER_USERNAME, APP_DB_OWNER_PASSWORD),
-            reverse_sql=drop_role(APP_DB_OWNER_USERNAME)),
+            sql=f"CREATE SCHEMA IF NOT EXISTS {APP_SCHEMA_NAME} AUTHORIZATION {APP_SCHEMA_OWNER_USERNAME};",
+            reverse_sql=None if (APP_SCHEMA_NAME == 'public')
+                else f"DROP SCHEMA IF EXISTS {APP_SCHEMA_NAME};"),
 
         migrations.RunSQL(
-            sql=f"GRANT ALL PRIVILEGES ON DATABASE {APP_DATABASE_NAME} TO {APP_DB_OWNER_USERNAME};",
-            reverse_sql=f"REVOKE ALL PRIVILEGES ON DATABASE {APP_DATABASE_NAME} FROM {APP_DB_OWNER_USERNAME};"),
+            sql=f"ALTER DATABASE {APP_DATABASE_NAME} SET search_path = {APP_SCHEMA_NAME}, public;",
+            reverse_sql=f"ALTER DATABASE {APP_DATABASE_NAME} RESET search_path;"),
+
+        # create a login user that will used by the Django admin process to manage entries
+        migrations.RunSQL(
+            sql=create_login_role(APP_ADMIN_USERNAME, APP_ADMIN_PASSWORD),
+            reverse_sql=drop_role(APP_ADMIN_USERNAME)),
+
+        # grant CRUD to admin user
+        migrations.RunSQL(
+            sql=grant_default(APP_SCHEMA_NAME, 'CRUD', APP_ADMIN_USERNAME),
+            reverse_sql=revoke_default(APP_SCHEMA_NAME, 'CRUD', APP_ADMIN_USERNAME)),
+        
+        # create a login user that will used by the app users to manage entries
+        migrations.RunSQL(
+            sql=create_login_role(APP_CLIENT_USERNAME, APP_CLIENT_PASSWORD),
+            reverse_sql=drop_role(APP_CLIENT_USERNAME)),
+
+        # grant select to client user
+        migrations.RunSQL(
+            sql=grant_default(APP_SCHEMA_NAME, 'SELECT', APP_CLIENT_USERNAME),
+            reverse_sql=revoke_default(APP_SCHEMA_NAME, 'SELECT', APP_CLIENT_USERNAME)),
 
         # migrations.RunSQL(
-        #     sql=f"ALTER USER {APP_DB_OWNER_USERNAME} WITH OPTION CREATEROLE CREATEUSER;",
-        #     reverse_sql=f"ALTER USER {APP_DB_OWNER_USERNAME} WITH OPTION NOCREATEROLE NOCREATEUSER;",),
+        #     sql=f"CREATE TABLE {APP_DATABASE_NAME}.public.django_migrations AS select * from django_migrations;",
+        #     reverse_sql=f"DROP TABLE {APP_DATABASE_NAME}.public.django_migrations;"),
 
-        # rolls can be granted to others, here the postgres superuser is granted the app db owner roll
-        migrations.RunSQL(
-            sql=grant_role(APP_DB_OWNER_USERNAME, DATABASE_USERNAME),
-            reverse_sql=revoke_role(APP_DB_OWNER_USERNAME, DATABASE_USERNAME)),
-
-        # assign the application database owner
-        migrations.RunSQL(
-            sql=f"ALTER DATABASE {APP_DATABASE_NAME} OWNER TO {APP_DB_OWNER_USERNAME};",
-            reverse_sql=f"ALTER DATABASE {APP_DATABASE_NAME} OWNER TO {DATABASE_USERNAME};"),
-
-        # create a login user that will own the application schema
-        migrations.RunSQL(
-            sql=create_login_role(APP_SCHEMA_OWNER_USERNAME, APP_SCHEMA_OWNER_PASSWORD),
-            reverse_sql=drop_role(APP_SCHEMA_OWNER_USERNAME)),
-
-        # the postgres superuser is granted the app db owner roll
-        migrations.RunSQL(
-            sql=grant_role(APP_SCHEMA_OWNER_USERNAME, APP_DB_OWNER_USERNAME),
-            reverse_sql=revoke_role(APP_SCHEMA_OWNER_USERNAME, APP_DB_OWNER_USERNAME)),
-
-        # create a database specific to the application
-        # this is how we would like to do it if Django connections were compatible.
-        # see 0000_create_database.py for proxy migration workaround.
-        # migrations.RunSQL(
-        #     sql=f"CREATE DATABASE {APP_DATABASE_NAME} WITH OWNER = {APP_DB_OWNER_USERNAME};",
-        #     reverse_sql=f"DROP DATABASE IF EXISTS {APP_DB_OWNER_USERNAME};"),
+        # grant CRUD to app user -- after 0001_initial, this cannot be granted until the tables is created
     ]

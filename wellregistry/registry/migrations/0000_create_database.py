@@ -20,6 +20,23 @@ from wellregistry.settings import DATABASE_PORT
 from wellregistry.settings import APP_DATABASE_NAME
 
 
+from wellregistry.settings import APP_SCHEMA_NAME
+from wellregistry.settings import APP_ADMIN_USERNAME
+from wellregistry.settings import APP_CLIENT_USERNAME
+
+
+def revoke_default(schema, defaults, target):
+    if defaults == 'CRUD':
+        defaults = "INSERT, SELECT, UPDATE, DELETE"
+
+    return f"""
+        ALTER DEFAULT PRIVILEGES 
+        IN SCHEMA {schema} 
+        REVOKE {defaults} 
+        ON TABLES FROM {target}
+    """
+
+
 class Migration(migrations.Migration):
     """
     Proxy migration for creating the application database.
@@ -33,7 +50,14 @@ class Migration(migrations.Migration):
 
     dependencies = []
 
-    operations = []
+    operations = [
+        # migrations.RunSQL(
+        #     sql=revoke_default('public', 'CRUD', APP_ADMIN_USERNAME),
+        #     reverse_sql=revoke_default(APP_SCHEMA_NAME, 'CRUD', APP_ADMIN_USERNAME)),
+        # migrations.RunSQL(
+        #     sql=revoke_default('public', 'SELECT', APP_CLIENT_USERNAME),
+        #     reverse_sql=revoke_default(APP_SCHEMA_NAME, 'SELECT', APP_CLIENT_USERNAME)),
+    ]
 
     def __init__(self, type1=None, type2=None):
         super().__init__(type1, type2)
