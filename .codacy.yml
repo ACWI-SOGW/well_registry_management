@@ -6,3 +6,4 @@ engines:
 
 exclude_paths:
   - '**/migrations/**'
+  - 'CHANGELOG.md'
