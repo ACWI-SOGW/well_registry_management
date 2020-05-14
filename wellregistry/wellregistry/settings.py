@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import ast
+import sys
 from distutils.util import strtobool
 import os
 
@@ -117,48 +118,52 @@ APP_ADMIN_PASSWORD = os.getenv('APP_ADMIN_PASSWORD')
 APP_CLIENT_USERNAME = os.getenv('APP_CLIENT_USERNAME')
 APP_CLIENT_PASSWORD = os.getenv('APP_CLIENT_PASSWORD')
 
-DATABASES = {
-    # this connection will be for users and will connect to the cloud database
-    # they will have CRUD on Registry only and select on lookup tables
-    'default': {  # the connection for the client users with the minimum actions
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': APP_DATABASE_NAME,  # 'postgis_25_test',
-        'HOST': DATABASE_HOST,  # 'localhost',
-        'PORT': DATABASE_PORT,  # '5432',
-        'USER': APP_CLIENT_USERNAME,  # 'app_user',
-        'PASSWORD': APP_CLIENT_PASSWORD,  # 'app_pwd',
-    },
-    'django_admin': {  # used for Django admin actions
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': APP_DATABASE_NAME,
-        'HOST': DATABASE_HOST,
-        'PORT': DATABASE_PORT,
-        'USER': APP_ADMIN_USERNAME,
-        'PASSWORD': APP_ADMIN_PASSWORD,
-    },
-    # Because the default connection alias is not a dba,
-    # this requires this command 'python manager.py migrate --database=migration'
-    'migration': {  # used for Django migration in app database
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': APP_DATABASE_NAME,
-        'HOST': DATABASE_HOST,
-        'PORT': DATABASE_PORT,
-        'USER': APP_DB_OWNER_USERNAME,
-        'PASSWORD': APP_DB_OWNER_PASSWORD,
-    },
-    'postgres': {  # only needed for Django migration 0001_create_db_users
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': DATABASE_NAME,
-        'HOST': DATABASE_HOST,
-        'PORT': DATABASE_PORT,
-        'USER': DATABASE_USERNAME,
-        'PASSWORD': DATABASE_PASSWORD,
-    },
-    'testing': {  # used for integration tests
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
-}
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {  # used for integration tests
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        },
+    }
+else:
+    DATABASES = {
+        # this connection will be for users and will connect to the cloud database
+        # they will have CRUD on Registry only and select on lookup tables
+        'default': {  # the connection for the client users with the minimum actions
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': APP_DATABASE_NAME,  # 'postgis_25_test',
+            'HOST': DATABASE_HOST,  # 'localhost',
+            'PORT': DATABASE_PORT,  # '5432',
+            'USER': APP_CLIENT_USERNAME,  # 'app_user',
+            'PASSWORD': APP_CLIENT_PASSWORD,  # 'app_pwd',
+        },
+        'django_admin': {  # used for Django admin actions
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': APP_DATABASE_NAME,
+            'HOST': DATABASE_HOST,
+            'PORT': DATABASE_PORT,
+            'USER': APP_ADMIN_USERNAME,
+            'PASSWORD': APP_ADMIN_PASSWORD,
+        },
+        # Because the default connection alias is not a dba,
+        # this requires this command 'python manager.py migrate --database=migration'
+        'migration': {  # used for Django migration in app database
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': APP_DATABASE_NAME,
+            'HOST': DATABASE_HOST,
+            'PORT': DATABASE_PORT,
+            'USER': APP_DB_OWNER_USERNAME,
+            'PASSWORD': APP_DB_OWNER_PASSWORD,
+        },
+        'postgres': {  # only needed for Django migration 0001_create_db_users
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': DATABASE_NAME,
+            'HOST': DATABASE_HOST,
+            'PORT': DATABASE_PORT,
+            'USER': DATABASE_USERNAME,
+            'PASSWORD': DATABASE_PASSWORD,
+        },
+    }
 
 
 # Password validation

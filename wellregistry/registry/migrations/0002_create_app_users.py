@@ -8,6 +8,8 @@ All subsequent migrations should be run on the 'migration'
 > python manage.py migrate --database=migration
 
 """
+import sys
+
 from django.db import migrations
 from wellregistry.settings import APP_DATABASE_NAME
 from wellregistry.settings import APP_SCHEMA_NAME
@@ -16,65 +18,7 @@ from wellregistry.settings import APP_ADMIN_USERNAME
 from wellregistry.settings import APP_ADMIN_PASSWORD
 from wellregistry.settings import APP_CLIENT_USERNAME
 from wellregistry.settings import APP_CLIENT_PASSWORD
-
-
-def create_login_role(username, password):
-    """Helper method to construct SQL: create role."""
-    # "create role if not exists" is not valid syntax
-    return f"DROP ROLE IF EXISTS {username}; CREATE ROLE {username} WITH LOGIN PASSWORD '{password}';"
-
-
-def drop_role(role):
-    """Helper method to construct SQL: drop role."""
-    return f"DROP ROLE IF EXISTS {role};"
-
-
-def grant_role(role, target):
-    """Helper method to construct SQL: grant privilege."""
-    return f"GRANT {role} to {target};"
-
-
-def revoke_role(role, target):
-    """Helper method to construct SQL: revoke privilege."""
-    return f"REVOKE {role} from {target};"
-
-
-def grant_default(schema, defaults, target):
-    if defaults == 'CRUD':
-        defaults = "INSERT, SELECT, UPDATE, DELETE"
-
-    return f"""
-        ALTER DEFAULT PRIVILEGES 
-        IN SCHEMA {schema} 
-        GRANT {defaults} 
-        ON TABLES TO {target};
-    """
-
-
-def revoke_default(schema, defaults, target):
-    if defaults == 'CRUD':
-        defaults = "INSERT, SELECT, UPDATE, DELETE"
-
-    return f"""
-        ALTER DEFAULT PRIVILEGES 
-        IN SCHEMA {schema} 
-        REVOKE {defaults} 
-        ON TABLES FROM {target}
-    """
-
-
-def alter_search_path():
-    return f"""
-        ALTER DATABASE {APP_DATABASE_NAME}
-        SET search_path = {APP_ADMIN_USERNAME}, {APP_SCHEMA_NAME}, public;
-    """
-
-
-def reset_search_path():
-    return f"""
-        ALTER DATABASE {APP_DATABASE_NAME}
-        SET search_path = {APP_ADMIN_USERNAME}, {APP_SCHEMA_NAME}, public;
-    """
+from registry.pgsql_utils import *
 
 
 class Migration(migrations.Migration):
@@ -110,41 +54,44 @@ class Migration(migrations.Migration):
 
     dependencies = [('registry', '0001_create_db_users')]
 
-    operations = [
+    if 'test' in sys.argv:
+        operations = []
+    else:
+        operations = [
 
-        # create a application specific schema within the database the connection is made
-        migrations.RunSQL(
-            sql=f"CREATE SCHEMA IF NOT EXISTS {APP_SCHEMA_NAME} AUTHORIZATION {APP_SCHEMA_OWNER_USERNAME};",
-            reverse_sql=None if (APP_SCHEMA_NAME == 'public')
-                else f"DROP SCHEMA IF EXISTS {APP_SCHEMA_NAME};"),
+            # create a application specific schema within the database the connection is made
+            migrations.RunSQL(
+                sql=f"CREATE SCHEMA IF NOT EXISTS {APP_SCHEMA_NAME} AUTHORIZATION {APP_SCHEMA_OWNER_USERNAME};",
+                reverse_sql=None if (APP_SCHEMA_NAME == 'public')
+                    else f"DROP SCHEMA IF EXISTS {APP_SCHEMA_NAME};"),
 
-        migrations.RunSQL(
-            sql=f"ALTER DATABASE {APP_DATABASE_NAME} SET search_path = {APP_SCHEMA_NAME}, public;",
-            reverse_sql=f"ALTER DATABASE {APP_DATABASE_NAME} RESET search_path;"),
+            migrations.RunSQL(
+                sql=f"ALTER DATABASE {APP_DATABASE_NAME} SET search_path = {APP_SCHEMA_NAME}, public;",
+                reverse_sql=f"ALTER DATABASE {APP_DATABASE_NAME} RESET search_path;"),
 
-        # create a login user that will used by the Django admin process to manage entries
-        migrations.RunSQL(
-            sql=create_login_role(APP_ADMIN_USERNAME, APP_ADMIN_PASSWORD),
-            reverse_sql=drop_role(APP_ADMIN_USERNAME)),
+            # create a login user that will used by the Django admin process to manage entries
+            migrations.RunSQL(
+                sql=create_login_role(APP_ADMIN_USERNAME, APP_ADMIN_PASSWORD),
+                reverse_sql=drop_role(APP_ADMIN_USERNAME)),
 
-        # grant CRUD to admin user
-        migrations.RunSQL(
-            sql=grant_default(APP_SCHEMA_NAME, 'CRUD', APP_ADMIN_USERNAME),
-            reverse_sql=revoke_default(APP_SCHEMA_NAME, 'CRUD', APP_ADMIN_USERNAME)),
-        
-        # create a login user that will used by the app users to manage entries
-        migrations.RunSQL(
-            sql=create_login_role(APP_CLIENT_USERNAME, APP_CLIENT_PASSWORD),
-            reverse_sql=drop_role(APP_CLIENT_USERNAME)),
+            # grant CRUD to admin user
+            migrations.RunSQL(
+                sql=grant_default(APP_SCHEMA_NAME, 'CRUD', APP_ADMIN_USERNAME),
+                reverse_sql=revoke_default(APP_SCHEMA_NAME, 'CRUD', APP_ADMIN_USERNAME)),
 
-        # grant select to client user
-        migrations.RunSQL(
-            sql=grant_default(APP_SCHEMA_NAME, 'SELECT', APP_CLIENT_USERNAME),
-            reverse_sql=revoke_default(APP_SCHEMA_NAME, 'SELECT', APP_CLIENT_USERNAME)),
+            # create a login user that will used by the app users to manage entries
+            migrations.RunSQL(
+                sql=create_login_role(APP_CLIENT_USERNAME, APP_CLIENT_PASSWORD),
+                reverse_sql=drop_role(APP_CLIENT_USERNAME)),
 
-        # migrations.RunSQL(
-        #     sql=f"CREATE TABLE {APP_DATABASE_NAME}.public.django_migrations AS select * from django_migrations;",
-        #     reverse_sql=f"DROP TABLE {APP_DATABASE_NAME}.public.django_migrations;"),
+            # grant select to client user
+            migrations.RunSQL(
+                sql=grant_default(APP_SCHEMA_NAME, 'SELECT', APP_CLIENT_USERNAME),
+                reverse_sql=revoke_default(APP_SCHEMA_NAME, 'SELECT', APP_CLIENT_USERNAME)),
 
-        # grant CRUD to app user -- after 0001_initial, this cannot be granted until the tables is created
-    ]
+            # migrations.RunSQL(
+            #     sql=f"CREATE TABLE {APP_DATABASE_NAME}.public.django_migrations AS select * from django_migrations;",
+            #     reverse_sql=f"DROP TABLE {APP_DATABASE_NAME}.public.django_migrations;"),
+
+            # grant CRUD to app user -- after 0001_initial, this cannot be granted until the tables is created
+        ]
