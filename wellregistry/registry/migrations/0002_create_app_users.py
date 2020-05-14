@@ -18,7 +18,7 @@ from wellregistry.settings import APP_ADMIN_USERNAME
 from wellregistry.settings import APP_ADMIN_PASSWORD
 from wellregistry.settings import APP_CLIENT_USERNAME
 from wellregistry.settings import APP_CLIENT_PASSWORD
-from registry.pgsql_utils import *
+import registry.pgsql_utils as pgsql
 
 
 class Migration(migrations.Migration):
@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
             migrations.RunSQL(
                 sql=f"CREATE SCHEMA IF NOT EXISTS {APP_SCHEMA_NAME} AUTHORIZATION {APP_SCHEMA_OWNER_USERNAME};",
                 reverse_sql=None if (APP_SCHEMA_NAME == 'public')
-                    else f"DROP SCHEMA IF EXISTS {APP_SCHEMA_NAME};"),
+                else f"DROP SCHEMA IF EXISTS {APP_SCHEMA_NAME};"),
 
             migrations.RunSQL(
                 sql=f"ALTER DATABASE {APP_DATABASE_NAME} SET search_path = {APP_SCHEMA_NAME}, public;",
@@ -71,23 +71,23 @@ class Migration(migrations.Migration):
 
             # create a login user that will used by the Django admin process to manage entries
             migrations.RunSQL(
-                sql=create_login_role(APP_ADMIN_USERNAME, APP_ADMIN_PASSWORD),
-                reverse_sql=drop_role(APP_ADMIN_USERNAME)),
+                sql=pgsql.create_login_role(APP_ADMIN_USERNAME, APP_ADMIN_PASSWORD),
+                reverse_sql=pgsql.drop_role(APP_ADMIN_USERNAME)),
 
             # grant CRUD to admin user
             migrations.RunSQL(
-                sql=grant_default(APP_SCHEMA_NAME, 'CRUD', APP_ADMIN_USERNAME),
-                reverse_sql=revoke_default(APP_SCHEMA_NAME, 'CRUD', APP_ADMIN_USERNAME)),
+                sql=pgsql.grant_default(APP_SCHEMA_NAME, 'CRUD', APP_ADMIN_USERNAME),
+                reverse_sql=pgsql.revoke_default(APP_SCHEMA_NAME, 'CRUD', APP_ADMIN_USERNAME)),
 
             # create a login user that will used by the app users to manage entries
             migrations.RunSQL(
-                sql=create_login_role(APP_CLIENT_USERNAME, APP_CLIENT_PASSWORD),
-                reverse_sql=drop_role(APP_CLIENT_USERNAME)),
+                sql=pgsql.create_login_role(APP_CLIENT_USERNAME, APP_CLIENT_PASSWORD),
+                reverse_sql=pgsql.drop_role(APP_CLIENT_USERNAME)),
 
             # grant select to client user
             migrations.RunSQL(
-                sql=grant_default(APP_SCHEMA_NAME, 'SELECT', APP_CLIENT_USERNAME),
-                reverse_sql=revoke_default(APP_SCHEMA_NAME, 'SELECT', APP_CLIENT_USERNAME)),
+                sql=pgsql.grant_default(APP_SCHEMA_NAME, 'SELECT', APP_CLIENT_USERNAME),
+                reverse_sql=pgsql.revoke_default(APP_SCHEMA_NAME, 'SELECT', APP_CLIENT_USERNAME)),
 
             # migrations.RunSQL(
             #     sql=f"CREATE TABLE {APP_DATABASE_NAME}.public.django_migrations AS select * from django_migrations;",

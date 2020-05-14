@@ -37,6 +37,7 @@ class Migration(migrations.Migration):
     operations = []
 
     def __init__(self, type1=None, type2=None):
+        """For this proxy, call the create database custom SQL."""
         super().__init__(type1, type2)
         create_database()
 
@@ -55,7 +56,7 @@ def create_database():
     """
     if 'test' not in sys.argv:
         with psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USERNAME, password=DATABASE_PASSWORD,
-                          host=DATABASE_HOST, port=DATABASE_PORT) as conn:
+                              host=DATABASE_HOST, port=DATABASE_PORT) as conn:
             conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
             cursor = conn.cursor()
 
@@ -70,7 +71,7 @@ def create_database():
             cursor.execute(sql_database_not_exists)
             rows = cursor.fetchall()
 
-            if len(rows) == 0:
+            if rows:
                 print(f"'{APP_DATABASE_NAME}' database exists!")
             else:
                 print(f"'{APP_DATABASE_NAME}' database needed.")

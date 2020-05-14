@@ -17,7 +17,7 @@ from wellregistry.settings import APP_DB_OWNER_USERNAME
 from wellregistry.settings import APP_DB_OWNER_PASSWORD
 from wellregistry.settings import APP_SCHEMA_OWNER_USERNAME
 from wellregistry.settings import APP_SCHEMA_OWNER_PASSWORD
-from registry.pgsql_utils import *
+import registry.pgsql_utils as pgsql
 
 
 class Migration(migrations.Migration):
@@ -60,8 +60,8 @@ class Migration(migrations.Migration):
 
             # create a login user that will own the application database
             migrations.RunSQL(
-                sql=create_login_role(APP_DB_OWNER_USERNAME, APP_DB_OWNER_PASSWORD),
-                reverse_sql=drop_role(APP_DB_OWNER_USERNAME)),
+                sql=pgsql.create_login_role(APP_DB_OWNER_USERNAME, APP_DB_OWNER_PASSWORD),
+                reverse_sql=pgsql.drop_role(APP_DB_OWNER_USERNAME)),
 
             migrations.RunSQL(
                 sql=f"GRANT ALL PRIVILEGES ON DATABASE {APP_DATABASE_NAME} TO {APP_DB_OWNER_USERNAME};",
@@ -69,8 +69,8 @@ class Migration(migrations.Migration):
 
             # rolls can be granted to others, here the postgres superuser is granted the app db owner roll
             migrations.RunSQL(
-                sql=grant_role(APP_DB_OWNER_USERNAME, DATABASE_USERNAME),
-                reverse_sql=revoke_role(APP_DB_OWNER_USERNAME, DATABASE_USERNAME)),
+                sql=pgsql.grant_role(APP_DB_OWNER_USERNAME, DATABASE_USERNAME),
+                reverse_sql=pgsql.revoke_role(APP_DB_OWNER_USERNAME, DATABASE_USERNAME)),
 
             # assign the application database owner
             migrations.RunSQL(
@@ -79,13 +79,13 @@ class Migration(migrations.Migration):
 
             # create a login user that will own the application schema
             migrations.RunSQL(
-                sql=create_login_role(APP_SCHEMA_OWNER_USERNAME, APP_SCHEMA_OWNER_PASSWORD),
-                reverse_sql=drop_role(APP_SCHEMA_OWNER_USERNAME)),
+                sql=pgsql.create_login_role(APP_SCHEMA_OWNER_USERNAME, APP_SCHEMA_OWNER_PASSWORD),
+                reverse_sql=pgsql.drop_role(APP_SCHEMA_OWNER_USERNAME)),
 
             # the postgres superuser is granted the app db owner roll
             migrations.RunSQL(
-                sql=grant_role(APP_SCHEMA_OWNER_USERNAME, APP_DB_OWNER_USERNAME),
-                reverse_sql=revoke_role(APP_SCHEMA_OWNER_USERNAME, APP_DB_OWNER_USERNAME)),
+                sql=pgsql.grant_role(APP_SCHEMA_OWNER_USERNAME, APP_DB_OWNER_USERNAME),
+                reverse_sql=pgsql.revoke_role(APP_SCHEMA_OWNER_USERNAME, APP_DB_OWNER_USERNAME)),
 
             # create a database specific to the application
             # this is how we would like to do it if Django connections were compatible.

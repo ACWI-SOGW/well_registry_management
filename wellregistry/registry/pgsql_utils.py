@@ -31,6 +31,7 @@ def grant_default(schema, defaults, target):
         ON TABLES TO {target};
     """
 
+
 def revoke_default(schema, defaults, target):
     if defaults == 'CRUD':
         defaults = "INSERT, SELECT, UPDATE, DELETE"
@@ -40,18 +41,4 @@ def revoke_default(schema, defaults, target):
         IN SCHEMA {schema} 
         REVOKE {defaults} 
         ON TABLES FROM {target}
-    """
-
-
-def alter_search_path():
-    return f"""
-        ALTER DATABASE {APP_DATABASE_NAME}
-        SET search_path = {APP_ADMIN_USERNAME}, {APP_SCHEMA_NAME}, public;
-    """
-
-
-def reset_search_path():
-    return f"""
-        ALTER DATABASE {APP_DATABASE_NAME}
-        SET search_path = {APP_ADMIN_USERNAME}, {APP_SCHEMA_NAME}, public;
     """
