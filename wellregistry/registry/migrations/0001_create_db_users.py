@@ -60,7 +60,8 @@ class Migration(migrations.Migration):
 
             migrations.RunSQL(
                 sql=f"GRANT ALL PRIVILEGES ON DATABASE {env.APP_DATABASE_NAME} TO {env.APP_DB_OWNER_USERNAME};",
-                reverse_sql=f"REVOKE ALL PRIVILEGES ON DATABASE {env.APP_DATABASE_NAME} FROM {env.APP_DB_OWNER_USERNAME};"),
+                reverse_sql=f"""REVOKE ALL PRIVILEGES ON DATABASE {env.APP_DATABASE_NAME}
+                                FROM {env.APP_DB_OWNER_USERNAME};"""),
 
             # rolls can be granted to others, here the postgres superuser is granted the app db owner roll
             migrations.RunSQL(
