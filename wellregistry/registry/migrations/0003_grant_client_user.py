@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
     """
     initial = False
 
-    dependencies = [('migrations', '0001_initial')]
+    dependencies = [('registry', '0002_initial')]
 
     operations = [
         # grant CRUD to app user -- after 0001_initial, this cannot be granted until the tables is created

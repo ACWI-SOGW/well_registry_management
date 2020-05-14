@@ -24,7 +24,8 @@ from wellregistry.settings import APP_CLIENT_PASSWORD
 
 def create_login_role(username, password):
     """Helper method to construct SQL: create role."""
-    return f"CREATE ROLE {username} WITH LOGIN PASSWORD '{password}';"
+    # "create role if not exists" is not valid syntax
+    return f"DROP ROLE IF EXISTS {username}; CREATE ROLE {username} WITH LOGIN PASSWORD '{password}';"
 
 
 def drop_role(role):
@@ -43,7 +44,7 @@ def revoke_role(role, target):
 
 
 def grant_default(schema, defaults, target):
-    if defaults=='CRUD':
+    if defaults is 'CRUD':
         defaults = "INSERT, SELECT, UPDATE, DELETE"
 
     return f"""
@@ -53,8 +54,9 @@ def grant_default(schema, defaults, target):
         ON TABLES TO {target};
     """
 
+
 def revoke_default(schema, defaults, target):
-    if defaults=='CRUD':
+    if defaults is 'CRUD':
         defaults = "INSERT, SELECT, UPDATE, DELETE"
 
     return f"""
@@ -63,6 +65,7 @@ def revoke_default(schema, defaults, target):
         REVOKE {defaults} 
         ON TABLES FROM {target}
     """
+
 
 def alter_search_path():
     return f"""
@@ -107,9 +110,9 @@ class Migration(migrations.Migration):
                 then authenticated with django admin login
     """
 
-    initial = True
+    initial = False
 
-    dependencies = []
+    dependencies = [('registry', '0000_create_database')]
 
     operations = [
         # create a login user that will own the application database
@@ -133,9 +136,11 @@ class Migration(migrations.Migration):
             reverse_sql=revoke_role(APP_SCHEMA_OWNER_USERNAME, APP_DB_OWNER_USERNAME)),
 
         # create a database specific to the application
-        migrations.RunSQL(
-            sql=f"CREATE DATABASE {APP_DATABASE_NAME} WITH OWNER = {APP_DB_OWNER_USERNAME};",
-            reverse_sql=f"DROP DATABASE IF EXISTS {APP_DB_OWNER_USERNAME};"),
+        # this is how we would like to do it if Django connections were compatible.
+        # see 0000_create_database.py for proxy migration workaround.
+        # migrations.RunSQL(
+        #     sql=f"COMMIT; CREATE DATABASE {APP_DATABASE_NAME} WITH OWNER = {APP_DB_OWNER_USERNAME};",
+        #     reverse_sql=f"DROP DATABASE IF EXISTS {APP_DB_OWNER_USERNAME};"),
 
         # create a application specific schema
         migrations.RunSQL(

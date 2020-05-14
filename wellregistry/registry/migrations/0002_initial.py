@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
     """
     initial = False
 
-    dependencies = [('migrations', '0000_create_db_users')]
+    dependencies = [('registry', '0001_create_db_users')]
 
     operations = [
         migrations.CreateModel(
