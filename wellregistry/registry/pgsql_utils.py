@@ -1,4 +1,5 @@
 """A collection of helper methods to construct postgres DDL SQL.
+
 """
 
 
