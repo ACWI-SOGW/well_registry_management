@@ -1,9 +1,8 @@
 engines:
     prospector:
         enabled: true
-    pylint:
+    pylintpython3:
         enabled: true
-        python_version: 3
 
 exclude_paths:
   - '**/migrations/**'
