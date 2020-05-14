@@ -1,4 +1,5 @@
-"""Django Registry Administration.
+"""
+Django Registry Administration.
 
 """
 
