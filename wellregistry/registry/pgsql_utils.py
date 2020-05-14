@@ -1,3 +1,7 @@
+"""
+A collection of helper methods to construct postgres DDL SQL.
+"""
+
 
 def create_login_role(username, password):
     """Helper method to construct SQL: create role."""
