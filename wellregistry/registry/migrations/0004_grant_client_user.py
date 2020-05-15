@@ -5,8 +5,9 @@ this will grant access to th client login
 import sys
 
 from django.db import migrations
-from wellregistry.settings import APP_SCHEMA_NAME
-from wellregistry.settings import APP_CLIENT_USERNAME
+from django.conf import settings
+
+env = settings.ENVIRONMENT
 
 
 class Migration(migrations.Migration):
@@ -28,12 +29,12 @@ class Migration(migrations.Migration):
             migrations.RunSQL(
                 sql=f"""
                     GRANT INSERT, SELECT, UPDATE, DELETE
-                    ON {APP_SCHEMA_NAME}.registry_registry
-                    TO {APP_CLIENT_USERNAME}
+                    ON {env.APP_SCHEMA_NAME}.registry_registry
+                    TO {env.APP_CLIENT_USERNAME}
                 """,
                 reverse_sql=f"""
                     REVOKE INSERT, SELECT, UPDATE, DELETE
-                    ON {APP_SCHEMA_NAME}.registry_registry
-                    FROM {APP_CLIENT_USERNAME}
+                    ON {env.APP_SCHEMA_NAME}.registry_registry
+                    FROM {env.APP_CLIENT_USERNAME}
                 """),
         ]

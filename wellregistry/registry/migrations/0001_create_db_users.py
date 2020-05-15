@@ -11,8 +11,11 @@ All subsequent migrations should be run on the 'migration'
 import sys
 
 from django.db import migrations
-from django.conf import settings as env
+from django.conf import settings
+from django.conf import settings
 import registry.pgsql_utils as pgsql
+
+env = settings.ENVIRONMENT
 
 
 class Migration(migrations.Migration):

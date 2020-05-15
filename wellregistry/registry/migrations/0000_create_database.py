@@ -10,10 +10,12 @@ All subsequent migrations should be run on the 'migration'
 """
 import sys
 from django.db import migrations
-from django.conf import settings as env
+from django.conf import settings
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import logging
+
+env = settings.ENVIRONMENT
 
 
 class Migration(migrations.Migration):
