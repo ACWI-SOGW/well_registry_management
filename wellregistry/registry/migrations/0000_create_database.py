@@ -13,6 +13,7 @@ from django.db import migrations
 from django.conf import settings as env
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+import logging
 
 
 class Migration(migrations.Migration):
@@ -66,11 +67,11 @@ def create_database():
             rows = cursor.fetchall()
 
             if rows:
-                print(f"'{env.APP_DATABASE_NAME}' database exists!")
+                logging.info(f"'{env.APP_DATABASE_NAME}' database exists!")
             else:
-                print(f"'{env.APP_DATABASE_NAME}' database needed.")
+                logging.info(f"'{env.APP_DATABASE_NAME}' database needed.")
 
             for row in rows:
                 if row[0] == 1:
                     cursor.execute(sql_create_db)
-                    print(f"'{env.APP_DATABASE_NAME}' database created.")
+                    logging.info(f"'{env.APP_DATABASE_NAME}' database created.")
