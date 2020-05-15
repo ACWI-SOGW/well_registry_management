@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
     This creates a new database and schema owner in PG for an application specific name.
     The "postgres" database and password is Already created during database install.
 
-    instance (daemon)
+    instance (daemon) server
         postgres database
             'postgres' admin user name and password
                 loosely like the Oracle 'sys' schema

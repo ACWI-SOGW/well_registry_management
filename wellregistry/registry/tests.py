@@ -4,8 +4,7 @@ Tests for the registry application
 """
 
 from django.test import RequestFactory, TestCase
-from .admin import RegistryAdmin
-from .admin import check_mark
+from .admin import RegistryAdmin, check_mark
 from .models import Registry
 from .views import BasePage, status_check
 
