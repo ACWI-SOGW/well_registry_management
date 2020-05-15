@@ -83,9 +83,15 @@ class Migration(migrations.Migration):
                 sql=pgsql.grant_role(env.APP_SCHEMA_OWNER_USERNAME, env.APP_DB_OWNER_USERNAME),
                 reverse_sql=pgsql.revoke_role(env.APP_SCHEMA_OWNER_USERNAME, env.APP_DB_OWNER_USERNAME)),
 
-            # create a database specific to the application
-            # this is how we would like to do it if Django connections were compatible.
-            # see 0000_create_database.py for proxy migration workaround.
+            # The migration below is how it would be best to create an application specific database.
+            # However, Django connections are transactional and Postgres does not allow
+            # CREATE DATABASE within a transaction. Disabling transactions does not seem possible.
+            # If it is possible (or some other workaround) in the future then this code could be used.
+            # It is left here as reference. Future project work might reference this impl on how to
+            # use migrations with IoW processes, and attempt the same command if it were not here.
+            # To avoid the need for future developers to also work through this, it is left here to note
+            # that it has been tried. Normally, "dead" code is deleted but this is more documentation.
+            # See 0000_create_database.py for proxy migration workaround using a custom connection.
             # migrations.RunSQL(
             #     sql=f"CREATE DATABASE {APP_DATABASE_NAME} WITH OWNER = {APP_DB_OWNER_USERNAME};",
             #     reverse_sql=f"DROP DATABASE IF EXISTS {APP_DB_OWNER_USERNAME};"),
