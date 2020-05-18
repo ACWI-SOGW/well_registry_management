@@ -12,14 +12,14 @@ import sys
 
 from django.db import migrations
 from django.conf import settings
-import registry.pgsql_utils as pgsql
+import postgres.pgsql_utils as pgsql
 
 env = settings.ENVIRONMENT
 
 
 class Migration(migrations.Migration):
     """
-    SQL to create the database and user roles.
+    SQL to create the database admin roles.
 
     This creates a new database and schema owner in PG for an application specific name.
     The "postgres" database and password is Already created during database install.
@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
 
     initial = False
 
-    dependencies = [('registry', '0000_create_database')]
+    dependencies = [('postgres', '0000_create_database')]
 
     if 'test' in sys.argv:
         operations = []
@@ -57,33 +57,33 @@ class Migration(migrations.Migration):
 
             # create a login user that will own the application database
             migrations.RunSQL(
-                sql=pgsql.create_login_role(env.APP_DB_OWNER_USERNAME, env.APP_DB_OWNER_PASSWORD),
-                reverse_sql=pgsql.drop_role(env.APP_DB_OWNER_USERNAME)),
+                sql=pgsql.create_login_role(env['APP_DB_OWNER_USERNAME'], env['APP_DB_OWNER_PASSWORD']),
+                reverse_sql=pgsql.drop_role(env['APP_DB_OWNER_USERNAME'])),
 
             migrations.RunSQL(
-                sql=f"GRANT ALL PRIVILEGES ON DATABASE {env.APP_DATABASE_NAME} TO {env.APP_DB_OWNER_USERNAME};",
-                reverse_sql=f"""REVOKE ALL PRIVILEGES ON DATABASE {env.APP_DATABASE_NAME}
-                                FROM {env.APP_DB_OWNER_USERNAME};"""),
+                sql=f"GRANT ALL PRIVILEGES ON DATABASE {env['APP_DATABASE_NAME']} TO {env['APP_DB_OWNER_USERNAME']};",
+                reverse_sql=f"""REVOKE ALL PRIVILEGES ON DATABASE {env['APP_DATABASE_NAME']}
+                                FROM {env['APP_DB_OWNER_USERNAME']};"""),
 
             # rolls can be granted to others, here the postgres superuser is granted the app db owner roll
             migrations.RunSQL(
-                sql=pgsql.grant_role(env.APP_DB_OWNER_USERNAME, env.DATABASE_USERNAME),
-                reverse_sql=pgsql.revoke_role(env.APP_DB_OWNER_USERNAME, env.DATABASE_USERNAME)),
+                sql=pgsql.grant_role(env['APP_DB_OWNER_USERNAME'], env['DATABASE_USERNAME']),
+                reverse_sql=pgsql.revoke_role(env['APP_DB_OWNER_USERNAME'], env['DATABASE_USERNAME'])),
 
             # assign the application database owner
             migrations.RunSQL(
-                sql=f"ALTER DATABASE {env.APP_DATABASE_NAME} OWNER TO {env.APP_DB_OWNER_USERNAME};",
-                reverse_sql=f"ALTER DATABASE {env.APP_DATABASE_NAME} OWNER TO {env.DATABASE_USERNAME};"),
+                sql=f"ALTER DATABASE {env['APP_DATABASE_NAME']} OWNER TO {env['APP_DB_OWNER_USERNAME']};",
+                reverse_sql=f"ALTER DATABASE {env['APP_DATABASE_NAME']} OWNER TO {env['DATABASE_USERNAME']};"),
 
             # create a login user that will own the application schema
             migrations.RunSQL(
-                sql=pgsql.create_login_role(env.APP_SCHEMA_OWNER_USERNAME, env.APP_SCHEMA_OWNER_PASSWORD),
-                reverse_sql=pgsql.drop_role(env.APP_SCHEMA_OWNER_USERNAME)),
+                sql=pgsql.create_login_role(env['APP_SCHEMA_OWNER_USERNAME'], env['APP_SCHEMA_OWNER_PASSWORD']),
+                reverse_sql=pgsql.drop_role(env['APP_SCHEMA_OWNER_USERNAME'])),
 
             # the postgres superuser is granted the app db owner roll
             migrations.RunSQL(
-                sql=pgsql.grant_role(env.APP_SCHEMA_OWNER_USERNAME, env.APP_DB_OWNER_USERNAME),
-                reverse_sql=pgsql.revoke_role(env.APP_SCHEMA_OWNER_USERNAME, env.APP_DB_OWNER_USERNAME)),
+                sql=pgsql.grant_role(env['APP_SCHEMA_OWNER_USERNAME'], env['APP_DB_OWNER_USERNAME']),
+                reverse_sql=pgsql.revoke_role(env['APP_SCHEMA_OWNER_USERNAME'], env['APP_DB_OWNER_USERNAME'])),
 
             # The migration below is how it would be best to create an application specific database.
             # However, Django connections are transactional and Postgres does not allow

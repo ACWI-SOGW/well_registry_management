@@ -13,9 +13,9 @@ class Migration(migrations.Migration):
     initial registry ORM.
 
     """
-    initial = False
+    initial = True
 
-    dependencies = [('registry', '0002_create_app_users')]
+    dependencies = [('registry', '0000_create_app_users')]
 
     operations = [
         migrations.CreateModel(

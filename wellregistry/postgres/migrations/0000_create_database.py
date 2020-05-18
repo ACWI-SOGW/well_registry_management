@@ -52,8 +52,8 @@ def create_database():
 
     """
     if 'test' not in sys.argv:
-        with psycopg2.connect(database=env.DATABASE_NAME, user=env.DATABASE_USERNAME, password=env.DATABASE_PASSWORD,
-                              host=env.DATABASE_HOST, port=env.DATABASE_PORT) as conn:
+        with psycopg2.connect(database=env['DATABASE_NAME'], user=env['DATABASE_USERNAME'], password=env['DATABASE_PASSWORD'],
+                              host=env['DATABASE_HOST'], port=env['DATABASE_PORT']) as conn:
             conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
             cursor = conn.cursor()
 
@@ -61,19 +61,19 @@ def create_database():
                 SELECT 1 as needed
                 WHERE NOT EXISTS 
                 (SELECT FROM pg_database 
-                WHERE datname = '{env.APP_DATABASE_NAME}');
+                WHERE datname = '{env['APP_DATABASE_NAME']}');
             """
-            sql_create_db = f"CREATE DATABASE {env.APP_DATABASE_NAME};"
+            sql_create_db = f"CREATE DATABASE {env['APP_DATABASE_NAME']};"
 
             cursor.execute(sql_database_not_exists)
             rows = cursor.fetchall()
 
             if rows:
-                logging.info(f"'{env.APP_DATABASE_NAME}' database exists!")
+                logging.info(f"'{env['APP_DATABASE_NAME']}' database exists!")
             else:
-                logging.info(f"'{env.APP_DATABASE_NAME}' database needed.")
+                logging.info(f"'{env['APP_DATABASE_NAME']}' database needed.")
 
             for row in rows:
                 if row[0] == 1:
                     cursor.execute(sql_create_db)
-                    logging.info(f"'{env.APP_DATABASE_NAME}' database created.")
+                    logging.info(f"'{env['APP_DATABASE_NAME']}' database created.")

@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
     """
     initial = False
 
-    dependencies = [('registry', '0003_registry_table')]
+    dependencies = [('registry', '0001_registry_table')]
 
     if 'test' in sys.argv:
         operations = []
@@ -29,12 +29,12 @@ class Migration(migrations.Migration):
             migrations.RunSQL(
                 sql=f"""
                     GRANT INSERT, SELECT, UPDATE, DELETE
-                    ON {env.APP_SCHEMA_NAME}.registry_registry
-                    TO {env.APP_CLIENT_USERNAME}
+                    ON {env['APP_SCHEMA_NAME']}.registry_registry
+                    TO {env['APP_CLIENT_USERNAME']}
                 """,
                 reverse_sql=f"""
                     REVOKE INSERT, SELECT, UPDATE, DELETE
-                    ON {env.APP_SCHEMA_NAME}.registry_registry
-                    FROM {env.APP_CLIENT_USERNAME}
+                    ON {env['APP_SCHEMA_NAME']}.registry_registry
+                    FROM {env['APP_CLIENT_USERNAME']}
                 """),
         ]
