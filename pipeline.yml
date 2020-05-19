@@ -1,26 +1,70 @@
 # docker image path in artifactory
+# TODO: above is a rephrase comment
 artifactoryPath: "groundwater"
+
 # name of the docker image
+# TODO: above is a rephrase comment
 dockerImageName: "wellregistry"
-# name of the git repo
+
+# location of the application project git repo (as opposed to the configuration repo)
 gitRepoUrl: "https://github.com/ACWI-SOGW/well_registry_management.git"
-# Jenkins credential for pushing back to repo
+
+# Jenkins credential for pushing back to application repo
+# The string name for the RAS key in Jenkins for the application project's repo
+# RSA keys in Jenkins are given a name or label for reference.
 gitRepoCredentialsId: "Jenkins-GitHub-Read-Write-Token"
-# name of the deploy job to trigger
+
+# name of the CHS Jenkins deploy job to trigger.
+# It will be passed IMAGE_TAG information to ID artifacts to deploy.
+# https://jenkins.wma.chs.usgs.gov/job/IOW/job/IOW-ALLGEMEIN/job/well-registry-deploy/
+# notice that this is within the "iow-allgemein" group which might be necessary for the "projectName" setting.
 deployJobName: "well-registry-deploy"
-# name of the project
+
+# name of the project - identifier of the ECS Cluster to use for this project
+# TODO: but the project is well-registry so what is iow-allgemein?
+# https://jenkins.wma.chs.usgs.gov/job/IOW/job/IOW-ALLGEMEIN/job/well-registry-deploy/
+# The deploy job is within this group and it might be that this informs the pipeline of the path to the deploy job
 projectName: "iow-allgemein"
-# maximum amount of RAM for running Docker containers in the service
+
+# maximum amount of RAM (MB) for running Docker containers in the service
 memory: 512
-# name of the application or service
+
+# name of the application or service name within the project, projectName
 applicationName: "wellregistry"
-# port that is exposed by your container
+
+# docker port that is exposed by your container
 containerPort: 8000
+
 # string parameter specifying a path that ALB should use to verify that your application is alive
+# AWS uses this to check that the app is up and accepting requests. If the health check URL
+# does not return or returns with a non-200 result then it triggers another to started up.
+# This should be a simple low resource response that is quick as possible to response to checks.
+# Long startup times for this URL will likely result in AWS improperly managing application deployment.
 healthCheck: "/registry/status"
-# configuration repository paths
+
+# The private gitlab path to the configuration repository containing AWS secrets and
+# application specific environment variable that will be passed into the docker as env variables.
+# The final path repository path shall match the application git repo name for project cohesion.
+# In this case both the application and configuration repos are named "well_registry_management"
+# The pipeline script will add the appropriate host name the this path.
+# This is a separate entry in order to allow separation of project application and configuration.
+# Configuration will likely contain secrets while the application code might be publicly shared.
+# It is expected that the extended path will be of the following pattern.
+# <private git repo host>/wma/docker/<group or project>/<application name>/config/<tier name>
+# Optional: If not provided then no configuration will be processed.
 configRepoPath: "wma/docker/wdfn/well_registry_management"
+
+# Jenkins credential for pulling from the configuration repo
+# The string name for the RAS key in Jenkins for the configuration project's repo
+# RSA keys in Jenkins are given a name or label for reference.
+# This might be the same as the gitRepoCredentialsId if the code is within same private repo
+# Optional: Only required if configRepoPath is provided.
 configCredentialsId: "wma-eto-eb-rsa"
+
+# This tells AWS what requests to redirect or route to this container
+# "conditions" is a list of URL patterns for this application to process
+# yaml formatted URL routing rules, only forward and redirect "types" are supported
+# "priority" is an AWS relative priority sort value and has no intrinsic other meaning.
 urlRules:
   - type: forward
     conditions:

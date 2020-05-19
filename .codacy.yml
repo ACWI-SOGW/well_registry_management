@@ -1,0 +1,9 @@
+engines:
+    prospector:
+        enabled: true
+    pylintpython3:
+        enabled: true
+
+exclude_paths:
+  - '**/migrations/**'
+  - 'CHANGELOG.md'

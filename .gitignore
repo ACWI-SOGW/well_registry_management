@@ -7,3 +7,5 @@
 **/__pycache__/
 **.coverage
 **local_settings.py
+ienv/
+.idea/

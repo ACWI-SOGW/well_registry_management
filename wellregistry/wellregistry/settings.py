@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import ast
+import sys
 from distutils.util import strtobool
 import os
 
@@ -48,6 +49,7 @@ except ValueError:
 # Application definition
 
 INSTALLED_APPS = [
+    'postgres',
     'registry',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -98,13 +100,78 @@ WSGI_APPLICATION = 'wellregistry.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+ENVIRONMENT = {
+    'DATABASE_NAME': os.getenv('DATABASE_NAME', 'postgres'),
+    'DATABASE_HOST': os.getenv('DATABASE_HOST'),
+    'DATABASE_PORT': os.getenv('DATABASE_PORT', default='5432'),
+    'DATABASE_USERNAME': os.getenv('DATABASE_USERNAME', 'postgres'),  # not necessary the same name
+    'DATABASE_PASSWORD': os.getenv('DATABASE_PASSWORD'),
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'APP_DATABASE_NAME': os.getenv('APP_DATABASE_NAME'),
+    'APP_DB_OWNER_USERNAME': os.getenv('APP_DB_OWNER_USERNAME'),
+    'APP_DB_OWNER_PASSWORD': os.getenv('APP_DB_OWNER_PASSWORD'),
+
+    'APP_SCHEMA_NAME': os.getenv('APP_SCHEMA_NAME', 'public'),
+    'APP_SCHEMA_OWNER_USERNAME': os.getenv('APP_SCHEMA_OWNER_USERNAME'),
+    'APP_SCHEMA_OWNER_PASSWORD': os.getenv('APP_SCHEMA_OWNER_PASSWORD'),
+
+    'APP_ADMIN_USERNAME': os.getenv('APP_ADMIN_USERNAME'),
+    'APP_ADMIN_PASSWORD': os.getenv('APP_ADMIN_PASSWORD'),
+    'APP_CLIENT_USERNAME': os.getenv('APP_CLIENT_USERNAME'),
+    'APP_CLIENT_PASSWORD': os.getenv('APP_CLIENT_PASSWORD'),
 }
+# short alias
+env = ENVIRONMENT
+
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {  # used for integration tests
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        },
+    }
+elif 'migrate' in sys.argv:
+    DATABASES = {
+        # Because the default connection alias is not a full dba,
+        # this requires this command 'python manager.py migrate --database=postgres'
+        'default': {  # used for Django migration in app database
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env['APP_DATABASE_NAME'],
+            'HOST': env['DATABASE_HOST'],
+            'PORT': env['DATABASE_PORT'],
+            'USER': env['APP_DB_OWNER_USERNAME'],
+            'PASSWORD': env['APP_DB_OWNER_PASSWORD'],
+        },
+        'postgres': {  # only needed for Django migration 0001_create_db_users
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env['DATABASE_NAME'],
+            'HOST': env['DATABASE_HOST'],
+            'PORT': env['DATABASE_PORT'],
+            'USER': env['DATABASE_USERNAME'],
+            'PASSWORD': env['DATABASE_PASSWORD'],
+        },
+    }
+else:
+    DATABASES = {
+        # this connection will be for users and will connect to the cloud database
+        # they will have CRUD on Registry only and select on lookup tables
+        'default': {  # the connection for the client users with the minimum actions
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env['APP_DATABASE_NAME'],  # 'postgis_25_test',
+            'HOST': env['DATABASE_HOST'],  # 'localhost',
+            'PORT': env['DATABASE_PORT'],  # '5432',
+            'USER': env['APP_CLIENT_USERNAME'],  # 'app_user',
+            'PASSWORD': env['APP_CLIENT_PASSWORD'],  # 'app_pwd',
+        },
+        'django_admin': {  # used for Django admin actions
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env['APP_DATABASE_NAME'],
+            'HOST': env['DATABASE_HOST'],
+            'PORT': env['DATABASE_PORT'],
+            'USER': env['APP_ADMIN_USERNAME'],
+            'PASSWORD': env['APP_ADMIN_PASSWORD'],
+        },
+    }
 
 
 # Password validation
