@@ -8,6 +8,8 @@ REM executes a database search_path update that is not taking effect
 REM on the current connection. If the 0000 script is run in isolation
 REM then subsequent connections inherit the proper search_path.
 
+SET DEBUG=True
+
 SET DATABASE_USERNAME=postgres
 SET DATABASE_PASSWORD=qwerty
 SET DATABASE_HOST=localhost
@@ -30,3 +32,4 @@ python -m manage migrate --database=postgres postgres
 rem python -m manage migrate --fake postgres
 python -m manage migrate registry 0000
 python -m manage migrate registry
+python -m manage runserver
