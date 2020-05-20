@@ -24,6 +24,20 @@ The Django local development can be run via:
 make watch
 ```
 
+Another means to run local is the manage.py from within the wellregistry path:
+
+```bash
+python -m manage runserver
+```
+Note that environment variable must be configured to connect to a postgres database.
+
+To run tests locally:
+
+```bash
+python -m manage test
+```
+
+
 ## Environment Variables
 
     This project has a private companion config project where environment variable
@@ -85,3 +99,23 @@ Database (app)
     It has limited table CRUD roles.
         APP_CLIENT_USERNAME: user name for the connection used by the registry users
         APP_CLIENT_PASSWORD: user level login password
+
+## Configuring Local Database
+
+There is a sample batch script to configure a local postres instance on Windows.
+
+    migration_test.bat
+
+I simple translation to bash script will allow running it on linux.
+It is included in the project more as an example documentation than a use case.  
+The critical components of the batch script show an example of local environment variables.
+It also shows the necessary order to run Django migrations.
+
+    python -m manage migrate --database=postgres postgres
+    python -m manage migrate registry 0000
+    python -m manage migrate registry
+
+Notice that the first scripts are run while connecting for the only time with the postgres user.
+Subsequent migrations run while connected to the application database. The 0000 migration
+must be run on its own because it sets the search_path to use the application schema. Subsequent
+connections default to placing new objects (DDL) in the application schema properly.
