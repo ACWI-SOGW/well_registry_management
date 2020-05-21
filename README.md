@@ -51,7 +51,7 @@ General
 
 Cloud
 
-    These environment variables are required for the cloud deployment.
+    These environment variables are required for the tier deployment.
     They are not used for local development.
 
         SECRET_KEY: AWS secret key
