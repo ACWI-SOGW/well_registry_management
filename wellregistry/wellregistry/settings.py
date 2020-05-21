@@ -10,9 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import ast
-import sys
-from distutils.util import strtobool
 import os
+import sys
 
 from django.core.management.utils import get_random_secret_key
 
@@ -31,11 +30,7 @@ except ImportError:
     SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-debug_setting = os.getenv('DEBUG', 'True')
-try:
-    DEBUG = bool(strtobool(debug_setting))
-except ValueError:
-    DEBUG = False
+DEBUG = 'DEBUG' in os.environ
 
 allowed_hosts = os.getenv('ALLOWED_HOSTS', '[]')
 
@@ -49,7 +44,7 @@ except ValueError:
 # Application definition
 
 INSTALLED_APPS = [
-    'postgres',
+#    'postgres',
     'registry',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -119,6 +114,8 @@ ENVIRONMENT = {
     'APP_ADMIN_PASSWORD': os.getenv('APP_ADMIN_PASSWORD'),
     'APP_CLIENT_USERNAME': os.getenv('APP_CLIENT_USERNAME'),
     'APP_CLIENT_PASSWORD': os.getenv('APP_CLIENT_PASSWORD'),
+
+    'DB_ENGINE': os.getenv('DB_ENGINE')
 }
 # short alias
 env = ENVIRONMENT
@@ -156,7 +153,7 @@ else:
         # this connection will be for users and will connect to the cloud database
         # they will have CRUD on Registry only and select on lookup tables
         'default': {  # the connection for the client users with the minimum actions
-            'ENGINE': 'django.db.backends.postgresql',
+            'ENGINE': env['DB_ENGINE'],
             'NAME': env['APP_DATABASE_NAME'],  # 'postgis_25_test',
             'HOST': env['DATABASE_HOST'],  # 'localhost',
             'PORT': env['DATABASE_PORT'],  # '5432',
@@ -164,7 +161,7 @@ else:
             'PASSWORD': env['APP_CLIENT_PASSWORD'],  # 'app_pwd',
         },
         'django_admin': {  # used for Django admin actions
-            'ENGINE': 'django.db.backends.postgresql',
+            'ENGINE': env['DB_ENGINE'],
             'NAME': env['APP_DATABASE_NAME'],
             'HOST': env['DATABASE_HOST'],
             'PORT': env['DATABASE_PORT'],

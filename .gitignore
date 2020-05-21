@@ -7,5 +7,6 @@
 **/__pycache__/
 **.coverage
 **local_settings.py
-ienv/
+env/
 .idea/
+wellregistry/.env

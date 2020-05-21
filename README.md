@@ -24,4 +24,18 @@ The Django local development can be run via:
 make watch
 ```
 
+## Using a local postgres database using Docker
+Run the following command:
+```bash
+% docker run --name registry_postgres -e POSTGRES_PASSWORD=changeme -d -p 5432:5432 postgres
+```
+
+You can stop the container using:
+```bash
+% docker stop registry_postgres
+```
+You can start the container again:
+```bash
+% docker start registry_posgres
+```
 
