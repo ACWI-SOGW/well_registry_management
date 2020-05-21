@@ -49,7 +49,7 @@ General
 
     DEBUG: boolean - true for debug level logging
 
-Cloud
+Deployment
 
     These environment variables are required for the tier deployment.
     They are not used for local development.
