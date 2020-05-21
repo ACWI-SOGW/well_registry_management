@@ -7,9 +7,11 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import Registry
 
+# A handy constant for the name of the alternate connection.
+ADMIN_DB = 'django_admin'
+
 # this is the Django property for the admin main page header
 admin.site.site_header = 'NGWMN Well Registry Administration'
-
 
 def check_mark(value):
     """Helper method to create an html formatted entry for the flags in tables."""
@@ -31,28 +33,26 @@ class MultiDBModelAdmin(admin.ModelAdmin):
     see RegistryAdmin for an example.
 
     """
-    # A handy constant for the name of the alternate connection.
-    using = 'django_admin'
 
     def save_model(self, request, obj, form, change):
         """Tell Django to save objects to the 'other' database."""
-        obj.save(using=self.using)
+        obj.save(using=ADMIN_DB)
 
     def delete_model(self, request, obj):
         """Tell Django to delete objects from the 'other' database."""
-        obj.delete(using=self.using)
+        obj.delete(using=ADMIN_DB)
 
     def get_queryset(self, request):
         """Tell Django to look for objects on the 'other' database."""
-        return super().get_queryset(request).using(self.using)
+        return super().get_queryset(request).using(ADMIN_DB)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """Tell Django to populate ForeignKey widgets using a query on the 'other' database."""
-        return super().formfield_for_foreignkey(db_field, request, using=self.using, **kwargs)
+        return super().formfield_for_foreignkey(db_field, request, using=ADMIN_DB, **kwargs)
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         """Tell Django to populate ManyToMany widgets using a query on the 'other' database."""
-        return super().formfield_for_manytomany(db_field, request, using=self.using, **kwargs)
+        return super().formfield_for_manytomany(db_field, request, using=ADMIN_DB, **kwargs)
 
 
 class RegistryAdmin(MultiDBModelAdmin):
