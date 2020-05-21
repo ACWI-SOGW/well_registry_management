@@ -19,5 +19,7 @@ def status_check(request):
     JSON response for health checks.
 
     """
+    # because the argument is framework we will ignore
+    # pylint: disable=unused-argument
     resp = {'status': 'up'}
     return JsonResponse(resp)
