@@ -74,9 +74,16 @@ Database (root)
 Database (app)
 
     The following should be set to initial values for a new database configuration.
-    Once the database initial migration scripts are run then they need to be set to 
-    expected values. While these can be arbitrarily configurable for local database 
-    development, some example values are mentioned.
+    When setting up the database to run the initial migration scripts the values are
+    flexible. They are arbitrarily configurable for local database development.
+    However, once the database has been configured they are not aribitrary and must
+    be the values used to configure that database. For example, if the applicaton
+    database is new the it could called 'well_registry' or 'ngwmn_registry' but once
+    the scripts have run to create that database the values must remain unchanged.
+    Conintuing the example, if 'well_registry' is used for the database name then it
+    must remain 'well_regisry' in order for the applicaiton to use it. The point is
+    that these values are used for configuration and runtime.
+    Some addition example values are given below. 
 
     The application database ensures that application data is not stored in the postgres 
     system database. It also enables multiple application to share a database instance.
