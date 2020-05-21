@@ -19,6 +19,7 @@ class Migration(migrations.Migration):
     """
     initial = False
 
+    # this could truly be dependent on 0000_create_app_users but I do not know if Django allows
     dependencies = [('registry', '0002_grant_client_user')]
 
     if 'test' in sys.argv:
