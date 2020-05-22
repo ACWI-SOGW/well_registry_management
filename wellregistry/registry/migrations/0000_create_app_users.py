@@ -67,7 +67,8 @@ class Migration(migrations.Migration):
 
             # create a application specific schema within the database the connection is made
             migrations.RunSQL(
-                sql=f"CREATE SCHEMA IF NOT EXISTS {env['APP_SCHEMA_NAME']} AUTHORIZATION {env['APP_SCHEMA_OWNER_USERNAME']};",
+                sql=f"""CREATE SCHEMA IF NOT EXISTS {env['APP_SCHEMA_NAME']}
+                        AUTHORIZATION {env['APP_SCHEMA_OWNER_USERNAME']};""",
                 reverse_sql=f"DROP SCHEMA IF EXISTS {env['APP_SCHEMA_NAME']};"),
 
             migrations.RunSQL(

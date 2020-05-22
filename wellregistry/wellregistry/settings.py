@@ -13,6 +13,7 @@ import ast
 import sys
 from distutils.util import strtobool
 import os
+import logging
 
 from django.core.management.utils import get_random_secret_key
 
@@ -31,11 +32,14 @@ except ImportError:
     SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-debug_setting = os.getenv('DEBUG', 'True')
+debug_setting = os.getenv('DEBUG', 'False')
 try:
     DEBUG = bool(strtobool(debug_setting))
 except ValueError:
     DEBUG = False
+
+logging.basicConfig(format="%(asctime)s [%(levelname)-8s] %(message)s",
+                    level=logging.DEBUG if DEBUG else logging.INFO)
 
 allowed_hosts = os.getenv('ALLOWED_HOSTS', '[]')
 

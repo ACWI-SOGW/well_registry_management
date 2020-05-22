@@ -8,12 +8,12 @@ All subsequent migrations should be run on the 'migration'
 > python manage.py migrate --database=migration
 
 """
+import logging
 import sys
+import psycopg2
 from django.db import migrations
 from django.conf import settings
-import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-import logging
 
 env = settings.ENVIRONMENT
 
@@ -52,7 +52,8 @@ def create_database():
 
     """
     if 'test' not in sys.argv:
-        with psycopg2.connect(database=env['DATABASE_NAME'], user=env['DATABASE_USERNAME'], password=env['DATABASE_PASSWORD'],
+        with psycopg2.connect(database=env['DATABASE_NAME'],
+                              user=env['DATABASE_USERNAME'], password=env['DATABASE_PASSWORD'],
                               host=env['DATABASE_HOST'], port=env['DATABASE_PORT']) as conn:
             conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
             cursor = conn.cursor()
@@ -69,11 +70,11 @@ def create_database():
             rows = cursor.fetchall()
 
             if rows:
-                logging.info(f"'{env['APP_DATABASE_NAME']}' database exists!")
+                logging.info("'%s' database exists!", env['APP_DATABASE_NAME'])
             else:
-                logging.info(f"'{env['APP_DATABASE_NAME']}' database needed.")
+                logging.info("'%s' database needed.", env['APP_DATABASE_NAME'])
 
             for row in rows:
                 if row[0] == 1:
                     cursor.execute(sql_create_db)
-                    logging.info(f"'{env['APP_DATABASE_NAME']}' database created.")
+                    logging.info("'%s' database created.", env['APP_DATABASE_NAME'])
