@@ -49,14 +49,14 @@ General
 
     DEBUG: boolean - true for debug level logging
 
-Deployment
+Django Deployment ([ALLOWED_HOSTS](https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts), [SECRET_KEY](https://docs.djangoproject.com/en/3.0/ref/settings/#std:setting-SECRET_KEY), [CIDR_RANGES](https://github.com/mozmeao/django-allow-cidr))
 
     These environment variables are required for the tier deployment.
     They are not used for local development.
 
-        SECRET_KEY: AWS secret key
-        ALLOWED_HOSTS: mapped URL
-        CIDR_RANGES: IP ranges allowed to connect
+        SECRET_KEY: Django cryptographic signing key
+        ALLOWED_HOSTS: list of host domain names for this application to respond
+        CIDR_RANGES: list of IP ranges allowed used in django-allow-cidr
 
 Database (root)
 
