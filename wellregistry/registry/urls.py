@@ -1,3 +1,6 @@
+"""
+Register Django URL route names.
+"""
 from django.urls import path
 
 from .views import BasePage, status_check

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import ast
+import logging
 import os
 import sys
 
@@ -31,6 +32,9 @@ except ImportError:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG' in os.environ
+
+logging.basicConfig(format="%(asctime)s [%(levelname)-8s] %(message)s",
+                    level=logging.DEBUG if DEBUG else logging.INFO)
 
 allowed_hosts = os.getenv('ALLOWED_HOSTS', '[]')
 
@@ -114,14 +118,7 @@ ENVIRONMENT = {
     'APP_ADMIN_PASSWORD': os.getenv('APP_ADMIN_PASSWORD'),
     'APP_CLIENT_USERNAME': os.getenv('APP_CLIENT_USERNAME'),
     'APP_CLIENT_PASSWORD': os.getenv('APP_CLIENT_PASSWORD'),
-
-    'DB_ENGINE': os.getenv('DB_ENGINE')
 }
-
-if 'migrate' not in sys.argv:
-    MIGRATION_MODULES = {
-        'postgres': None
-    }
 
 # short alias
 env = ENVIRONMENT
