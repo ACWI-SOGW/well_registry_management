@@ -1,7 +1,7 @@
 PYTHON := env/bin/python
 PIP := env/bin/pip
 
-.PHONY: cleanenv devenv prodenv test watch runmigrations
+.PHONY: cleanenv devenv prodenv test watch runmigrations runlint
 
 cleanenv:
 	@echo 'Cleaning environment....'
@@ -17,6 +17,16 @@ prodenv: env common-env-requirements prod-requirements wellregistry/.env
 test:
 	cd wellregistry && ../$(PYTHON) manage.py test
 
+runmigrations:
+	env/bin/python wellregistry/manage.py migrate --database=postgres postgres
+	env/bin/python wellregistry/manage.py migrate registry 0000
+	env/bin/python wellregistry/manage.py migrate registry
+
+runlint:
+	env/bin/pylint wellregistry/postgres
+	env/bin/pylint wellregistry/registry
+	env/bin/pylint wellregistry/wellregistry/
+	env/bin/pylint ./**/*.py
 env:
 	@echo 'Creating local environment....'
 	virtualenv --python=python3.8 --no-download env

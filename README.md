@@ -15,31 +15,63 @@ make env
 ```
 
 ## Development Server
-To run the development server, create a `local_settings.py` file as a sibling of `settings.py`. Add a `SECRET_KEY` value
-with some random stuff (e.g `SECRET_KEY = 'sjfio3u903RaggleFraggle'`).
+Once the project has been cloned, the user should ensure a clean environment. This can be
+done with 
+```bash
+make cleanenv
+```
+### Installing requirements
+The user can then install the requirements. Both scripts will create an initial .env file that
+assumes that a local postgres database is available. See below for instructions on using a docker container
+to run a local postgres database. Installing the postgres module psycopg2 can be
+challenging on some environments so two options are provided. The first
+```bash
+make devenv
+```
+installs psycopg2-binary. This should never be done in for deployment or in the docker container. Instead use
+```bash
+make prodenv
+```
+This installs psycopg2 module which has some environment prerequisites. See <https://www.psycopg.org/docs/install.html> for details
 
-The Django local development can be run via:
+### Tests and Linting
+To run tests locally:
+```bash
+make test
+```
 
+You can also easily run pyling against all python modules using:
+```bash
+make runlint
+```
+
+### Running migrations
+The Django environment requires a database. On an empty database, you will need to run the migrations. Care 
+should be taken to ensure that you are running migrations against the local database. It is not harmful to run the migrations again as previously run migrations will be skipped.
+
+```bash
+make runmigrations
+``` 
+
+There is also a sample batch script to configure a local postgres instance on Windows.
+```bash 
+    migration_test.batwhich can be done as follows:
+```
+
+### Running local development server
+The Django local development can be run as follows:
 ```bash
 make watch
 ```
-
 Another means to run local is the manage.py from within the wellregistry path:
-
 ```bash
-python -m manage runserver
+% python -m manage runserver
 ```
-Note that environment variable must be configured to connect to a postgres database.
 
-To run tests locally:
-
-```bash
-python -m manage test
-```
 ## Using a local postgres database using Docker
 Run the following command:
 ```bash
-% docker run --name registry_postgres -e POSTGRES_PASSWORD=changeme -d -p 5432:5432 postgres
+docker run --name registry_postgres -e POSTGRES_PASSWORD=changeme -d -p 5432:5432 postgres
 ```
 
 You can stop the container using:
@@ -54,25 +86,26 @@ You can start the container again:
 
 ## Environment Variables
 
-    This project has a private companion config project where environment variable
-    files for each deployment tier are maintained. The values in the config files are
-    applied to the docker container for each teir at deployment. 
-    The following sub sections will describe the various variables used.
+Environment variables are used to configure this application. In order to facilitate local development
+the developer can create a .env file with the necessary environment variables. There is a sample
+file at ./wellregistry/.env.sample which will be copied to ./env if the make devenv or make prodenv
+command is executed and no .env file already exists. Below is the description of the variables.
+All variables are described in <https://docs.djangoproject.com/en/3.0/ref/settings> unless noted.
 
-General
+### General
 
     DEBUG: boolean - true for debug level logging
 
-Django Deployment ([ALLOWED_HOSTS](https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts), [SECRET_KEY](https://docs.djangoproject.com/en/3.0/ref/settings/#std:setting-SECRET_KEY), [CIDR_RANGES](https://github.com/mozmeao/django-allow-cidr))
-
+### Django Deployment 
     These environment variables are required for the tier deployment.
     They are not used for local development.
 
         SECRET_KEY: Django cryptographic signing key
         ALLOWED_HOSTS: list of host domain names for this application to respond
-        CIDR_RANGES: list of IP ranges allowed used in django-allow-cidr
+        CIDR_RANGES: list of IP ranges allowed used in django-allow-cidr. Is used to
+                set ALLOWED_CIDR_NETS which is defined in allow_cidr.middleware.AllowCIDRMiddleware
 
-Database (root)
+### Database (root)
 
     The DATABASE values are defined to connect to cloud RDS or local DB installation.
     These values are used by the initial Django migrations *only* to configure the application.
@@ -85,7 +118,7 @@ Database (root)
         DATABASE_USERNAME: postgres root user name
         DATABASE_PASSWORD: postgres root password
 
-Database (app)
+### Database (app)
 
     The following should be set to initial values for a new database configuration.
     When setting up the database to run the initial migration scripts the values are
@@ -123,18 +156,15 @@ Database (app)
 
 ## Configuring Local Database
 
-There is a sample batch script to configure a local postres instance on Windows.
+The Makefile contains a command, ```% make runmigrations```, which can be used to initialize the
+database. Care should be taken to ensure that you are running migrations against
+the local database. 
+
+There is also a sample batch script to configure a local postres instance on Windows.
 
     migration_test.bat
-
-I simple translation to bash script will allow running it on linux.
-It is included in the project more as an example documentation than a use case.  
-The critical components of the batch script show an example of local environment variables.
-It also shows the necessary order to run Django migrations.
-
-    python -m manage migrate --database=postgres postgres
-    python -m manage migrate registry 0000
-    python -m manage migrate registry
+    
+If running by hand please note that the order of migrations should be maintained.
 
 Notice that the first scripts are run while connecting for the only time with the postgres user.
 Subsequent migrations run while connected to the application database. The 0000 migration
