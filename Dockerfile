@@ -7,6 +7,7 @@ COPY . $HOME/application
 WORKDIR $HOME/application/wellregistry
 
 RUN pip install --no-cache-dir -r ../requirements.txt
+RUN pip install --no-cache-dir -r ../requirements-prod.txt
 
 USER $USER
 
