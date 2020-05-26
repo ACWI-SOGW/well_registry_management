@@ -55,8 +55,12 @@ make runmigrations
 
 There is also a sample batch script to configure a local postgres instance on Windows.
 ```bash 
-    migration_test.batwhich can be done as follows:
+    migration_test.bat
 ```
+
+If running by hand please note that the order of migrations should be maintained.
+
+Notice that the first scripts are run while connecting for the only time with the postgres user. Subsequent migrations run while connected to the application database. The 0000 migration must be run on its own because it sets the search_path to use the application schema. Subsequent connections default to placing new objects (DDL) in the application schema properly.
 
 ### Running local development server
 The Django local development can be run as follows:
@@ -153,20 +157,3 @@ All variables are described in <https://docs.djangoproject.com/en/3.0/ref/settin
     It has limited table CRUD roles.
         APP_CLIENT_USERNAME: user name for the connection used by the registry users
         APP_CLIENT_PASSWORD: user level login password
-
-## Configuring Local Database
-
-The Makefile contains a command, ```% make runmigrations```, which can be used to initialize the
-database. Care should be taken to ensure that you are running migrations against
-the local database. 
-
-There is also a sample batch script to configure a local postres instance on Windows.
-
-    migration_test.bat
-    
-If running by hand please note that the order of migrations should be maintained.
-
-Notice that the first scripts are run while connecting for the only time with the postgres user.
-Subsequent migrations run while connected to the application database. The 0000 migration
-must be run on its own because it sets the search_path to use the application schema. Subsequent
-connections default to placing new objects (DDL) in the application schema properly.
