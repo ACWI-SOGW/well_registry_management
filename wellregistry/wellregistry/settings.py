@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import ast
-import logging
 import os
 import sys
 
@@ -25,16 +24,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-try:
-    from .local_settings import SECRET_KEY
-except ImportError:
-    SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
+SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG' in os.environ
-
-logging.basicConfig(format="%(asctime)s [%(levelname)-8s] %(message)s",
-                    level=logging.DEBUG if DEBUG else logging.INFO)
 
 allowed_hosts = os.getenv('ALLOWED_HOSTS', '[]')
 
