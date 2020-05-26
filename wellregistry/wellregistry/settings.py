@@ -44,7 +44,7 @@ except ValueError:
 # Application definition
 
 INSTALLED_APPS = [
-#    'postgres',
+    'postgres',
     'registry',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -117,6 +117,12 @@ ENVIRONMENT = {
 
     'DB_ENGINE': os.getenv('DB_ENGINE')
 }
+
+if 'migrate' not in sys.argv:
+    MIGRATION_MODULES = {
+        'postgres': None
+    }
+
 # short alias
 env = ENVIRONMENT
 
@@ -153,7 +159,7 @@ else:
         # this connection will be for users and will connect to the cloud database
         # they will have CRUD on Registry only and select on lookup tables
         'default': {  # the connection for the client users with the minimum actions
-            'ENGINE': env['DB_ENGINE'],
+            'ENGINE': 'django.db.backends.postgresql',
             'NAME': env['APP_DATABASE_NAME'],  # 'postgis_25_test',
             'HOST': env['DATABASE_HOST'],  # 'localhost',
             'PORT': env['DATABASE_PORT'],  # '5432',
@@ -161,7 +167,7 @@ else:
             'PASSWORD': env['APP_CLIENT_PASSWORD'],  # 'app_pwd',
         },
         'django_admin': {  # used for Django admin actions
-            'ENGINE': env['DB_ENGINE'],
+            'ENGINE': 'django.db.backends.postgresql',
             'NAME': env['APP_DATABASE_NAME'],
             'HOST': env['DATABASE_HOST'],
             'PORT': env['DATABASE_PORT'],

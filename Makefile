@@ -1,7 +1,7 @@
 PYTHON := env/bin/python
 PIP := env/bin/pip
 
-.PHONY: cleanenv devenv prodenv test watch
+.PHONY: cleanenv devenv prodenv test watch runmigrations
 
 cleanenv:
 	@echo 'Cleaning environment....'
@@ -15,7 +15,7 @@ devenv: env common-env-requirements local-dev-requirements wellregistry/.env
 prodenv: env common-env-requirements prod-requirements wellregistry/.env
 
 test:
-	$(PYTHON) wellregistry/manage.py test
+	cd wellregistry && ../$(PYTHON) manage.py test
 
 env:
 	@echo 'Creating local environment....'
