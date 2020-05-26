@@ -88,6 +88,26 @@ TEMPLATES = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters':{
+        'basic': {
+            'format': '%(asctime)s [%(levelname)-8s] %(message)s'
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'basic'
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG' if DEBUG else 'INFO'
+    }
+}
+
 # use the AllowCIDRMiddleware to support a CIDR range to ensure that an AWS health check can work
 CIDR_RANGES = os.getenv('CIDR_RANGES', None)
 if CIDR_RANGES is not None:
