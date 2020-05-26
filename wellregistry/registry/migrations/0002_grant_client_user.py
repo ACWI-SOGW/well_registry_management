@@ -1,6 +1,5 @@
 """
-After the registry table is created,
-this will grant access to th client login
+After the registry table is created,this will grant access to th client login
 """
 import sys
 

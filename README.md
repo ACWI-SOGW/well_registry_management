@@ -4,7 +4,6 @@
 [![codecov](https://codecov.io/gh/ACWI-SOGW/well_registry_management/branch/master/graph/badge.svg)](https://codecov.io/gh/ACWI-SOGW/well_registry_management)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6af41d5963ee48c1bb9f8a83ea338b46)](https://www.codacy.com/gh/ACWI-SOGW/well_registry_management?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ACWI-SOGW/well_registry_management&amp;utm_campaign=Badge_Grade)
 
-
 Application for management of groundwater monitoring locations.
 
 ## Local Environment Setup
@@ -87,7 +86,6 @@ You can start the container again:
 % docker start registry_posgres
 ```
 
-
 ## Environment Variables
 
 Environment variables are used to configure this application. In order to facilitate local development
@@ -97,63 +95,53 @@ command is executed and no .env file already exists. Below is the description of
 All variables are described in <https://docs.djangoproject.com/en/3.0/ref/settings> unless noted.
 
 ### General
-
-    DEBUG: boolean - true for debug level logging
+```bash
+DEBUG: boolean - true for debug level logging
+``` 
 
 ### Django Deployment 
-    These environment variables are required for the tier deployment.
-    They are not used for local development.
-
-        SECRET_KEY: Django cryptographic signing key
-        ALLOWED_HOSTS: list of host domain names for this application to respond
-        CIDR_RANGES: list of IP ranges allowed used in django-allow-cidr. Is used to
-                set ALLOWED_CIDR_NETS which is defined in allow_cidr.middleware.AllowCIDRMiddleware
+These environment variables are required for the tier deployment. They are not used for local development.
+```bash
+SECRET_KEY: Django cryptographic signing key
+ALLOWED_HOSTS: list of host domain names for this application to respond
+CIDR_RANGES: list of IP ranges allowed used in django-allow-cidr. Is used to
+        set ALLOWED_CIDR_NETS which is defined in allow_cidr.middleware.AllowCIDRMiddleware
+```
 
 ### Database (root)
-
-    The DATABASE values are defined to connect to cloud RDS or local DB installation.
-    These values are used by the initial Django migrations *only* to configure the application.
-
-        DATABASE_NAME: posgres database name
-        DATABASE_HOST: posgres host url 
-            - use 'localhost' for local development database
-            - use the actual tier database host URL for cloud deployment
-        DATABASE_PORT: optional posgres port - if not specified then default is '5432' 
-        DATABASE_USERNAME: postgres root user name
-        DATABASE_PASSWORD: postgres root password
+The DATABASE values are defined to connect to cloud RDS or local DB installation.These values are used by the initial Django migrations *only* to configure the application.
+```bash
+DATABASE_NAME: posgres database name
+DATABASE_HOST: posgres host url 
+    - use 'localhost' for local development database
+    - use the actual tier database host URL for cloud deployment
+DATABASE_PORT: optional posgres port - if not specified then default is '5432' 
+DATABASE_USERNAME: postgres root user name
+DATABASE_PASSWORD: postgres root password
+```
 
 ### Database (app)
+The following should be set to initial values for a new database configuration.When setting up the database to run the initial migration scripts the values are flexible. They are arbitrarily configurable for local database development. However, once the database has been configured they are not arbitrary and must be the values used to configure that database. For example, if the application database is new the it could be called 'well_registry' or 'ngwmn_registry' but once the scripts have run to create that database, the values must remain unchanged. Continuing the example, if 'well_registry' is used for the database name then it must remain 'well_registry' in order for the application to use it. The point is that these values are used for configuration and runtime after configuration. Some addition example values are given below. 
 
-    The following should be set to initial values for a new database configuration.
-    When setting up the database to run the initial migration scripts the values are
-    flexible. They are arbitrarily configurable for local database development.
-    However, once the database has been configured they are not aribitrary and must
-    be the values used to configure that database. For example, if the applicaton
-    database is new the it could be called 'well_registry' or 'ngwmn_registry' but 
-    once the scripts have run to create that database, the values must remain unchanged.
-    Continuing the example, if 'well_registry' is used for the database name then it
-    must remain 'well_regisry' in order for the applicaiton to use it. The point is
-    that these values are used for configuration and runtime after configuration.
-    Some addition example values are given below. 
-
-    The application database ensures that application data is not stored in the postgres 
-    system database. It also enables multiple application to share a database instance.
-        APP_DATABASE_NAME:     name for the applicaiton database within postgres
-        APP_DB_OWNER_USERNAME: user name for the database owner
-        APP_DB_OWNER_PASSWORD: database owner password
-
-    The application schema ensure that applicaiton data is not stored in the default public
-    schema. The configuration assigns this schema as the primary search_path.
-        APP_SCHEMA_NAME:           name for the application schema
-        APP_SCHEMA_OWNER_USERNAME: owner user name for the application schema
-        APP_SCHEMA_OWNER_PASSWORD: schema owner password
-
-    This connection will allow maitainance of all registry entries in support of user issues.
-    It has less restricted table CRUD roles than the application user.
-        APP_ADMIN_USERNAME: user name for the connection used by the registry administration
-        APP_ADMIN_PASSWORD: administration login password
-
-    This connecton is the standard or default applicaiton user connection.
-    It has limited table CRUD roles.
-        APP_CLIENT_USERNAME: user name for the connection used by the registry users
-        APP_CLIENT_PASSWORD: user level login password
+The application database ensures that application data is not stored in the postgres system database. It also enables multiple application to share a database instance.
+```bash
+APP_DATABASE_NAME:     name for the applicaiton database within postgres
+APP_DB_OWNER_USERNAME: user name for the database owner
+APP_DB_OWNER_PASSWORD: database owner password
+```
+The application schema ensure that application data is not stored in the default public schema. The configuration assigns this schema as the primary search_path.
+```bash
+APP_SCHEMA_NAME:           name for the application schema
+APP_SCHEMA_OWNER_USERNAME: owner user name for the application schema
+APP_SCHEMA_OWNER_PASSWORD: schema owner password
+```
+This connection will allow maintenance of all registry entries in support of user issues. It has less restricted table CRUD roles than the application user.
+ ```bash
+APP_ADMIN_USERNAME: user name for the connection used by the registry administration
+APP_ADMIN_PASSWORD: administration login password
+```
+This connecton is the standard or default application user connection. It has limited table CRUD roles.
+```bash
+APP_CLIENT_USERNAME: user name for the connection used by the registry users
+APP_CLIENT_PASSWORD: user level login password
+```

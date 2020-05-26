@@ -3,6 +3,8 @@ PIP := env/bin/pip
 
 .PHONY: cleanenv devenv prodenv test watch runmigrations runlint
 
+.IGNORE: runlint
+
 cleanenv:
 	@echo 'Cleaning environment....'
 	rm -rf env/
@@ -27,6 +29,7 @@ runlint:
 	env/bin/pylint wellregistry/registry
 	env/bin/pylint wellregistry/wellregistry/
 	env/bin/pylint ./**/*.py
+
 env:
 	@echo 'Creating local environment....'
 	virtualenv --python=python3.8 --no-download env

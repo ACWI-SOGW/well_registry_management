@@ -1,6 +1,5 @@
 """
-After the registry table is created,
-this will grant access to th client login
+After the registry table is created, this will grant access to the client login
 """
 import sys
 
@@ -13,6 +12,7 @@ env = settings.ENVIRONMENT
 class Migration(migrations.Migration):
     """
     Django Migration.
+
     SQL to grant the client access to the registry table.
     """
     initial = False
