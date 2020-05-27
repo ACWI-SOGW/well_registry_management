@@ -10,10 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import ast
-import sys
-from distutils.util import strtobool
 import os
-import logging
+import sys
 
 from django.core.management.utils import get_random_secret_key
 
@@ -26,20 +24,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-try:
-    from .local_settings import SECRET_KEY
-except ImportError:
-    SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
+SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-debug_setting = os.getenv('DEBUG', 'False')
-try:
-    DEBUG = bool(strtobool(debug_setting))
-except ValueError:
-    DEBUG = False
-
-logging.basicConfig(format="%(asctime)s [%(levelname)-8s] %(message)s",
-                    level=logging.DEBUG if DEBUG else logging.INFO)
+DEBUG = 'DEBUG' in os.environ
 
 allowed_hosts = os.getenv('ALLOWED_HOSTS', '[]')
 
@@ -93,6 +81,26 @@ TEMPLATES = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters':{
+        'basic': {
+            'format': '%(asctime)s [%(levelname)-8s] %(message)s'
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'basic'
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG' if DEBUG else 'INFO'
+    }
+}
+
 # use the AllowCIDRMiddleware to support a CIDR range to ensure that an AWS health check can work
 CIDR_RANGES = os.getenv('CIDR_RANGES', None)
 if CIDR_RANGES is not None:
@@ -124,6 +132,7 @@ ENVIRONMENT = {
     'APP_CLIENT_USERNAME': os.getenv('APP_CLIENT_USERNAME'),
     'APP_CLIENT_PASSWORD': os.getenv('APP_CLIENT_PASSWORD'),
 }
+
 # short alias
 env = ENVIRONMENT
 

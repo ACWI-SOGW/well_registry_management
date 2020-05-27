@@ -1,12 +1,21 @@
 #!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
+"""
+Django's command-line utility for administrative tasks.
+"""
 import os
 import sys
 
+from dotenv import load_dotenv
 
 def main():
+    """
+    Django entry point
+    """
+    load_dotenv()
+
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wellregistry.settings')
     try:
+        # pylint: disable=import-outside-toplevel
         from django.core.management import execute_from_command_line
     except ImportError as exc:
         raise ImportError(

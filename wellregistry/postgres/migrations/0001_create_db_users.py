@@ -1,18 +1,18 @@
 """
 Migrate initial users and roles.
+
 https://docs.djangoproject.com/en/3.0/topics/migrations/
 
 This one migration should be run on the 'postgres' database alias.
 > python manage.py migrate --database=postgres  registry 0000
 All subsequent migrations should be run on the 'migration'
 > python manage.py migrate --database=migration
-
 """
 import sys
 
 from django.db import migrations
 from django.conf import settings
-import postgres.pgsql_utils as pgsql
+import wellregistry.pgsql_utils as pgsql
 
 env = settings.ENVIRONMENT
 
@@ -45,7 +45,6 @@ class Migration(migrations.Migration):
             first authenticated with login.gov
                 then authenticated with django admin login
     """
-
     initial = False
 
     dependencies = [('postgres', '0000_create_database')]

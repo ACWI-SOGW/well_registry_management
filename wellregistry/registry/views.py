@@ -1,6 +1,5 @@
 """
 Registry application views.
-
 """
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView

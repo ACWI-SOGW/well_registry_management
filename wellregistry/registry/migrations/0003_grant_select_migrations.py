@@ -1,6 +1,5 @@
 """
-After the registry table is created,
-this will grant access to th client login
+After the registry table is created, this will grant access to the client login
 """
 import sys
 
@@ -15,7 +14,6 @@ class Migration(migrations.Migration):
     Django Migration.
 
     SQL to grant the client access to the registry table.
-
     """
     initial = False
 
@@ -29,13 +27,13 @@ class Migration(migrations.Migration):
             # grant SELECT to app user -- Django seems to want to verify migrations are up to date.
             migrations.RunSQL(
                 sql=f"""
-                    GRANT SELECT
-                    ON public.django_migrations
-                    TO {env['APP_CLIENT_USERNAME']}
-                """,
+                            GRANT SELECT
+                            ON public.django_migrations
+                            TO {env['APP_CLIENT_USERNAME']}
+                        """,
                 reverse_sql=f"""
-                    REVOKE SELECT
-                    ON public.django_migrations
-                    FROM {env['APP_CLIENT_USERNAME']}
-                """),
+                            REVOKE SELECT
+                            ON public.django_migrations
+                            FROM {env['APP_CLIENT_USERNAME']}
+                        """),
         ]

@@ -1,6 +1,5 @@
 """
 Tests for the registry application
-
 """
 
 from django.test import RequestFactory, TestCase
