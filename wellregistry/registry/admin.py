@@ -1,6 +1,5 @@
 """
 Django Registry Administration.
-
 """
 
 from django.contrib import admin

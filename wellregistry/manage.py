@@ -5,7 +5,6 @@ import sys
 
 from dotenv import load_dotenv
 
-
 def main():
     """
     Django entry point

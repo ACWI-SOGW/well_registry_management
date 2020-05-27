@@ -1,6 +1,5 @@
 """
 Well Registry ORM object.
-
 """
 
 from django.db import models
