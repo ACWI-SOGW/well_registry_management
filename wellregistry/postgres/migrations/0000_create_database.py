@@ -43,13 +43,12 @@ def create_database():
     """
     Creates the application database.
 
-    This creates its own connection because Django connections
-    cannot execute postgres 'create database'
+    This creates its own connection because Django connections are transactional and Postgres does not allow
+    CREATE DATABASE within a transaction. The owner of the database is granted in
+    00001_crete_db_users
 
-    Notice that it runs two SQL commands.
-    The first checks the database existence.
-    While the second creates the database if it is needed.
-
+    Two SQL commands are run. The first checks the database existence.
+    while the second creates the database if it is needed.
     """
     if 'test' not in sys.argv:
         with psycopg2.connect(database=env['DATABASE_NAME'],
