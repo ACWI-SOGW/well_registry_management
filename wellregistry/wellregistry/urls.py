@@ -21,6 +21,8 @@ urlpatterns = [
     # this is the django admin url which allows adding django users and table management
     path('admin/', admin.site.urls),
 
+    path('', include('social_django.urls', namespace='social')),
+
     # this is our registry page
     path('registry/', include('registry.urls'))
 ]

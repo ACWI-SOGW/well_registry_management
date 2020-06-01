@@ -23,6 +23,8 @@ class Migration(migrations.Migration):
 
     This creates a database owner and a schema owner in PG for an application specific name.
     The "postgres" database and password is already created during database install.
+
+    This migration should be run with --database=postgres
     """
     initial = False
 

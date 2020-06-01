@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+
+{% block base_content %}
+    <a href="{% url 'social:begin' 'keycloak' %}?next={{ request.path }}">Login with Keycloak</a>
+{% endblock %}

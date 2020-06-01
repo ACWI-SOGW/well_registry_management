@@ -49,7 +49,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django'
 ]
+
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,8 +62,37 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
     'allow_cidr.middleware.AllowCIDRMiddleware'
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.keycloak.KeycloakOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_KEYCLOAK_KEY = 'ngwmn-registry-dev'
+SOCIAL_AUTH_KEYCLOAK_SECRET = os.getenv('SOCIAL_AUTH_KEYCLOAK_SECRET', '')
+SOCIAL_AUTH_PUBLIC_KEY = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7FjpBwLx8A0qLSSHJF106EW07t/KuiXhD8ME4qfjzurxe7WH2mJO9Jl2zmb5wwsibQtBsum9G8sjQ+STFUzXnpO3KLIo3Y9tI9YfpOQIStm1QpXm8dndPr1BYvbIeOPElXNTFkypOygFXBEOjoowSNoVMM97joBIkV/yXNS+BX7XL+8/qpUSooMtDoSp6GT3bw3HXyhnbKP0bb/aeSxa2YTqRvSLfLAm3f0axtuCwx5+pSiyVIVN5LTHWPRbhvpRXwyPuRK5D7iEocHBt5sTbWT6ZC7gtpE+DLcximgDl5KlJijbjV/rWLxjXzTbRnFqpUWfCMWz1gD1pFC/5G7zLwIDAQAB'
+SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL = 'https://www.sciencebase.gov/auth/realms/WMA-B/protocol/openid-connect/auth'
+SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL = 'https://www.sciencebase.gov/auth/realms/WMA-B/protocol/openid-connect/token'
+#LOGIN_URL = '/login/'
+#LOGIN_ERROR_URL = '/login-error/'
+#LOGIN_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['email']
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
 
 ROOT_URLCONF = 'wellregistry.urls'
 TEMPLATES = [
@@ -76,6 +108,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends'
             ],
         },
     },
@@ -143,6 +176,26 @@ if 'test' in sys.argv:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         },
     }
+else:
+    DATABASES = {
+        'default': {# used by the migrations and backend code. Use a more limited connection for users (maybe)
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env['APP_DATABASE_NAME'],
+            'HOST': env['DATABASE_HOST'],
+            'PORT': env['DATABASE_PORT'],
+            'USER': env['APP_DB_OWNER_USERNAME'],
+            'PASSWORD': env['APP_DB_OWNER_PASSWORD'],
+        },
+        'postgres': {  # only needed for Django migration 0001_create_db_users
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env['DATABASE_NAME'],
+            'HOST': env['DATABASE_HOST'],
+            'PORT': env['DATABASE_PORT'],
+            'USER': env['DATABASE_USERNAME'],
+            'PASSWORD': env['DATABASE_PASSWORD'],
+        }
+    }
+'''
 elif 'migrate' in sys.argv:
     DATABASES = {
         # Because the default connection alias is not a full dba,
@@ -185,7 +238,7 @@ else:
             'PASSWORD': env['APP_ADMIN_PASSWORD'],
         },
     }
-
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -204,6 +257,22 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# TODO: Put these in config variables
+AUTHLIB_OAUTH_CLIENTS = {
+    'wmab': {
+        'client_id': 'Twitter Consumer Key',
+        'client_secret': '',
+        'request_token_url': 'https://api.twitter.com/oauth/request_token',
+        'request_token_params': None,
+        'access_token_url': 'https://api.twitter.com/oauth/access_token',
+        'access_token_params': None,
+        'refresh_token_url': None,
+        'authorize_url': 'https://api.twitter.com/oauth/authenticate',
+        'api_base_url': 'https://api.twitter.com/1.1/',
+        'client_kwargs': None
+    }
+}
 
 
 # Internationalization
