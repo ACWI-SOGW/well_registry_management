@@ -6,6 +6,9 @@ COPY . $HOME/application
 
 WORKDIR $HOME/application/wellregistry
 
+RUN apt-get update
+RUN apt-get install build-essential libpq-dev python3-dev -y
+
 RUN pip install --no-cache-dir -r ../requirements.txt
 RUN pip install --no-cache-dir -r ../requirements-prod.txt
 
