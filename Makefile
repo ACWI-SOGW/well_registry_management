@@ -21,8 +21,9 @@ test:
 
 runmigrations:
 	env/bin/python wellregistry/manage.py migrate --database=postgres postgres
-	env/bin/python wellregistry/manage.py migrate registry 0000
+	#env/bin/python wellregistry/manage.py migrate registry 0000
 	env/bin/python wellregistry/manage.py migrate registry
+	env/bin/python wellregistry/manage.py migrate
 
 runlint:
 	env/bin/pylint wellregistry/postgres
