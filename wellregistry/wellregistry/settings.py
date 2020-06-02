@@ -71,14 +71,20 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+# custom
+LOGOUT_REDIRECT_URL='/login/'
+LOGIN_REDIRECT_URL='/profile/'
+LOGIN_URL='/login/'
+LOGIN_ERROR_URL = '/login/'
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_KEYCLOAK_KEY = 'ngwmn-registry-dev'
 SOCIAL_AUTH_KEYCLOAK_SECRET = os.getenv('SOCIAL_AUTH_KEYCLOAK_SECRET', '')
 SOCIAL_AUTH_PUBLIC_KEY = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7FjpBwLx8A0qLSSHJF106EW07t/KuiXhD8ME4qfjzurxe7WH2mJO9Jl2zmb5wwsibQtBsum9G8sjQ+STFUzXnpO3KLIo3Y9tI9YfpOQIStm1QpXm8dndPr1BYvbIeOPElXNTFkypOygFXBEOjoowSNoVMM97joBIkV/yXNS+BX7XL+8/qpUSooMtDoSp6GT3bw3HXyhnbKP0bb/aeSxa2YTqRvSLfLAm3f0axtuCwx5+pSiyVIVN5LTHWPRbhvpRXwyPuRK5D7iEocHBt5sTbWT6ZC7gtpE+DLcximgDl5KlJijbjV/rWLxjXzTbRnFqpUWfCMWz1gD1pFC/5G7zLwIDAQAB'
 SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL = 'https://www.sciencebase.gov/auth/realms/WMA-B/protocol/openid-connect/auth'
 SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL = 'https://www.sciencebase.gov/auth/realms/WMA-B/protocol/openid-connect/token'
-#LOGIN_URL = '/login/'
-#LOGIN_ERROR_URL = '/login-error/'
-#LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/accounts/login/'
+LOGOUT_REDIRECT_URL = '/registry/'
 
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['email']
 
@@ -108,7 +114,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends'
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect'
             ],
         },
     },

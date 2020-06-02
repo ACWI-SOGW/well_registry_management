@@ -8,7 +8,7 @@ from .models import Registry
 
 # this is the Django property for the admin main page header
 admin.site.site_header = 'NGWMN Well Registry Administration'
-admin.site.login_template = 'login.html'
+admin.site.login_template = 'registration/login.html'
 
 
 def check_mark(value):

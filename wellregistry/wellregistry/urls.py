@@ -24,5 +24,6 @@ urlpatterns = [
     path('', include('social_django.urls', namespace='social')),
 
     # this is our registry page
-    path('registry/', include('registry.urls'))
+    path('registry/', include('registry.urls')),
+    path('accounts/', include('django.contrib.auth.urls'))
 ]
