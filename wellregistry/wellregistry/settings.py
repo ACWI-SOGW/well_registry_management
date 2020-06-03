@@ -86,6 +86,8 @@ SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL = 'https://www.sciencebase.gov/auth/realms
 LOGIN_URL = '/accounts/login/'
 LOGOUT_REDIRECT_URL = '/registry/'
 
+SOCIAL_AUTH_DJANGO_SUPERUSERS = os.getenv('SOCIAL_AUTH_DJANGO_SUPERUSERS')
+
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['email']
 
 SOCIAL_AUTH_PIPELINE = (
@@ -95,6 +97,8 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_user',
     'social_core.pipeline.user.get_username',
     'social_core.pipeline.user.create_user',
+    'wellregistry.custom_social_pipeline.change_usgs_user_to_staff',
+    'wellregistry.custom_social_pipeline.set_superuser_permission',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
