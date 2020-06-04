@@ -207,6 +207,9 @@ else:
         }
     }
 '''
+For now we are only using the default connection for the admin. Permissions for logged in users are handled
+by the admin interface using Django authentication framework. At the moment users who are not authenticated can not
+change or view any data. If a user is not authorized, they also can't edit any data through the admin interface
 elif 'migrate' in sys.argv:
     DATABASES = {
         # Because the default connection alias is not a full dba,
@@ -268,23 +271,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-# TODO: Put these in config variables
-AUTHLIB_OAUTH_CLIENTS = {
-    'wmab': {
-        'client_id': 'Twitter Consumer Key',
-        'client_secret': '',
-        'request_token_url': 'https://api.twitter.com/oauth/request_token',
-        'request_token_params': None,
-        'access_token_url': 'https://api.twitter.com/oauth/access_token',
-        'access_token_params': None,
-        'refresh_token_url': None,
-        'authorize_url': 'https://api.twitter.com/oauth/authenticate',
-        'api_base_url': 'https://api.twitter.com/1.1/',
-        'client_kwargs': None
-    }
-}
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
