@@ -15,8 +15,6 @@ EXPOSE 8000
 
 # Run the Django migrations to ensure the DB tier is up to date.
 # Django, like liquibase, executes each entry once.
-# The order below is important initial database configuration.
-CMD python -m manage migrate --database=postgres postgres \
- && python -m manage migrate registry 0000 \
- && python -m manage migrate registry \
+#
+CMD make runmigrations \
  && gunicorn --config wellregistry/gunicorn.conf.py wellregistry.wsgi
