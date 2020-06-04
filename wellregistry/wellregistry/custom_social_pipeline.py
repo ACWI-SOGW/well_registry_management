@@ -5,7 +5,14 @@ Custom social pipeline functions
 from django.contrib.auth.models import Group
 from django.conf import settings
 
-def change_usgs_user_to_staff(strategy, details, backend, user=None, *args, **kwargs):
+# pylint: disable=unused-argument
+
+def change_usgs_user_to_staff(strategy, details, backend, *args, user=None, **kwargs):
+    """
+    Social auth pipeline function to change usgs users automatically to have is_staff set and
+    to add the usgs permissions to the user.
+    :return: dict
+    """
     if kwargs.get('is_new'):
         email = details.get('username')
         if email.find('@usgs.gov') != -1:
@@ -18,7 +25,12 @@ def change_usgs_user_to_staff(strategy, details, backend, user=None, *args, **kw
         'user': user
     }
 
-def set_superuser_permission(strategy, details, backend, user=None, *args, **kwargs):
+
+def set_superuser_permission(strategy, details, backend, *args, user=None, **kwargs):
+    """
+    Social auth piplien function to set user to superuser if username is in SOCIAL_AUTH_DJANGO_SUPERUSERS
+    :return: dict
+    """
     email = details.get('username')
     if email in settings.SOCIAL_AUTH_DJANGO_SUPERUSERS:
         user.is_superuser = True

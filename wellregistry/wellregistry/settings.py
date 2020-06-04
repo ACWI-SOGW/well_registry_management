@@ -72,9 +72,9 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # custom
-LOGOUT_REDIRECT_URL='/login/'
-LOGIN_REDIRECT_URL='/profile/'
-LOGIN_URL='/login/'
+LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_REDIRECT_URL = '/profile/'
+LOGIN_URL = '/login/'
 LOGIN_ERROR_URL = '/login/'
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
@@ -206,7 +206,7 @@ else:
             'PASSWORD': env['DATABASE_PASSWORD'],
         }
     }
-'''
+"""
 For now we are only using the default connection for the admin. Permissions for logged in users are handled
 by the admin interface using Django authentication framework. At the moment users who are not authenticated can not
 change or view any data. If a user is not authorized, they also can't edit any data through the admin interface
@@ -252,7 +252,7 @@ else:
             'PASSWORD': env['APP_ADMIN_PASSWORD'],
         },
     }
-'''
+"""
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

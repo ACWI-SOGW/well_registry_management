@@ -56,10 +56,8 @@ class MultiDBModelAdmin(admin.ModelAdmin):
         """Tell Django to populate ManyToMany widgets using a query on the 'other' database."""
         return super().formfield_for_manytomany(db_field, request, using=self.using, **kwargs)
 
-'''
-TODO: Think about using separate Django database connections for particular admins. For now default to
-admin.ModelAdmin
-'''
+
+#TODO: Think about using separate Django database connections for particular admins. For now default to admin.ModelAdmin
 class RegistryAdmin(admin.ModelAdmin):
     """
     Django admin model for the registry application
