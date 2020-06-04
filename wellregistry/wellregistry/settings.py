@@ -72,21 +72,17 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # custom
-LOGOUT_REDIRECT_URL = '/login/'
-LOGIN_REDIRECT_URL = '/profile/'
-LOGIN_URL = '/login/'
-LOGIN_ERROR_URL = '/login/'
-
-SOCIAL_AUTH_URL_NAMESPACE = 'social'
-SOCIAL_AUTH_KEYCLOAK_KEY = 'ngwmn-registry-dev'
-SOCIAL_AUTH_KEYCLOAK_SECRET = os.getenv('SOCIAL_AUTH_KEYCLOAK_SECRET', '')
-SOCIAL_AUTH_PUBLIC_KEY = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7FjpBwLx8A0qLSSHJF106EW07t/KuiXhD8ME4qfjzurxe7WH2mJO9Jl2zmb5wwsibQtBsum9G8sjQ+STFUzXnpO3KLIo3Y9tI9YfpOQIStm1QpXm8dndPr1BYvbIeOPElXNTFkypOygFXBEOjoowSNoVMM97joBIkV/yXNS+BX7XL+8/qpUSooMtDoSp6GT3bw3HXyhnbKP0bb/aeSxa2YTqRvSLfLAm3f0axtuCwx5+pSiyVIVN5LTHWPRbhvpRXwyPuRK5D7iEocHBt5sTbWT6ZC7gtpE+DLcximgDl5KlJijbjV/rWLxjXzTbRnFqpUWfCMWz1gD1pFC/5G7zLwIDAQAB'
-SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL = 'https://www.sciencebase.gov/auth/realms/WMA-B/protocol/openid-connect/auth'
-SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL = 'https://www.sciencebase.gov/auth/realms/WMA-B/protocol/openid-connect/token'
 LOGIN_URL = '/accounts/login/'
 LOGOUT_REDIRECT_URL = ''
+LOGIN_REDIRECT_URL = '/profile/'
 
-SOCIAL_AUTH_DJANGO_SUPERUSERS = os.getenv('SOCIAL_AUTH_DJANGO_SUPERUSERS')
+# python-social-auth settings
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+SOCIAL_AUTH_KEYCLOAK_KEY = os.getenv('SOCIAL_AUTH_KEYCLOAK_KEY', '')
+SOCIAL_AUTH_KEYCLOAK_SECRET = os.getenv('SOCIAL_AUTH_KEYCLOAK_SECRET', '')
+SOCIAL_AUTH_KEYCLOAK_PUBLIC_KEY = os.getenv('SOCIAL_AUTH_KEYCLOAK_PUBLIC_KEY', '')
+SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL = os.getenv('SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL')
+SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL = os.getenv('SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL')
 
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['email']
 
@@ -103,6 +99,9 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
 )
+
+# Custom setting which is a list of user's who are granted superuser status
+SOCIAL_AUTH_DJANGO_SUPERUSERS = os.getenv('SOCIAL_AUTH_DJANGO_SUPERUSERS', [])
 
 ROOT_URLCONF = 'wellregistry.urls'
 TEMPLATES = [
@@ -166,15 +165,6 @@ ENVIRONMENT = {
     'APP_DATABASE_NAME': os.getenv('APP_DATABASE_NAME'),
     'APP_DB_OWNER_USERNAME': os.getenv('APP_DB_OWNER_USERNAME'),
     'APP_DB_OWNER_PASSWORD': os.getenv('APP_DB_OWNER_PASSWORD'),
-
-    'APP_SCHEMA_NAME': os.getenv('APP_SCHEMA_NAME', 'public'),
-    'APP_SCHEMA_OWNER_USERNAME': os.getenv('APP_SCHEMA_OWNER_USERNAME'),
-    'APP_SCHEMA_OWNER_PASSWORD': os.getenv('APP_SCHEMA_OWNER_PASSWORD'),
-
-    'APP_ADMIN_USERNAME': os.getenv('APP_ADMIN_USERNAME'),
-    'APP_ADMIN_PASSWORD': os.getenv('APP_ADMIN_PASSWORD'),
-    'APP_CLIENT_USERNAME': os.getenv('APP_CLIENT_USERNAME'),
-    'APP_CLIENT_PASSWORD': os.getenv('APP_CLIENT_PASSWORD'),
 }
 
 # short alias
@@ -206,53 +196,6 @@ else:
             'PASSWORD': env['DATABASE_PASSWORD'],
         }
     }
-"""
-For now we are only using the default connection for the admin. Permissions for logged in users are handled
-by the admin interface using Django authentication framework. At the moment users who are not authenticated can not
-change or view any data. If a user is not authorized, they also can't edit any data through the admin interface
-elif 'migrate' in sys.argv:
-    DATABASES = {
-        # Because the default connection alias is not a full dba,
-        # this requires this command 'python manager.py migrate --database=postgres'
-        'default': {  # used for Django migration in app database
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': env['APP_DATABASE_NAME'],
-            'HOST': env['DATABASE_HOST'],
-            'PORT': env['DATABASE_PORT'],
-            'USER': env['APP_DB_OWNER_USERNAME'],
-            'PASSWORD': env['APP_DB_OWNER_PASSWORD'],
-        },
-        'postgres': {  # only needed for Django migration 0001_create_db_users
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': env['DATABASE_NAME'],
-            'HOST': env['DATABASE_HOST'],
-            'PORT': env['DATABASE_PORT'],
-            'USER': env['DATABASE_USERNAME'],
-            'PASSWORD': env['DATABASE_PASSWORD'],
-        },
-    }
-else:
-    DATABASES = {
-        # this connection will be for users and will connect to the cloud database
-        # they will have CRUD on Registry only and select on lookup tables
-        'default': {  # the connection for the client users with the minimum actions
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': env['APP_DATABASE_NAME'],  # 'postgis_25_test',
-            'HOST': env['DATABASE_HOST'],  # 'localhost',
-            'PORT': env['DATABASE_PORT'],  # '5432',
-            'USER': env['APP_CLIENT_USERNAME'],  # 'app_user',
-            'PASSWORD': env['APP_CLIENT_PASSWORD'],  # 'app_pwd',
-        },
-        'django_admin': {  # used for Django admin actions
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': env['APP_DATABASE_NAME'],
-            'HOST': env['DATABASE_HOST'],
-            'PORT': env['DATABASE_PORT'],
-            'USER': env['APP_ADMIN_USERNAME'],
-            'PASSWORD': env['APP_ADMIN_PASSWORD'],
-        },
-    }
-"""
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

@@ -4,6 +4,8 @@
 from django.contrib.auth.models import Group, Permission
 from django.db import migrations
 
+#pylint: disable=unused-argument
+
 # Updating the values will cause the migration to be rerun
 AGENCIES = [
     u'usgs',
@@ -11,7 +13,7 @@ AGENCIES = [
     u'mbmg'
 ]
 
-def apply_migration():
+def apply_migration(apps, schema_editor):
     """
     Add a group for each agency with add, change and delete permissions for the registry table.
     """
@@ -27,7 +29,7 @@ def apply_migration():
             group.save()
 
 
-def revert_migration():
+def revert_migration(apps, schema_editor):
     """
     Reverts migration in apply_migration
     """
