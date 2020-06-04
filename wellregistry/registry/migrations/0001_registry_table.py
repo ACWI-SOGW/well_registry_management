@@ -17,6 +17,10 @@ class Migration(migrations.Migration):
 
     dependencies = []
 
+    run_before = [
+        ('registry', '0002_add_agency_groups')
+    ]
+
     operations = [
         migrations.CreateModel(
             name='Registry',

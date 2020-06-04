@@ -22,8 +22,13 @@ test:
 runmigrations:
 	env/bin/python wellregistry/manage.py migrate --database=postgres postgres
 	#env/bin/python wellregistry/manage.py migrate registry 0000
-	env/bin/python wellregistry/manage.py migrate registry
-	env/bin/python wellregistry/manage.py migrate
+	env/bin/python wellregistry/manage.py migrate admin
+	env/bin/python wellregistry/manage.py migrate auth
+	env/bin/python wellregistry/manage.py migrate contenttypes
+	env/bin/python wellregistry/manage.py migrate sessions
+	env/bin/python wellregistry/manage.py migrate social_django
+	env/bin/python wellregistry/manage.py migrate registry 0001_registry_table
+	env/bin/python wellregistry/manage.py migrate registry 0002_add_agency_groups
 
 runlint:
 	env/bin/pylint wellregistry/postgres

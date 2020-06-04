@@ -2,24 +2,30 @@
 
 from django.db import migrations
 
+AGENCIES = [
+    u'usgs',
+    u'adwr',
+    u'mbmg'
+]
+
 def apply_migration(apps, schema_editor):
     Group = apps.get_model('auth', 'Group')
     Permission = apps.get_model('auth', 'Permission')
-    nwis_group = Group.objects.create(name=u'nwis')
     add_p = Permission.objects.get(codename=u'add_registry')
     change_p = Permission.objects.get(codename=u'change_registry')
     delete_p = Permission.objects.get(codename=u'delete_registry')
-    nwis_group.permissions.set([add_p, change_p, delete_p])
-    nwis_group.save()
+
+    existing_agencies = Group.objects.all().values_list('name', flat=True)
+    for agency in AGENCIES:
+        if agency not in existing_agencies:
+            group = Group.objects.create(name=agency)
+            group.permissions.set([add_p, change_p, delete_p])
+            group.save()
 
 
 def revert_migration(apps, schema_editor):
     Group = apps.get_model('auth', 'Group')
-    Group.objects.filter(
-        name__in=[
-            u'nwis'
-        ]
-    ).delete()
+    Group.objects.filter(name__in=AGENCIES).delete()
 
 
 class Migration(migrations.Migration):
