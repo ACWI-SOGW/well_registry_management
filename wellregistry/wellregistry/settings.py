@@ -76,7 +76,7 @@ LOGIN_URL = '/accounts/login/'
 LOGOUT_REDIRECT_URL = ''
 LOGIN_REDIRECT_URL = '/profile/'
 
-# python-social-auth settings
+# python-social-auth settings - See the keycloak.py backend in social-core for guidance on setting these.
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_KEYCLOAK_KEY = os.getenv('SOCIAL_AUTH_KEYCLOAK_KEY', '')
 SOCIAL_AUTH_KEYCLOAK_SECRET = os.getenv('SOCIAL_AUTH_KEYCLOAK_SECRET', '')

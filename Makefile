@@ -21,7 +21,6 @@ test:
 
 runmigrations:
 	env/bin/python wellregistry/manage.py migrate --database=postgres postgres
-	#env/bin/python wellregistry/manage.py migrate registry 0000
 	env/bin/python wellregistry/manage.py migrate admin
 	env/bin/python wellregistry/manage.py migrate auth
 	env/bin/python wellregistry/manage.py migrate contenttypes
