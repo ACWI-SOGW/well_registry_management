@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
 {% block base_content %}
+    <h1>Well Registry Admin Login</h1>
     <a href="{% url 'social:begin' 'keycloak' %}?next={{ request.path }}">Login with Keycloak</a>
 {% endblock %}

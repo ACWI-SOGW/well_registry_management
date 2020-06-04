@@ -84,7 +84,7 @@ SOCIAL_AUTH_PUBLIC_KEY = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7FjpBwLx8A
 SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL = 'https://www.sciencebase.gov/auth/realms/WMA-B/protocol/openid-connect/auth'
 SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL = 'https://www.sciencebase.gov/auth/realms/WMA-B/protocol/openid-connect/token'
 LOGIN_URL = '/accounts/login/'
-LOGOUT_REDIRECT_URL = '/registry/'
+LOGOUT_REDIRECT_URL = ''
 
 SOCIAL_AUTH_DJANGO_SUPERUSERS = os.getenv('SOCIAL_AUTH_DJANGO_SUPERUSERS')
 

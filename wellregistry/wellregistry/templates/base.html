@@ -2,15 +2,13 @@
 <html lang="en">
 <head>
     <title>
-        Well Registry Management
+        {% block title %}
+            Well Registry Management
+        {% endblock %}
     </title>
 </head>
 <body>
     {% block base_content %}
-        <h1>
-            Well Registry Management
-        </h1>
-        <a href="{% url 'admin:index' %}">Enter Admin Interface</a>
     {% endblock %}
 </body>
 </html>
