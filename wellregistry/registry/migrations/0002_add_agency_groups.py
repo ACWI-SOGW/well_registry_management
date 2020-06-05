@@ -4,6 +4,7 @@
 from django.db import migrations
 
 #pylint: disable=unused-argument
+#pylint: disable=invalid-name
 
 # Updating the values will cause the migration to be rerun
 AGENCIES = [
@@ -16,6 +17,8 @@ def apply_migration(apps, schema_editor):
     """
     Add a group for each agency with add, change and delete permissions for the registry table.
     """
+
+    #pylint: disable=unused-variable
     Group = apps.get_model('auth', 'Group')
     Permission = apps.get_model('auth', 'Permission')
     ContentType = apps.get_model('contenttypes', 'ContentType')
@@ -44,6 +47,9 @@ def revert_migration(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
+    """
+    Adds a group for each agency and gives permissions for add/change/delete_registry.
+    """
 
     dependencies = [
         ('registry', '0001_registry_table'),

@@ -101,7 +101,7 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 # Custom setting which is a list of user's who are granted superuser status
-SOCIAL_AUTH_DJANGO_SUPERUSERS = os.getenv('SOCIAL_AUTH_DJANGO_SUPERUSERS', [])
+SOCIAL_AUTH_DJANGO_SUPERUSERS = os.getenv('SOCIAL_AUTH_DJANGO_SUPERUSERS')
 
 ROOT_URLCONF = 'wellregistry.urls'
 TEMPLATES = [

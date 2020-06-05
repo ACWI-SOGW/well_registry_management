@@ -16,48 +16,6 @@ def check_mark(value):
     return format_html('&check;') if value == 1 else ''
 
 
-class MultiDBModelAdmin(admin.ModelAdmin):
-    """
-    A Django example from djangoproject.
-
-    https://docs.djangoproject.com/en/3.0/topics/db/multi-db/#s-exposing-multiple-databases-in-django-s-admin-interface
-    It controls the connection used by admin actions. When a database action passes through this instance
-    it selects the database 'using' for the admin connection.
-
-    It is best practice that admin actions are on
-    a separate connection than standard users.
-    All model admin should have an handler the extends this class.
-    When using more than the 'default' database alias then it is required to set the 'using' value to the database alias
-    to use in a db action. This helper class ensures that the admin access to the registry table uses the connection
-    alias with the appropriate granted access or db roles.
-    see RegistryAdmin for an example.
-
-    """
-    # A handy constant for the name of the alternate connection.
-    using = 'default'
-
-    def save_model(self, request, obj, form, change):
-        """Tell Django to save objects to the 'other' database."""
-        obj.save(using=self.using)
-
-    def delete_model(self, request, obj):
-        """Tell Django to delete objects from the 'other' database."""
-        obj.delete(using=self.using)
-
-    def get_queryset(self, request):
-        """Tell Django to look for objects on the 'other' database."""
-        return super().get_queryset(request).using(self.using)
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        """Tell Django to populate ForeignKey widgets using a query on the 'other' database."""
-        return super().formfield_for_foreignkey(db_field, request, using=self.using, **kwargs)
-
-    def formfield_for_manytomany(self, db_field, request, **kwargs):
-        """Tell Django to populate ManyToMany widgets using a query on the 'other' database."""
-        return super().formfield_for_manytomany(db_field, request, using=self.using, **kwargs)
-
-
-#TODO: Think about using separate Django database connections for particular admins. For now default to admin.ModelAdmin
 class RegistryAdmin(admin.ModelAdmin):
     """
     Django admin model for the registry application
