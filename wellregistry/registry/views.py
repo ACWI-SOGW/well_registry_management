@@ -4,13 +4,12 @@ Registry application views.
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView
 
-
 class BasePage(TemplateView):
     """
     Landing page.
 
     """
-    template_name = 'base.html'
+    template_name = 'registry/index.html'
 
 
 def status_check(request):

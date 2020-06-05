@@ -49,7 +49,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django'
 ]
+
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,8 +62,46 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
     'allow_cidr.middleware.AllowCIDRMiddleware'
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.keycloak.KeycloakOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# custom
+LOGIN_URL = '/accounts/login/'
+LOGOUT_REDIRECT_URL = ''
+LOGIN_REDIRECT_URL = '/profile/'
+
+# python-social-auth settings - See the keycloak.py backend in social-core for guidance on setting these.
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+SOCIAL_AUTH_KEYCLOAK_KEY = os.getenv('SOCIAL_AUTH_KEYCLOAK_KEY', '')
+SOCIAL_AUTH_KEYCLOAK_SECRET = os.getenv('SOCIAL_AUTH_KEYCLOAK_SECRET', '')
+SOCIAL_AUTH_KEYCLOAK_PUBLIC_KEY = os.getenv('SOCIAL_AUTH_KEYCLOAK_PUBLIC_KEY', '')
+SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL = os.getenv('SOCIAL_AUTH_KEYCLOAK_AUTHORIZATION_URL')
+SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL = os.getenv('SOCIAL_AUTH_KEYCLOAK_ACCESS_TOKEN_URL')
+
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['email']
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'wellregistry.custom_social_pipeline.change_usgs_user_to_staff',
+    'wellregistry.custom_social_pipeline.set_superuser_permission',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
+
+# Custom setting which is a list of user's who are granted superuser status
+SOCIAL_AUTH_DJANGO_SUPERUSERS = os.getenv('SOCIAL_AUTH_DJANGO_SUPERUSERS')
 
 ROOT_URLCONF = 'wellregistry.urls'
 TEMPLATES = [
@@ -76,6 +117,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect'
             ],
         },
     },
@@ -122,15 +165,6 @@ ENVIRONMENT = {
     'APP_DATABASE_NAME': os.getenv('APP_DATABASE_NAME'),
     'APP_DB_OWNER_USERNAME': os.getenv('APP_DB_OWNER_USERNAME'),
     'APP_DB_OWNER_PASSWORD': os.getenv('APP_DB_OWNER_PASSWORD'),
-
-    'APP_SCHEMA_NAME': os.getenv('APP_SCHEMA_NAME', 'public'),
-    'APP_SCHEMA_OWNER_USERNAME': os.getenv('APP_SCHEMA_OWNER_USERNAME'),
-    'APP_SCHEMA_OWNER_PASSWORD': os.getenv('APP_SCHEMA_OWNER_PASSWORD'),
-
-    'APP_ADMIN_USERNAME': os.getenv('APP_ADMIN_USERNAME'),
-    'APP_ADMIN_PASSWORD': os.getenv('APP_ADMIN_PASSWORD'),
-    'APP_CLIENT_USERNAME': os.getenv('APP_CLIENT_USERNAME'),
-    'APP_CLIENT_PASSWORD': os.getenv('APP_CLIENT_PASSWORD'),
 }
 
 # short alias
@@ -145,17 +179,7 @@ if 'test' in sys.argv:
     }
 elif 'migrate' in sys.argv:
     DATABASES = {
-        # Because the default connection alias is not a full dba,
-        # this requires this command 'python manager.py migrate --database=postgres'
-        'default': {  # used for Django migration in app database
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': env['APP_DATABASE_NAME'],
-            'HOST': env['DATABASE_HOST'],
-            'PORT': env['DATABASE_PORT'],
-            'USER': env['APP_DB_OWNER_USERNAME'],
-            'PASSWORD': env['APP_DB_OWNER_PASSWORD'],
-        },
-        'postgres': {  # only needed for Django migration 0001_create_db_users
+        'postgres': { # only needed for Django migration 0001_create_db_users
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': env['DATABASE_NAME'],
             'HOST': env['DATABASE_HOST'],
@@ -163,29 +187,26 @@ elif 'migrate' in sys.argv:
             'USER': env['DATABASE_USERNAME'],
             'PASSWORD': env['DATABASE_PASSWORD'],
         },
-    }
-else:
-    DATABASES = {
-        # this connection will be for users and will connect to the cloud database
-        # they will have CRUD on Registry only and select on lookup tables
-        'default': {  # the connection for the client users with the minimum actions
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': env['APP_DATABASE_NAME'],  # 'postgis_25_test',
-            'HOST': env['DATABASE_HOST'],  # 'localhost',
-            'PORT': env['DATABASE_PORT'],  # '5432',
-            'USER': env['APP_CLIENT_USERNAME'],  # 'app_user',
-            'PASSWORD': env['APP_CLIENT_PASSWORD'],  # 'app_pwd',
-        },
-        'django_admin': {  # used for Django admin actions
+        'default': {# used by the migrations and backend code.
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': env['APP_DATABASE_NAME'],
             'HOST': env['DATABASE_HOST'],
             'PORT': env['DATABASE_PORT'],
-            'USER': env['APP_ADMIN_USERNAME'],
-            'PASSWORD': env['APP_ADMIN_PASSWORD'],
-        },
+            'USER': env['APP_DB_OWNER_USERNAME'],
+            'PASSWORD': env['APP_DB_OWNER_PASSWORD'],
+        }
     }
-
+else:
+    DATABASES = {
+        'default': {  # used by the migrations and backend code.
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env['APP_DATABASE_NAME'],
+            'HOST': env['DATABASE_HOST'],
+            'PORT': env['DATABASE_PORT'],
+            'USER': env['APP_DB_OWNER_USERNAME'],
+            'PASSWORD': env['APP_DB_OWNER_PASSWORD'],
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -204,7 +225,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

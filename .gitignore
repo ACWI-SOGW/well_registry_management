@@ -10,3 +10,4 @@
 env/
 .idea/
 wellregistry/.env
+.DS_Store
