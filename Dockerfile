@@ -20,5 +20,4 @@ EXPOSE 8000
 # Run the Django migrations to ensure the DB tier is up to date.
 # Django, like liquibase, executes each entry once.
 #
-CMD make runmigrations \
- && gunicorn --config wellregistry/gunicorn.conf.py wellregistry.wsgi
+CMD gunicorn --config wellregistry/gunicorn.conf.py wellregistry.wsgi
