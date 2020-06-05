@@ -15,10 +15,10 @@ def change_usgs_user_to_staff(strategy, details, backend, *args, user=None, **kw
     """
     if kwargs.get('is_new'):
         email = details.get('username')
-        if email.find('@usgs.gov') != -1:
+        if email.find('@usgs.gov') != -1 or email.find('@contractor.usgs.gov') != -1:
             user.is_staff = True
             user.save()
-            usgs_group = Group.objects.get(name=u'usgs')
+            usgs_group = Group.objects.get(name='usgs')
             usgs_group.user_set.add(user)
     return {
         'is_new': kwargs.get('is_new'),
