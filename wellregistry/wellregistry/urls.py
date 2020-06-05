@@ -19,10 +19,10 @@ from django.urls import include, path
 
 urlpatterns = [
     # this is the django admin url which allows adding django users and table management
-    path('admin/', admin.site.urls),
+    path('registry/admin/', admin.site.urls),
 
     path('', include('social_django.urls', namespace='social')),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('registry/accounts/', include('django.contrib.auth.urls')),
 
     # this is our registry page
     path('', include('registry.urls')),

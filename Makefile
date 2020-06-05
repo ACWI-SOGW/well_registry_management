@@ -26,8 +26,7 @@ runmigrations:
 	env/bin/python wellregistry/manage.py migrate contenttypes
 	env/bin/python wellregistry/manage.py migrate sessions
 	env/bin/python wellregistry/manage.py migrate social_django
-	env/bin/python wellregistry/manage.py migrate registry 0001_registry_table
-	env/bin/python wellregistry/manage.py migrate registry 0002_add_agency_groups
+	env/bin/python wellregistry/manage.py migrate registry
 
 runlint:
 	env/bin/pylint wellregistry/postgres

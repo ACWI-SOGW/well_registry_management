@@ -179,15 +179,17 @@ if 'test' in sys.argv:
     }
 else:
     DATABASES = {
-        'default': {# used by the migrations and backend code. Use a more limited connection for users (maybe)
+        'default': {# used by the migrations and backend code.
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': env['APP_DATABASE_NAME'],
             'HOST': env['DATABASE_HOST'],
             'PORT': env['DATABASE_PORT'],
             'USER': env['APP_DB_OWNER_USERNAME'],
             'PASSWORD': env['APP_DB_OWNER_PASSWORD'],
-        },
-        'postgres': {  # only needed for Django migration 0001_create_db_users
+        }
+    }
+    if 'migration' in sys.argv:
+        DATABASES['postgres']: {  # only needed for Django migration 0001_create_db_users
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': env['DATABASE_NAME'],
             'HOST': env['DATABASE_HOST'],
@@ -195,7 +197,6 @@ else:
             'USER': env['DATABASE_USERNAME'],
             'PASSWORD': env['DATABASE_PASSWORD'],
         }
-    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
