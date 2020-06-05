@@ -6,8 +6,12 @@ COPY . $HOME/application
 
 WORKDIR $HOME/application/wellregistry
 
-RUN pip install --no-cache-dir -r ../requirements.txt
-RUN pip install --no-cache-dir -r ../requirements-prod.txt
+RUN apt-get update \
+ && apt-get install gcc libpq-dev python3-dev -y \
+ && pip install --no-cache-dir -r ../requirements-prod.txt \
+ && apt-get autoremove --purge -y gcc libpq-dev python3-dev \
+ && rm -rf /var/lib/apt/lists/* \
+ && pip install --no-cache-dir -r ../requirements.txt
 
 USER $USER
 
