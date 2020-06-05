@@ -1,8 +1,7 @@
 """
 Tests for custom_social_pipeline
 """
-from django.conf import settings
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.test import TestCase, override_settings
 
 from ..custom_social_pipeline import change_usgs_user_to_staff, set_superuser_permission
@@ -19,7 +18,7 @@ class TestChangeUsgsUserToStaff(TestCase):
         }
         strategy = None
         backend = None
-        result = change_usgs_user_to_staff(strategy,details,backend, user=self.user, is_new=True)
+        result = change_usgs_user_to_staff(strategy, details, backend, user=self.user, is_new=True)
         saved_user = User.objects.get(username=TEST_USERNAME)
 
         self.assertIs(result.get('user'), self.user)
@@ -33,7 +32,7 @@ class TestChangeUsgsUserToStaff(TestCase):
         }
         strategy = None
         backend = None
-        result = change_usgs_user_to_staff(strategy,details,backend, user=self.user, is_new=True)
+        result = change_usgs_user_to_staff(strategy, details, backend, user=self.user, is_new=True)
         saved_user = User.objects.get(username=TEST_USERNAME)
 
         self.assertIs(result.get('user'), self.user)
@@ -76,7 +75,7 @@ class TestSetSuperuserPermission(TestCase):
         self.assertTrue(saved_user.is_superuser)
 
     @override_settings(SOCIAL_AUTH_DJANGO_SUPERUSERS=['testuser@usgs.gov'])
-    def test_user_superuser(self):
+    def test_user_not_superuser(self):
         details = {
             'username': 'testuser@doi.gov'
         }
