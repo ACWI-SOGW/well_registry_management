@@ -23,9 +23,9 @@ def apply_migration(apps, schema_editor):
     content_type = ContentType.objects.get_for_model(Registry)
 
     # Create permissions if the post migrate signal has not been issued after Registry table creation
-    add_p = Permission.objects.get_or_create(codename=u'add_registry', content_type=content_type)
-    change_p = Permission.objects.get_or_create(codename=u'change_registry', content_type=content_type)
-    delete_p = Permission.objects.get_or_create(codename=u'delete_registry', content_type=content_type)
+    add_p, created = Permission.objects.get_or_create(codename=u'add_registry', content_type=content_type)
+    change_p, created = Permission.objects.get_or_create(codename=u'change_registry', content_type=content_type)
+    delete_p, created = Permission.objects.get_or_create(codename=u'delete_registry', content_type=content_type)
 
     existing_agencies = Group.objects.all().values_list('name', flat=True)
     for agency in AGENCIES:
