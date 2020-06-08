@@ -54,4 +54,14 @@ class Migration(migrations.Migration):
             migrations.RunSQL(
                 sql=f"ALTER DATABASE {env['APP_DATABASE_NAME']} OWNER TO {env['APP_DB_OWNER_USERNAME']};",
                 reverse_sql=f"ALTER DATABASE {env['APP_DATABASE_NAME']} OWNER TO {env['DATABASE_USERNAME']};"),
+
+            # create a login user that will own the application schema
+            migrations.RunSQL(
+                sql=pgsql.create_login_role(env['APP_SCHEMA_OWNER_USERNAME'], env['APP_SCHEMA_OWNER_PASSWORD']),
+                reverse_sql=pgsql.drop_role(env['APP_SCHEMA_OWNER_USERNAME'])),
+
+            # the postgres superuser is granted the app db owner roll
+            migrations.RunSQL(
+                sql=pgsql.grant_role(env['APP_SCHEMA_OWNER_USERNAME'], env['APP_DB_OWNER_USERNAME']),
+                reverse_sql=pgsql.revoke_role(env['APP_SCHEMA_OWNER_USERNAME'], env['APP_DB_OWNER_USERNAME'])),
         ]

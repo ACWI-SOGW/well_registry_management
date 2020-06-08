@@ -165,6 +165,10 @@ ENVIRONMENT = {
     'APP_DATABASE_NAME': os.getenv('APP_DATABASE_NAME'),
     'APP_DB_OWNER_USERNAME': os.getenv('APP_DB_OWNER_USERNAME'),
     'APP_DB_OWNER_PASSWORD': os.getenv('APP_DB_OWNER_PASSWORD'),
+
+    'APP_SCHEMA_NAME': os.getenv('APP_SCHEMA_NAME'),
+    'APP_SCHEMA_OWNER_USERNAME': os.getenv('APP_SCHEMA_OWNER_USERNAME'),
+    'APP_SCHEMA_OWNER_PASSWORD': os.getenv('APP_SCHEMA_OWNER_PASSWORD'),
 }
 
 # short alias
@@ -190,6 +194,9 @@ elif 'migrate' in sys.argv:
         'default': {# used by the migrations and backend code.
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': env['APP_DATABASE_NAME'],
+            'OPTIONS': {
+                'options': f'-c search_path={env["APP_SCHEMA_NAME"]},public'
+            },
             'HOST': env['DATABASE_HOST'],
             'PORT': env['DATABASE_PORT'],
             'USER': env['APP_DB_OWNER_USERNAME'],
@@ -201,6 +208,9 @@ else:
         'default': {  # used by the migrations and backend code.
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': env['APP_DATABASE_NAME'],
+            'OPTIONS': {
+                'options': f'-c search_path={env["APP_SCHEMA_NAME"]},public'
+            },
             'HOST': env['DATABASE_HOST'],
             'PORT': env['DATABASE_PORT'],
             'USER': env['APP_DB_OWNER_USERNAME'],
