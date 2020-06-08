@@ -10,14 +10,13 @@ import sys
 
 from django.db import migrations
 from django.conf import settings
-import wellregistry.pgsql_utils as pgsql
 
 env = settings.ENVIRONMENT
 
 
 class Migration(migrations.Migration):
     """
-
+    Migration to create registry schema
     """
 
     initial = False
