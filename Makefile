@@ -29,6 +29,16 @@ runmigrations:
 	env/bin/python wellregistry/manage.py migrate social_django
 	env/bin/python wellregistry/manage.py migrate registry
 
+runmigrations-containerized:
+	/usr/local/bin/python wellregistry/manage.py migrate --database=postgres postgres
+	/usr/local/bin/python wellregistry/manage.py migrate registry 0000_create_app_schema
+	/usr/local/bin/python wellregistry/manage.py migrate admin
+	/usr/local/bin/python wellregistry/manage.py migrate auth
+	/usr/local/bin/python wellregistry/manage.py migrate contenttypes
+	/usr/local/bin/python wellregistry/manage.py migrate sessions
+	/usr/local/bin/python wellregistry/manage.py migrate social_django
+	/usr/local/bin/python wellregistry/manage.py migrate registry
+
 runlint:
 	env/bin/pylint wellregistry/postgres
 	env/bin/pylint wellregistry/registry
