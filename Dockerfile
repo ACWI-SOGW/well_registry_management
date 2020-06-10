@@ -15,4 +15,4 @@ USER $USER
 
 EXPOSE 8000
 
-CMD make runmigrations-containerized && gunicorn --chdir wellregistry --config wellregistry/gunicorn.conf.py wellregistry.wsgi
+CMD gunicorn --chdir wellregistry --config wellregistry/gunicorn.conf.py wellregistry.wsgi

@@ -7,6 +7,41 @@ pipeline {
         }
     }
     stages {
+        stage('run migration') {
+            agent {
+                dockerfile {
+                    filename 'migrationDockerfile'
+                    label 'team:iow'
+                }
+            }
+            steps {
+                script {
+                    def deployStage = "$ENVIRONMENT".toUpperCase()
+                    def scriptCmd = "/usr/local/bin/aws ssm get-parameter --name \"/aws/reference/secretsmanager/MON-LOC-$deployStage\" --query \"Parameter.Value\" --with-decryption --output text --region \"us-west-2\""
+                    def secretsString = sh(script: scriptCmd, returnStdout: true).trim()
+                    def secretsJson = readJSON text: secretsString
+                    env.DATABASE_HOST = secretsJson.DATABASE_ADDRESS
+                    env.DATABASE_PORT = secretsJson.DATABASE_PORT
+                    env.DATABASE_USERNAME = secretsJson.DATABASE_USERNAME
+                    env.DATABASE_PASSWORD = secretsJson.DATABASE_PASSWORD
+                    env.APP_DATABASE_NAME = secretsJson.DATABASE_NAME
+                    env.APP_DB_OWNER_PASSWORD = secretsJson.DB_OWNER_PASSWORD
+                    env.APP_DB_OWNER_USERNAME = secretsJson.DB_OWNER_USERNAME
+                    env.APP_SCHEMA_NAME = secretsJson.SCHEMA_NAME
+                    env.APP_SCHEMA_OWNER_PASSWORD = secretsJson.SCHEMA_OWNER_PASSWORD
+                    env.APP_SCHEMA_OWNER_USERNAME = secretsJson.SCHEMA_OWNER_USERNAME
+
+                    sh '''
+                    /usr/local/bin/python wellregistry/manage.py migrate admin
+                    /usr/local/bin/python wellregistry/manage.py migrate auth
+                    /usr/local/bin/python wellregistry/manage.py migrate contenttypes
+                    /usr/local/bin/python wellregistry/manage.py migrate sessions
+                    /usr/local/bin/python wellregistry/manage.py migrate social_django
+                    /usr/local/bin/python wellregistry/manage.py migrate registry
+                    '''
+                }
+            }
+        }
         stage('build artifact') {
             steps {
                 serviceDeployPipeline()
