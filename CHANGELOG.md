@@ -10,3 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added Registry model and admin prototype interface.
 -   Added initial registry model with migrations and admin 
 -   Added keycloak as the authentication method for the admin.
+
+### Fixed
+-   Using whitenoise to serve out the staticfiles when using gunicorn to run the server. Added collectstaticfiles to the Dockerfile.
