@@ -11,8 +11,12 @@ RUN apt-get update \
  && pip install --no-cache-dir -r requirements-prod.txt \
  && pip install --no-cache-dir -r requirements.txt
 
+RUN python wellregistry/manage.py collectstatic --clear --no-input
+
+ENV PYTHON=/usr/local/bin/python
+
 USER $USER
 
 EXPOSE 8000
 
-CMD make runmigrations-containerized && gunicorn --chdir wellregistry --config wellregistry/gunicorn.conf.py wellregistry.wsgi
+CMD make -e runmigrations && gunicorn --chdir wellregistry --config wellregistry/gunicorn.conf.py wellregistry.wsgi
