@@ -28,8 +28,11 @@ SET APP_ADMIN_PASSWORD=qwerty_2
 SET APP_CLIENT_USERNAME=django_user
 SET APP_CLIENT_PASSWORD=qwerty_3
 
-python -m manage migrate --database=postgres postgres
 rem python -m manage migrate --fake postgres
-python -m manage migrate registry 0000
 python -m manage migrate registry
+python -m manage migrate admin
+python -m manage migrate auth
+python -m manage migrate contenttypes
+python -m manage migrate sessions
+python -m manage migrate social_django
 python -m manage runserver

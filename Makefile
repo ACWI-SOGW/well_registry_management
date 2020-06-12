@@ -20,8 +20,7 @@ test:
 	cd wellregistry && ../$(PYTHON) manage.py test
 
 runmigrations:
-	env/bin/python wellregistry/manage.py migrate --database=postgres postgres
-	env/bin/python wellregistry/manage.py migrate registry 0000_create_app_schema
+	env/bin/python wellregistry/manage.py migrate registry
 	env/bin/python wellregistry/manage.py migrate admin
 	env/bin/python wellregistry/manage.py migrate auth
 	env/bin/python wellregistry/manage.py migrate contenttypes
@@ -30,8 +29,7 @@ runmigrations:
 	env/bin/python wellregistry/manage.py migrate registry
 
 runmigrations-containerized:
-	/usr/local/bin/python wellregistry/manage.py migrate --database=postgres postgres
-	/usr/local/bin/python wellregistry/manage.py migrate registry 0000_create_app_schema
+	/usr/local/bin/python wellregistry/manage.py migrate registry
 	/usr/local/bin/python wellregistry/manage.py migrate admin
 	/usr/local/bin/python wellregistry/manage.py migrate auth
 	/usr/local/bin/python wellregistry/manage.py migrate contenttypes
