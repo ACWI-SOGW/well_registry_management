@@ -41,7 +41,6 @@ except ValueError:
 # Application definition
 
 INSTALLED_APPS = [
-    'postgres',
     'registry',
     'django.contrib.admin',
     'django.contrib.auth',
