@@ -13,8 +13,6 @@ RUN apt-get update \
 
 RUN python wellregistry/manage.py collectstatic --clear --no-input
 
-ENV PYTHON=/usr/local/bin/python
-
 USER $USER
 
 EXPOSE 8000
