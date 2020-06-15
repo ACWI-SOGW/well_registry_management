@@ -21,8 +21,6 @@ test:
 	cd wellregistry && ../$(PYTHON) manage.py test
 
 runmigrations:
-	$(PYTHON) wellregistry/manage.py migrate --database=postgres postgres
-	$(PYTHON) wellregistry/manage.py migrate registry 0000_create_app_schema
 	$(PYTHON) wellregistry/manage.py migrate admin
 	$(PYTHON) wellregistry/manage.py migrate auth
 	$(PYTHON) wellregistry/manage.py migrate contenttypes
