@@ -6,3 +6,4 @@ pylint-django==2.0.15
 python-dotenv==0.13.0
 social-auth-app-django==3.4.0
 social-auth-core==3.3.3
+whitenoise==5.1.0

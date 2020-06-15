@@ -19,7 +19,6 @@ from django.core.management.utils import get_random_secret_key
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -41,7 +40,6 @@ except ValueError:
 # Application definition
 
 INSTALLED_APPS = [
-    'postgres',
     'registry',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -56,6 +54,7 @@ SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -184,28 +183,6 @@ if 'test' in sys.argv:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         },
     }
-elif 'migrate' in sys.argv:
-    DATABASES = {
-        'postgres': { # only needed for Django migration 0001_create_db_users
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': env['DATABASE_NAME'],
-            'HOST': env['DATABASE_HOST'],
-            'PORT': env['DATABASE_PORT'],
-            'USER': env['DATABASE_USERNAME'],
-            'PASSWORD': env['DATABASE_PASSWORD'],
-        },
-        'default': {# used by the migrations and backend code.
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': env['APP_DATABASE_NAME'],
-            'OPTIONS': {
-                'options': f'-c search_path={env["APP_SCHEMA_NAME"]},public'
-            },
-            'HOST': env['DATABASE_HOST'],
-            'PORT': env['DATABASE_PORT'],
-            'USER': env['APP_DB_OWNER_USERNAME'],
-            'PASSWORD': env['APP_DB_OWNER_PASSWORD'],
-        }
-    }
 else:
     DATABASES = {
         'default': {  # used by the migrations and backend code.
@@ -256,4 +233,5 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/registry/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "wellregistry/staticfiles")

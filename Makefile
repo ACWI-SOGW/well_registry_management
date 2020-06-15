@@ -1,5 +1,6 @@
 PYTHON := env/bin/python
 PIP := env/bin/pip
+PYLINT := env/bin/pylint
 
 .PHONY: cleanenv devenv prodenv test watch runmigrations runlint
 
@@ -7,7 +8,7 @@ PIP := env/bin/pip
 
 cleanenv:
 	@echo 'Cleaning environment....'
-	rm -rf env/
+	rm -rf env/ && rm -rf wellregistry/wellregistry/staticfiles
 
 watch:
 	$(PYTHON) wellregistry/manage.py runserver
@@ -20,30 +21,18 @@ test:
 	cd wellregistry && ../$(PYTHON) manage.py test
 
 runmigrations:
-	env/bin/python wellregistry/manage.py migrate --database=postgres postgres
-	env/bin/python wellregistry/manage.py migrate registry 0000_create_app_schema
-	env/bin/python wellregistry/manage.py migrate admin
-	env/bin/python wellregistry/manage.py migrate auth
-	env/bin/python wellregistry/manage.py migrate contenttypes
-	env/bin/python wellregistry/manage.py migrate sessions
-	env/bin/python wellregistry/manage.py migrate social_django
-	env/bin/python wellregistry/manage.py migrate registry
-
-runmigrations-containerized:
-	/usr/local/bin/python wellregistry/manage.py migrate --database=postgres postgres
-	/usr/local/bin/python wellregistry/manage.py migrate registry 0000_create_app_schema
-	/usr/local/bin/python wellregistry/manage.py migrate admin
-	/usr/local/bin/python wellregistry/manage.py migrate auth
-	/usr/local/bin/python wellregistry/manage.py migrate contenttypes
-	/usr/local/bin/python wellregistry/manage.py migrate sessions
-	/usr/local/bin/python wellregistry/manage.py migrate social_django
-	/usr/local/bin/python wellregistry/manage.py migrate registry
+	$(PYTHON) wellregistry/manage.py migrate admin
+	$(PYTHON) wellregistry/manage.py migrate auth
+	$(PYTHON) wellregistry/manage.py migrate contenttypes
+	$(PYTHON) wellregistry/manage.py migrate sessions
+	$(PYTHON) wellregistry/manage.py migrate social_django
+	$(PYTHON) wellregistry/manage.py migrate registry
 
 runlint:
-	env/bin/pylint wellregistry/postgres
-	env/bin/pylint wellregistry/registry
-	env/bin/pylint wellregistry/wellregistry/
-	env/bin/pylint ./**/*.py
+	$(PYLINT) wellregistry/postgres
+	$(PYLINT) wellregistry/registry
+	$(PYLINT) wellregistry/wellregistry/
+	$(PYLINT) ./**/*.py
 
 env:
 	@echo 'Creating local environment....'

@@ -10,4 +10,5 @@
 env/
 .idea/
 wellregistry/.env
+wellregistry/staticfiles
 .DS_Store
