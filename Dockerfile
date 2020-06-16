@@ -7,7 +7,7 @@ WORKDIR $HOME/application
 
 
 RUN apt-get update \
- && apt-get install gcc make libpq-dev python3-dev -y \
+ && apt-get install gcc libpq-dev python3-dev -y \
  && pip install --no-cache-dir -r requirements-prod.txt \
  && pip install --no-cache-dir -r requirements.txt
 
