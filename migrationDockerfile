@@ -1,0 +1,11 @@
+FROM usgswma/python:3.8
+
+COPY requirements.txt .
+COPY requirements-prod.txt .
+
+RUN apt-get update \
+    && apt-get install -y gcc libpq-dev python3-dev
+RUN pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir -r requirements-prod.txt \
+    && pip install --no-cache-dir awscli
+

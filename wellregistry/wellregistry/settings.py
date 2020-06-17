@@ -158,11 +158,8 @@ WSGI_APPLICATION = 'wellregistry.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 ENVIRONMENT = {
-    'DATABASE_NAME': os.getenv('DATABASE_NAME', 'postgres'),
     'DATABASE_HOST': os.getenv('DATABASE_HOST'),
     'DATABASE_PORT': os.getenv('DATABASE_PORT', default='5432'),
-    'DATABASE_USERNAME': os.getenv('DATABASE_USERNAME', 'postgres'),  # not necessary the same name
-    'DATABASE_PASSWORD': os.getenv('DATABASE_PASSWORD'),
 
     'APP_DATABASE_NAME': os.getenv('APP_DATABASE_NAME'),
     'APP_DB_OWNER_USERNAME': os.getenv('APP_DB_OWNER_USERNAME'),
