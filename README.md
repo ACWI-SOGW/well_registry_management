@@ -71,10 +71,11 @@ Another means to run local is the manage.py from within the wellregistry path:
 % python -m manage runserver
 ```
 
-## Using a local postgres database using Docker
+## Using Docker ci database
 Run the following command:
 ```bash
-docker run --name registry_postgres -e POSTGRES_PASSWORD=changeme -d -p 5432:5432 postgres
+docker pull usgswma/well-registry-db:ci
+docker run --name registry_postgres -d -p 5432:5432 usgswma/well-registry-db:ci
 ```
 
 You can stop the container using:
