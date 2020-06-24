@@ -13,6 +13,7 @@ before_script:
 script:
   - coverage run --source='.' manage.py test
 after_failure:
+  - bash docker logs registry_postgres
   - bash docker rm -f registry_postgres
 after_success:
   - bash <(curl -s https://codecov.io/bash)
