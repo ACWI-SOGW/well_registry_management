@@ -34,6 +34,7 @@ make prodenv
 This installs psycopg2 module which has some environment prerequisites. See <https://www.psycopg.org/docs/install.html> for details
 
 ### Tests and Linting
+The tests by default run againts the docker ci database. See [Using Docker ci database.](#using-docker-ci-database)
 To run tests locally:
 ```bash
 make test
