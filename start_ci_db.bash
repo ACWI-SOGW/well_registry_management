@@ -28,7 +28,7 @@ db_started=0
 sleep $timer
 until [ $retries -eq 0 ]; do
   echo "Waiting for postgres server, $((retries--)) remaining attempts..."
-  docker logs $ci_container_name | paste -s | grep "$db_ready_text"
+  (docker logs $ci_container_name) 2>&1 | paste -s | grep -q "$db_ready_text"
   status=$?
   if [ $status -eq 0 ]; then
     retries=0
