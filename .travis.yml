@@ -6,15 +6,13 @@ install:
   - pip install -r requirements-prod.txt
   - pip install coverage
 before_script:
+  - ./start_ci_db.bash
   - cd wellregistry
   - cp .env.sample .env
-  - docker pull usgswma/well-registry-db:ci
-  - docker run --name registry_postgres -d -p 5432:5432 usgswma/well-registry-db:ci
 script:
   - coverage run --source='.' manage.py test
 after_failure:
   - bash docker logs registry_postgres
-  - bash docker rm -f registry_postgres
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - bash docker rm -f registry_postgres
