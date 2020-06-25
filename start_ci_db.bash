@@ -5,10 +5,10 @@
 ci_container_name="registry_postgres"
 db_ready_text="PostgreSQL init process complete; ready for start up.*database system is ready to accept connections"
 
-container_id=`docker ps -a | grep $ci_container_name | awk '{print $1;}'`
+container_id=$(docker ps -a | grep $ci_container_name | awk '{print $1;}')
 if [ -n "$container_id" ]; then
    echo "Removing existing ci db container"
-   docker rm -f $container_id
+   docker rm -f "$container_id"
 fi
 
 # start the docker database container
