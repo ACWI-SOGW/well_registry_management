@@ -18,7 +18,14 @@ def check_mark(value):
 
 
 class RegistryAdminForm(forms.ModelForm):
+    """
+    Registry admin form.
 
+    This model form is based on fields in models.Registry
+
+    """
+
+    # override the country_cd field
     country_cd = forms.ModelChoiceField(queryset=CountryLookup.objects.all())
 
     class Meta:

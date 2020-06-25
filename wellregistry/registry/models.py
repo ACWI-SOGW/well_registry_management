@@ -5,7 +5,14 @@ Well Registry ORM object.
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+
 class CountryLookup(models.Model):
+    """
+    Country lookup table for the Registry app.
+
+    Used to populate drop downs.
+
+    """
     country_code = models.CharField(max_length=10)
     country_name = models.CharField(max_length=200)
 
