@@ -81,3 +81,11 @@ class Registry(models.Model):
         str_rep = f"{self.agency_nm}:{self.site_no} display:{self.display_flag} "
         str_rep += f"qw:{self.qw_sn_flag} wl:{self.wl_sn_flag}"
         return str_rep
+
+
+class CountryLookup(models.Model):
+    country_code = models.CharField(max_length=10)
+    country_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.country_name
