@@ -5,6 +5,13 @@ Well Registry ORM object.
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+class CountryLookup(models.Model):
+    country_code = models.CharField(max_length=10)
+    country_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.country_name
+
 
 class Registry(models.Model):
     """
@@ -22,7 +29,7 @@ class Registry(models.Model):
     alt_units = models.IntegerField()                 # UNITS_DIM.UNIT_ID
     horz_datum = models.CharField(max_length=10)      # HORZ_DATUM_DIM.HDATUM_CD
     nat_aquifer_cd = models.CharField(max_length=10)  # NAT_AQFR.NAT_AQFR_CD
-    country_cd = models.CharField(max_length=2)       # COUNTRY.COUNTRY_CD
+    country_cd = models.ForeignKey(CountryLookup, on_delete=models.CASCADE)       # COUNTRY.COUNTRY_CD
     state_cd = models.CharField(max_length=2)         # STATE.STATE_CD and STATE.COUNTRY_CD
     county_cd = models.CharField(max_length=3)        # COUNTY.COUNTY_CD and COUNTY.STATE_CD and COUNTY.COUNTRY_CD
 
@@ -81,11 +88,3 @@ class Registry(models.Model):
         str_rep = f"{self.agency_nm}:{self.site_no} display:{self.display_flag} "
         str_rep += f"qw:{self.qw_sn_flag} wl:{self.wl_sn_flag}"
         return str_rep
-
-
-class CountryLookup(models.Model):
-    country_code = models.CharField(max_length=10)
-    country_name = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.country_name
