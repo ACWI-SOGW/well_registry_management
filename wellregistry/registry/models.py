@@ -6,6 +6,20 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
+class CountryLookup(models.Model):
+    """
+    Country lookup table for the Registry app.
+
+    Used to populate drop downs.
+
+    """
+    country_cd = models.CharField(max_length=10, primary_key=True)
+    country_nm = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.country_nm
+
+
 class Registry(models.Model):
     """
     Django Registry Model.
@@ -22,7 +36,7 @@ class Registry(models.Model):
     alt_units = models.IntegerField()                 # UNITS_DIM.UNIT_ID
     horz_datum = models.CharField(max_length=10)      # HORZ_DATUM_DIM.HDATUM_CD
     nat_aquifer_cd = models.CharField(max_length=10)  # NAT_AQFR.NAT_AQFR_CD
-    country_cd = models.CharField(max_length=2)       # COUNTRY.COUNTRY_CD
+    country_cd = models.ForeignKey(CountryLookup, on_delete=models.CASCADE)       # COUNTRY.COUNTRY_CD
     state_cd = models.CharField(max_length=2)         # STATE.STATE_CD and STATE.COUNTRY_CD
     county_cd = models.CharField(max_length=3)        # COUNTY.COUNTY_CD and COUNTY.STATE_CD and COUNTY.COUNTRY_CD
 

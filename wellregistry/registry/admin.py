@@ -2,9 +2,10 @@
 Django Registry Administration.
 """
 
+from django import forms
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Registry
+from .models import CountryLookup, Registry
 
 # this is the Django property for the admin main page header
 admin.site.site_header = 'NGWMN Well Registry Administration'
@@ -16,13 +17,30 @@ def check_mark(value):
     return format_html('&check;') if value == 1 else ''
 
 
+class RegistryAdminForm(forms.ModelForm):
+    """
+    Registry admin form.
+
+    This model form is based on fields in models.Registry
+
+    """
+
+    # override the country_cd field
+    country_cd = forms.ModelChoiceField(queryset=CountryLookup.objects.all())
+
+    class Meta:
+        model = Registry
+        fields = '__all__'
+
+
 class RegistryAdmin(admin.ModelAdmin):
     """
     Django admin model for the registry application
 
     """
-    list_display = ('site_id', 'agency_cd', 'site_no', 'displayed', 'has_qw', 'has_wl', 'insert_date', 'update_date',)
-    list_filter = ('agency_cd', 'site_no', 'update_date',)
+    form = RegistryAdminForm
+    list_display = ('site_id', 'agency_cd', 'site_no', 'displayed', 'has_qw', 'has_wl', 'insert_date', 'update_date')
+    list_filter = ('agency_cd', 'site_no', 'update_date')
 
     # change this value when we have an full UI
     # change_list_template = 'path/to/ui/templates/registry.html
