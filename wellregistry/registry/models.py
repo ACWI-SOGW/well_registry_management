@@ -13,11 +13,11 @@ class CountryLookup(models.Model):
     Used to populate drop downs.
 
     """
-    country_code = models.CharField(max_length=10)
-    country_name = models.CharField(max_length=200)
+    country_cd = models.CharField(max_length=10, primary_key=True)
+    country_nm = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.country_name
+        return self.country_nm
 
 
 class Registry(models.Model):

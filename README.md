@@ -71,6 +71,9 @@ Another means to run local is the manage.py from within the wellregistry path:
 % python -m manage runserver
 ```
 
+Use `localhost` instead of `127.0.0.1` for local development, otherwise a KeyCloak bug
+regarding an invalid `redirect_uri` will be encountered when authenticating.
+
 ## Using Docker ci database
 Run the following command:
 ```bash

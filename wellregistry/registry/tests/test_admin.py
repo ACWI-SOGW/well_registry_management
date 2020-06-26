@@ -13,8 +13,8 @@ class TestRegistryAdminForm(TestCase):
 
     def setUp(self):
         CountryLookup.objects.create(
-            country_code='US',
-            country_name='United States'
+            country_cd='US',
+            country_nm='United States'
         )
         self.form_values = {
             'agency_cd': 'ZYX',
@@ -23,7 +23,7 @@ class TestRegistryAdminForm(TestCase):
             'alt_units': 2,
             'horz_datum': 'NAD83',
             'nat_aquifer_cd': 'AQ CODE',
-            'country_cd': 1,  # the primary key of the only entry in the country lookup table
+            'country_cd': 'US',  # the primary key of the only entry in the country lookup table
             'state_cd': 'CA',
             'county_cd': 'SF',
             'agency_nm': 'Die Katze',
@@ -77,7 +77,7 @@ class TestRegistryAdminForm(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_form_with_invalid_country(self):
-        self.form_values['country_cd'] = 19
+        self.form_values['country_cd'] = 'FR'
         form = RegistryAdminForm(data=self.form_values)
         self.assertFalse(form.is_valid())
 
