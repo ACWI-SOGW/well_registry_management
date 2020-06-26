@@ -34,13 +34,13 @@ make prodenv
 This installs psycopg2 module which has some environment prerequisites. See <https://www.psycopg.org/docs/install.html> for details
 
 ### Tests and Linting
-The tests by default run againts the docker ci database. See [Using Docker ci database.](#using-docker-ci-database)
+The tests require a postgres database. The docker ci database can be used to run these tests. Start the docker ci database and ensure the application's DATABASE_HOST is set to localhost before running the tests. See [Using Docker ci database.](#using-docker-ci-database)
 To run tests locally:
 ```bash
 make test
 ```
 
-You can also easily run pyling against all python modules using:
+You can also easily run pylint against all python modules using:
 ```bash
 make runlint
 ```
@@ -73,7 +73,8 @@ Another means to run local is the manage.py from within the wellregistry path:
 ```
 
 ## Using Docker ci database
-Run the following command:
+The docker ci database can be started with the start_ci_db.bash script. Keep in mind that any existing instance will be removed first.
+To manually start, run the following command:
 ```bash
 docker pull usgswma/well-registry-db:ci
 docker run --name registry_postgres -d -p 5432:5432 usgswma/well-registry-db:ci
