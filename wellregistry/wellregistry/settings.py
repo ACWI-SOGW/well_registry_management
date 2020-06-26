@@ -161,6 +161,9 @@ ENVIRONMENT = {
     'DATABASE_HOST': os.getenv('DATABASE_HOST'),
     'DATABASE_PORT': os.getenv('DATABASE_PORT', default='5432'),
 
+    'DATABASE_USERNAME': os.getenv('DATABASE_USERNAME'),
+    'DATABASE_PASSWORD': os.getenv('DATABASE_PASSWORD'),
+
     'APP_DATABASE_NAME': os.getenv('APP_DATABASE_NAME'),
     'APP_DB_OWNER_USERNAME': os.getenv('APP_DB_OWNER_USERNAME'),
     'APP_DB_OWNER_PASSWORD': os.getenv('APP_DB_OWNER_PASSWORD'),
@@ -175,10 +178,17 @@ env = ENVIRONMENT
 
 if 'test' in sys.argv:
     DATABASES = {
-        'default': {  # used for integration tests
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        },
+        'default': {  # used by the migrations and backend code.
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env['APP_DATABASE_NAME'],
+            'OPTIONS': {
+                'options': f'-c search_path={env["APP_SCHEMA_NAME"]},public'
+            },
+            'HOST': env['DATABASE_HOST'],
+            'PORT': env['DATABASE_PORT'],
+            'USER': env['DATABASE_USERNAME'],
+            'PASSWORD': env['DATABASE_PASSWORD'],
+        }
     }
 else:
     DATABASES = {
