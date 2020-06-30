@@ -5,7 +5,7 @@ Django Registry Administration.
 from django import forms
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import CountryLookup, Registry
+from .models import AgencyLovLookup, AltDatumDimLookup, HorzDatumDimLookup, CountryLookup, CountyLookup, NatAqfrLookup, StateLookup, UnitsDimLookup, Registry
 
 # this is the Django property for the admin main page header
 admin.site.site_header = 'NGWMN Well Registry Administration'
@@ -24,10 +24,6 @@ class RegistryAdminForm(forms.ModelForm):
     This model form is based on fields in models.Registry
 
     """
-
-    # override the country_cd field
-    country_cd = forms.ModelChoiceField(queryset=CountryLookup.objects.all())
-
     class Meta:
         model = Registry
         fields = '__all__'
