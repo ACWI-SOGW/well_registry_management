@@ -6,26 +6,23 @@ import datetime
 from django.test import TestCase
 
 from ..admin import RegistryAdminForm, RegistryAdmin, check_mark
-from ..models import CountryLookup, Registry
-
+from .lookups import LookupData
+from ..models import AgencyLovLookup, CountyLookup, StateLookup, Registry
 
 class TestRegistryAdminForm(TestCase):
 
     def setUp(self):
-        CountryLookup.objects.create(
-            country_cd='US',
-            country_nm='United States'
-        )
+        LookupData.create()
         self.form_values = {
-            'agency_cd': 'ZYX',
+            'agency_cd': 'provider',
             'well_depth_units': 1,
             'alt_datum_cd': 'NAVD88',
             'alt_units': 2,
             'horz_datum': 'NAD83',
-            'nat_aquifer_cd': 'AQ CODE',
-            'country_cd': 'US',  # the primary key of the only entry in the country lookup table
-            'state_cd': 'CA',
-            'county_cd': 'SF',
+            'nat_aquifer_cd': 'N100AKUNCD',
+            'country_cd': 'US',
+            'state_cd': StateLookup.objects.get(state_cd = 'CA'),
+            'county_cd': CountyLookup.objects.get(county_cd = 'SF'),
             'agency_nm': 'Die Katze',
             'agency_med': 'Der Hund',
             'site_no': '048043273',
@@ -72,26 +69,54 @@ class TestRegistryAdminForm(TestCase):
             'update_date': datetime.datetime(2020, 6, 18, 21, 55, 10)
         }
 
-    def test_form_with_valid_country(self):
+    def test_form_valid(self):
         form = RegistryAdminForm(data=self.form_values)
         self.assertTrue(form.is_valid())
 
+    def test_form_with_invalid_agency(self):
+        self.do_invalid_form('agency_cd', 'ABCD')
+
+    def test_form_with_invalid_horz_datum(self):
+        self.do_invalid_form('horz_datum', 'NAD99')
+
+    def test_form_with_invalid_alt_datum(self):
+        self.do_invalid_form('alt_datum_cd', 'NAVD99')
+
+    def test_form_with_invalid_nat_aquifer(self):
+        self.do_invalid_form('nat_aquifer_cd', 'NAD99')
+
     def test_form_with_invalid_country(self):
-        self.form_values['country_cd'] = 'FR'
+        self.do_invalid_form('country_cd', 'FR')
+
+    def test_form_with_invalid_state(self):
+        self.do_invalid_form('state_cd', 'CD')
+
+    def test_form_with_invalid_county(self):
+        self.do_invalid_form('county_cd', 'SA')
+
+    def test_form_with_invalid_well_depth_units(self):
+        self.do_invalid_form('well_depth_units', 3)
+
+    def test_form_with_invalid_alt_units(self):
+        self.do_invalid_form('alt_units', 4)
+
+    def do_invalid_form(self, field, value):
+        self.form_values[field] = value
         form = RegistryAdminForm(data=self.form_values)
         self.assertFalse(form.is_valid())
 
-        # verify that an error is thrown for the country code
+        # verify that an error is thrown
         form_errors = form.errors.as_data()
-        self.assertIsNotNone(form_errors.get('country_cd'))
-
+        self.assertIsNotNone(form_errors.get(field))
 
 class TestRegistryAdmin(TestCase):
+    def setUp(self):
+        LookupData.create()
 
     def test_site_id(self):
         # SETUP
         reg_entry = Registry()
-        reg_entry.agency_cd = 'provider'
+        reg_entry.agency_cd = AgencyLovLookup.objects.get(agency_cd = 'provider')
         reg_entry.site_no = '12345'
 
         # TEST ACTION

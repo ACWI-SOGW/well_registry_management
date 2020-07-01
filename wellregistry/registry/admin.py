@@ -5,7 +5,7 @@ Django Registry Administration.
 from django import forms
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import AgencyLovLookup, AltDatumDimLookup, HorzDatumDimLookup, CountryLookup, CountyLookup, NatAqfrLookup, StateLookup, UnitsDimLookup, Registry
+from .models import Registry
 
 # this is the Django property for the admin main page header
 admin.site.site_header = 'NGWMN Well Registry Administration'
@@ -44,7 +44,8 @@ class RegistryAdmin(admin.ModelAdmin):
     @staticmethod
     def site_id(obj):
         """Constructs a site id from agency code and site number."""
-        return f"{obj.agency_cd}:{obj.site_no}"
+        # The obj field agency_cd is the AgencyLovLookup model, retrieve agency_cd from the model
+        return f"{obj.agency_cd.agency_cd}:{obj.site_no}"
 
     @staticmethod
     def displayed(obj):

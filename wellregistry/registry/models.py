@@ -6,6 +6,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 class AgencyLovLookup(models.Model):
+    """Model definition for the agency_lov table, lookup only"""
     agency_cd = models.CharField(max_length=50, primary_key=True)
     agency_nm = models.CharField(max_length=150, blank=True, null=True)
     org_type = models.CharField(max_length=50, blank=True, null=True)
@@ -21,7 +22,8 @@ class AgencyLovLookup(models.Model):
 
 
 class AltDatumDimLookup(models.Model):
-    adatum_cd = models.CharField(max_length=10,primary_key=True)
+    """Model definition for the alt_datum_dim table, lookup only"""
+    adatum_cd = models.CharField(max_length=10, primary_key=True)
     adatum_desc = models.CharField(max_length=100, blank=True, null=True)
     datum_type = models.CharField(max_length=20, blank=True, null=True)
 
@@ -33,6 +35,7 @@ class AltDatumDimLookup(models.Model):
 
 
 class CountryLookup(models.Model):
+    """Model definition for the country table, lookup only"""
     country_cd = models.CharField(primary_key=True, max_length=2)
     country_nm = models.CharField(max_length=48)
 
@@ -43,6 +46,7 @@ class CountryLookup(models.Model):
         return self.country_nm
 
 class CountyLookup(models.Model):
+    """Model definition for the county table, lookup only"""
     country_cd = models.ForeignKey('CountryLookup', models.DO_NOTHING, db_column='country_cd')
     state_cd = models.ForeignKey('StateLookup', models.DO_NOTHING, db_column='state_cd')
     county_cd = models.CharField(max_length=3)
@@ -63,6 +67,7 @@ class CountyLookup(models.Model):
         return self.county_nm
 
 class HorzDatumDimLookup(models.Model):
+    """Model definition for the horz_datum_dim table, lookup only"""
     hdatum_cd = models.CharField(primary_key=True, max_length=10)
     hdatum_desc = models.CharField(blank=True, null=True, max_length=100)
 
@@ -74,6 +79,7 @@ class HorzDatumDimLookup(models.Model):
 
 
 class NatAqfrLookup(models.Model):
+    """Model definition for the nat_aqfr table, lookup only"""
     nat_aqfr_cd = models.CharField(primary_key=True, max_length=10)
     nat_aqfr_desc = models.CharField(blank=True, null=True, max_length=100)
 
@@ -85,6 +91,7 @@ class NatAqfrLookup(models.Model):
 
 
 class StateLookup(models.Model):
+    """Model definition for the state table, lookup only"""
     country_cd = models.ForeignKey('CountryLookup', models.DO_NOTHING, db_column='country_cd')
     state_cd = models.CharField(max_length=2)
     state_nm = models.CharField(max_length=53)
@@ -106,6 +113,7 @@ class StateLookup(models.Model):
 
 
 class UnitsDimLookup(models.Model):
+    """Model definition for the units_dim table, lookup only"""
     unit_id = models.FloatField(primary_key=True)
     unit_desc = models.CharField(max_length=20, blank=True, null=True)
     unit_abrev = models.CharField(max_length=20, blank=True, null=True)
@@ -126,15 +134,16 @@ class Registry(models.Model):
 
     """
     # these columns use foreign keys
-    agency_cd = models.ForeignKey(AgencyLovLookup, on_delete=models.PROTECT)       # AGENCY_LOV.AGENCY_CD
-    well_depth_units = models.ForeignKey(UnitsDimLookup, related_name='+', on_delete=models.PROTECT)          # UNITS_DIM.UNIT_ID
-    alt_datum_cd = models.ForeignKey(AltDatumDimLookup, on_delete=models.PROTECT)    # ALT_DATUM_DIM.ADATUM_CD
-    alt_units = models.ForeignKey(UnitsDimLookup, on_delete=models.PROTECT)                 # UNITS_DIM.UNIT_ID
-    horz_datum = models.ForeignKey(HorzDatumDimLookup, on_delete=models.PROTECT)      # HORZ_DATUM_DIM.HDATUM_CD
+    agency_cd = models.ForeignKey(AgencyLovLookup, on_delete=models.PROTECT) # AGENCY_LOV.AGENCY_CD
+    well_depth_units = models.ForeignKey(UnitsDimLookup, related_name='+',
+                                         on_delete=models.PROTECT) # UNITS_DIM.UNIT_ID
+    alt_datum_cd = models.ForeignKey(AltDatumDimLookup, on_delete=models.PROTECT) # ALT_DATUM_DIM.ADATUM_CD
+    alt_units = models.ForeignKey(UnitsDimLookup, on_delete=models.PROTECT) # UNITS_DIM.UNIT_ID
+    horz_datum = models.ForeignKey(HorzDatumDimLookup, on_delete=models.PROTECT) # HORZ_DATUM_DIM.HDATUM_CD
     nat_aquifer_cd = models.ForeignKey(NatAqfrLookup, on_delete=models.PROTECT)  # NAT_AQFR.NAT_AQFR_CD
     country_cd = models.ForeignKey(CountryLookup, on_delete=models.PROTECT)  # COUNTRY.COUNTRY_CD
-    state_cd = models.ForeignKey(StateLookup, on_delete=models.PROTECT  )    # STATE.STATE_CD and STATE.COUNTRY_CD
-    county_cd = models.ForeignKey(CountyLookup, on_delete=models.PROTECT)    # COUNTY.COUNTY_CD and COUNTY.STATE_CD and COUNTY.COUNTRY_CD
+    state_cd = models.ForeignKey(StateLookup, on_delete=models.PROTECT) # STATE.STATE_CD and STATE.COUNTRY_CD
+    county_cd = models.ForeignKey(CountyLookup, on_delete=models.PROTECT) # COUNTY.{country_cd,state_cd,county_cd'}
 
     agency_nm = models.CharField(max_length=200)
     agency_med = models.CharField(max_length=200)
