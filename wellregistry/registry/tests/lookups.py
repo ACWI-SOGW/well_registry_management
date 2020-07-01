@@ -1,13 +1,18 @@
 """
-Manage lookup data for tests.
+Module for Managing lookups used in tests.
 """
 
-from ..models import AgencyLovLookup, AltDatumDimLookup, CountryLookup, CountyLookup, CountyLookup, HorzDatumDimLookup
-from ..models import NatAqfrLookup, StateLookup, UnitsDimLookup, Registry
+from ..models import AgencyLovLookup, AltDatumDimLookup, CountryLookup, CountyLookup, HorzDatumDimLookup
+from ..models import NatAqfrLookup, StateLookup, UnitsDimLookup
 
-class LookupData():
+class LookupData:
+    """
+    Utility class for Managing test lookup data
+    """
 
+    @staticmethod
     def create():
+        """Create test lookup data."""
         AgencyLovLookup.objects.create(
             agency_cd='provider',
             agency_nm='Provider Name'
@@ -29,21 +34,23 @@ class LookupData():
             nat_aqfr_desc='Alaska unconsolidated-deposit aquifers'
         )
         StateLookup.objects.create(
-            country_cd= CountryLookup.objects.get(country_cd = 'US'),
+            country_cd=CountryLookup.objects.get(country_cd='US'),
             state_cd='CA',
             state_nm='California'
         )
         CountyLookup.objects.create(
-            country_cd= CountryLookup.objects.get(country_cd = 'US'),
-            state_cd= StateLookup.objects.get(state_cd = 'CA'),
+            country_cd=CountryLookup.objects.get(country_cd='US'),
+            state_cd=StateLookup.objects.get(state_cd='CA'),
             county_cd='SF',
             county_nm='United States'
         )
+        LookupData.create_units_dim(1, 'Feet')
+        LookupData.create_units_dim(2, 'Centimeters')
+
+    @staticmethod
+    def create_units_dim(unit_id, unit_desc):
+        """Creates a Units Dim lookup data with the specified unit_id and unit_desc. """
         UnitsDimLookup.objects.create(
-            unit_id=1,
-            unit_desc='Feet'
-        )
-        UnitsDimLookup.objects.create(
-            unit_id=2,
-            unit_desc='Centimeters'
+            unit_id=unit_id,
+            unit_desc=unit_desc
         )

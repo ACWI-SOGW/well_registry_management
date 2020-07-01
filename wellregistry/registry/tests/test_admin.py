@@ -21,8 +21,8 @@ class TestRegistryAdminForm(TestCase):
             'horz_datum': 'NAD83',
             'nat_aquifer_cd': 'N100AKUNCD',
             'country_cd': 'US',
-            'state_cd': StateLookup.objects.get(state_cd = 'CA'),
-            'county_cd': CountyLookup.objects.get(county_cd = 'SF'),
+            'state_cd': StateLookup.objects.get(state_cd='CA'),
+            'county_cd': CountyLookup.objects.get(county_cd='SF'),
             'agency_nm': 'Die Katze',
             'agency_med': 'Der Hund',
             'site_no': '048043273',
@@ -101,6 +101,7 @@ class TestRegistryAdminForm(TestCase):
         self.do_invalid_form('alt_units', 4)
 
     def do_invalid_form(self, field, value):
+        """Execute form validation failure test using the specified field and value"""
         self.form_values[field] = value
         form = RegistryAdminForm(data=self.form_values)
         self.assertFalse(form.is_valid())
@@ -116,7 +117,7 @@ class TestRegistryAdmin(TestCase):
     def test_site_id(self):
         # SETUP
         reg_entry = Registry()
-        reg_entry.agency_cd = AgencyLovLookup.objects.get(agency_cd = 'provider')
+        reg_entry.agency_cd = AgencyLovLookup.objects.get(agency_cd='provider')
         reg_entry.site_no = '12345'
 
         # TEST ACTION
