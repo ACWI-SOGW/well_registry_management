@@ -6,13 +6,13 @@ import datetime
 from django.test import TestCase
 
 from ..admin import RegistryAdminForm, RegistryAdmin, check_mark
-from .lookups import LookupData
+from .lookups import create_lookup_data
 from ..models import AgencyLovLookup, CountyLookup, StateLookup, Registry
 
 class TestRegistryAdminForm(TestCase):
 
     def setUp(self):
-        LookupData.create()
+        create_lookup_data()
         self.form_values = {
             'agency_cd': 'provider',
             'well_depth_units': 1,
@@ -112,7 +112,7 @@ class TestRegistryAdminForm(TestCase):
 
 class TestRegistryAdmin(TestCase):
     def setUp(self):
-        LookupData.create()
+        create_lookup_data()
 
     def test_site_id(self):
         # SETUP
