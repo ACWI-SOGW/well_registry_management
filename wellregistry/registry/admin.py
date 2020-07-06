@@ -4,6 +4,7 @@ Django Registry Administration.
 
 from django import forms
 from django.contrib import admin
+from django.db.models.functions import Upper
 from django.utils.html import format_html
 from .models import CountryLookup, Registry
 
@@ -65,6 +66,41 @@ class RegistryAdmin(admin.ModelAdmin):
         """Transforms water level boolean to HTML check mark."""
         return check_mark(obj.wl_sn_flag)
 
+    def _get_user_groups(self, user):
+        """Return a list of upper case groups that this user belongs to"""
+        return user.groups.all().values_list(Upper('name'), flat=True)
+
+    def _is_user_in_registry_agency(self, user, registry):
+        return registry.agency_cd in self._get_user_groups(user)
+
+    def get_queryset(self, request):
+        return Registry.objects.all() if request.user.is_superuser \
+            else Registry.objects.filter(agency_cd__in=self._get_user_groups(request.user))
+
+    def _has_permission(self, perm, request, obj=None):
+        if request.user.is_superuser:
+            return True
+        else:
+            return request.user.has_perm(perm) \
+                   and (not obj or obj.agency_cd in self._get_user_groups(request.user))
+
+    def has_view_permission(self, request, obj=None):
+        return self._has_permission('registry.view_registry', request, obj)
+
+    def has_add_permission(self, request):
+        return self._has_permission('registry.add_registry', request)
+
+    def has_change_permission(self, request, obj=None):
+        return self._has_permission('registry.change_registry', request)
+
+    def has_delete_permission(self, request, obj=None):
+        return self._has_permission('registry.delete_registry', request)
+
+    def get_changeform_initial_data(self, request):
+        groups = request.user.groups.all()
+        return {
+            'agency_cd': '' if request.user.is_superuser or not groups.count() else list(groups)[0].name.upper()
+        }
 
 # below here will maintain all the tables Django admin should be aware
 admin.site.register(Registry, RegistryAdmin)
