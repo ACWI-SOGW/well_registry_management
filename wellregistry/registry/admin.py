@@ -35,8 +35,8 @@ class RegistryAdmin(admin.ModelAdmin):
 
     """
     form = RegistryAdminForm
-    list_display = ('site_id', 'agency_cd', 'site_no', 'displayed', 'has_qw', 'has_wl', 'insert_date', 'update_date')
-    list_filter = ('agency_cd', 'site_no', 'update_date')
+    list_display = ('site_id', 'agency', 'site_no', 'displayed', 'has_qw', 'has_wl', 'insert_date', 'update_date')
+    list_filter = ('agency', 'site_no', 'update_date')
 
     # change this value when we have an full UI
     # change_list_template = 'path/to/ui/templates/registry.html

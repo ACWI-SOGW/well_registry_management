@@ -7,22 +7,22 @@ from django.test import TestCase
 
 from ..admin import RegistryAdminForm, RegistryAdmin, check_mark
 from .lookups import create_lookup_data
-from ..models import AgencyLovLookup, CountyLookup, StateLookup, Registry
+from ..models import AgencyLookup, CountyLookup, StateLookup, Registry
 
 class TestRegistryAdminForm(TestCase):
 
     def setUp(self):
         create_lookup_data()
         self.form_values = {
-            'agency_cd': 'provider',
+            'agency': 'provider',
             'well_depth_units': 1,
-            'alt_datum_cd': 'NAVD88',
-            'alt_units': 2,
-            'horz_datum': 'NAD83',
-            'nat_aquifer_cd': 'N100AKUNCD',
-            'country_cd': 'US',
-            'state_cd': StateLookup.objects.get(state_cd='CA'),
-            'county_cd': CountyLookup.objects.get(county_cd='SF'),
+            'altitude_datum': 'NAVD88',
+            'altitude_units': 2,
+            'horizontal_datum': 'NAD83',
+            'nat_aqfr': 'N100AKUNCD',
+            'country': 'US',
+            'state': StateLookup.objects.get(state_cd='CA'),
+            'county': CountyLookup.objects.get(county_cd='SF'),
             'agency_nm': 'Die Katze',
             'agency_med': 'Der Hund',
             'site_no': '048043273',
@@ -74,31 +74,31 @@ class TestRegistryAdminForm(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_form_with_invalid_agency(self):
-        self.do_invalid_form('agency_cd', 'ABCD')
+        self.do_invalid_form('agency', 'ABCD')
 
     def test_form_with_invalid_horz_datum(self):
-        self.do_invalid_form('horz_datum', 'NAD99')
+        self.do_invalid_form('horizontal_datum', 'NAD99')
 
     def test_form_with_invalid_alt_datum(self):
-        self.do_invalid_form('alt_datum_cd', 'NAVD99')
+        self.do_invalid_form('altitude_datum', 'NAVD99')
 
     def test_form_with_invalid_nat_aquifer(self):
-        self.do_invalid_form('nat_aquifer_cd', 'NAD99')
+        self.do_invalid_form('nat_aqfr', 'NAD99')
 
     def test_form_with_invalid_country(self):
-        self.do_invalid_form('country_cd', 'FR')
+        self.do_invalid_form('country', 'FR')
 
     def test_form_with_invalid_state(self):
-        self.do_invalid_form('state_cd', 'CD')
+        self.do_invalid_form('state', 'CD')
 
     def test_form_with_invalid_county(self):
-        self.do_invalid_form('county_cd', 'SA')
+        self.do_invalid_form('county', 'SA')
 
     def test_form_with_invalid_well_depth_units(self):
         self.do_invalid_form('well_depth_units', 3)
 
     def test_form_with_invalid_alt_units(self):
-        self.do_invalid_form('alt_units', 4)
+        self.do_invalid_form('altitude_units', 4)
 
     def do_invalid_form(self, field, value):
         """Execute form validation failure test using the specified field and value"""
@@ -117,7 +117,7 @@ class TestRegistryAdmin(TestCase):
     def test_site_id(self):
         # SETUP
         reg_entry = Registry()
-        reg_entry.agency_cd = AgencyLovLookup.objects.get(agency_cd='provider')
+        reg_entry.agency_cd = AgencyLookup.objects.get(agency_cd='provider')
         reg_entry.site_no = '12345'
 
         # TEST ACTION

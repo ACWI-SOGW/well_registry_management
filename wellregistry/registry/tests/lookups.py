@@ -2,23 +2,23 @@
 Module for Managing lookups used in tests.
 """
 
-from ..models import AgencyLovLookup, AltDatumDimLookup, CountryLookup, CountyLookup, HorzDatumDimLookup
-from ..models import NatAqfrLookup, StateLookup, UnitsDimLookup
+from ..models import AgencyLookup, AltitudeDatumLookup, CountryLookup, CountyLookup, HorizontalDatumLookup
+from ..models import NatAqfrLookup, StateLookup, UnitsLookup
 
 def create_units_dim(unit_id, unit_desc):
     """Creates a Units Dim lookup data with the specified unit_id and unit_desc. """
-    UnitsDimLookup.objects.create(
+    UnitsLookup.objects.create(
         unit_id=unit_id,
         unit_desc=unit_desc
     )
 
 def create_lookup_data():
     """Create test lookup data."""
-    AgencyLovLookup.objects.create(
+    AgencyLookup.objects.create(
         agency_cd='provider',
         agency_nm='Provider Name'
     )
-    AltDatumDimLookup.objects.create(
+    AltitudeDatumLookup.objects.create(
         adatum_cd='NAVD88',
         adatum_desc='adatum description'
     )
@@ -26,7 +26,7 @@ def create_lookup_data():
         country_cd='US',
         country_nm='United States'
     )
-    HorzDatumDimLookup.objects.create(
+    HorizontalDatumLookup.objects.create(
         hdatum_cd='NAD83',
         hdatum_desc='North American Datum of 1983'
     )

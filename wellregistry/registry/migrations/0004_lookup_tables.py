@@ -23,38 +23,34 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='AgencyLovLookup',
+            name='AgencyLookup',
             fields=[
                 ('agency_cd', models.CharField(max_length=50, primary_key=True, serialize=False)),
                 ('agency_nm', models.CharField(blank=True, max_length=150, null=True)),
-                ('org_type', models.CharField(blank=True, max_length=50, null=True)),
                 ('agency_med', models.CharField(blank=True, max_length=200, null=True)),
-                ('state_cd', models.CharField(blank=True, max_length=5, null=True)),
-                ('agency_link', models.CharField(blank=True, max_length=500, null=True)),
             ],
             options={
-                'db_table': 'agency_lov',
+                'db_table': 'agency',
             },
         ),
         migrations.CreateModel(
-            name='AltDatumDimLookup',
+            name='AltitudeDatumLookup',
             fields=[
                 ('adatum_cd', models.CharField(max_length=10, primary_key=True, serialize=False)),
                 ('adatum_desc', models.CharField(blank=True, max_length=100, null=True)),
-                ('datum_type', models.CharField(blank=True, max_length=20, null=True)),
             ],
             options={
-                'db_table': 'alt_datum_dim',
+                'db_table': 'altitude_datum',
             },
         ),
         migrations.CreateModel(
-            name='HorzDatumDimLookup',
+            name='HorizontalDatumLookup',
             fields=[
                 ('hdatum_cd', models.CharField(max_length=10, primary_key=True, serialize=False)),
                 ('hdatum_desc', models.CharField(blank=True, max_length=100, null=True)),
             ],
             options={
-                'db_table': 'horz_datum_dim',
+                'db_table': 'horizontal_datum',
             },
         ),
         migrations.CreateModel(
@@ -68,14 +64,13 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='UnitsDimLookup',
+            name='UnitsLookup',
             fields=[
                 ('unit_id', models.FloatField(primary_key=True, serialize=False)),
                 ('unit_desc', models.CharField(blank=True, max_length=20, null=True)),
-                ('unit_abrev', models.CharField(blank=True, max_length=20, null=True)),
             ],
             options={
-                'db_table': 'units_dim',
+                'db_table': 'units',
             },
         ),
         migrations.AlterField(
@@ -93,6 +88,11 @@ class Migration(migrations.Migration):
             name='country_cd',
             field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='registry.CountryLookup'),
         ),
+        migrations.RenameField(
+            model_name='registry',
+            old_name='country_cd',
+            new_name='country',
+        ),
         migrations.AlterModelTable(
             name='countrylookup',
             table='country',
@@ -103,14 +103,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('state_cd', models.CharField(max_length=2)),
                 ('state_nm', models.CharField(max_length=53)),
-                ('state_post_cd', models.CharField(max_length=2)),
-                ('state_max_lat_va', models.CharField(blank=True, max_length=11, null=True)),
-                ('state_min_lat_va', models.CharField(blank=True, max_length=11, null=True)),
-                ('state_max_long_va', models.CharField(blank=True, max_length=12, null=True)),
-                ('state_min_long_va', models.CharField(blank=True, max_length=12, null=True)),
-                ('state_max_alt_va', models.CharField(blank=True, max_length=8, null=True)),
-                ('state_min_alt_va', models.CharField(blank=True, max_length=8, null=True)),
-                ('state_md', models.CharField(max_length=8)),
                 ('country_cd', models.ForeignKey(db_column='country_cd',
                                                  on_delete=django.db.models.deletion.DO_NOTHING,
                                                  to='registry.CountryLookup')),
@@ -126,13 +118,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('county_cd', models.CharField(max_length=3)),
                 ('county_nm', models.CharField(max_length=48)),
-                ('county_max_lat_va', models.CharField(max_length=11)),
-                ('county_min_lat_va', models.CharField(max_length=11)),
-                ('county_max_long_va', models.CharField(max_length=12)),
-                ('county_min_long_va', models.CharField(max_length=12)),
-                ('county_max_alt_va', models.CharField(max_length=8)),
-                ('county_min_alt_va', models.CharField(max_length=8)),
-                ('county_md', models.CharField(max_length=8)),
                 ('country_cd', models.ForeignKey(db_column='country_cd',
                                                  on_delete=django.db.models.deletion.DO_NOTHING,
                                                  to='registry.CountryLookup')),
@@ -145,45 +130,93 @@ class Migration(migrations.Migration):
                 'unique_together': {('country_cd', 'state_cd', 'county_cd')},
             },
         ),
-        migrations.AlterField(
+        migrations.RenameField(
             model_name='registry',
-            name='agency_cd',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='registry.AgencyLovLookup'),
+            old_name='agency_cd',
+            new_name='agency',
         ),
-        migrations.AlterField(
+        migrations.RenameField(
             model_name='registry',
-            name='alt_datum_cd',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='registry.AltDatumDimLookup'),
+            old_name='alt_datum_cd',
+            new_name='altitude_datum',
         ),
-        migrations.AlterField(
+        migrations.RenameField(
             model_name='registry',
-            name='alt_units',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='registry.UnitsDimLookup'),
+            old_name='alt_units',
+            new_name='altitude_units',
         ),
-        migrations.AlterField(
+        migrations.RenameField(
             model_name='registry',
-            name='county_cd',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='registry.CountyLookup'),
+            old_name='county_cd',
+            new_name='county',
         ),
-        migrations.AlterField(
+        migrations.RenameField(
             model_name='registry',
-            name='horz_datum',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='registry.HorzDatumDimLookup'),
+            old_name='horz_datum',
+            new_name='horizontal_datum',
         ),
-        migrations.AlterField(
+        migrations.RenameField(
             model_name='registry',
-            name='nat_aquifer_cd',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='registry.NatAqfrLookup'),
+            old_name='nat_aquifer_cd',
+            new_name='nat_aqfr',
         ),
-        migrations.AlterField(
+        migrations.RenameField(
             model_name='registry',
-            name='state_cd',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='registry.StateLookup'),
+            old_name='state_cd',
+            new_name='state',
         ),
         migrations.AlterField(
             model_name='registry',
             name='well_depth_units',
             field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='+',
-                                    to='registry.UnitsDimLookup'),
+                                    db_column='well_depth_units', to='registry.UnitsLookup'),
+        ),
+        migrations.AlterField(
+            model_name='registry',
+            name='agency',
+            field=models.ForeignKey(db_column='agency_cd', on_delete=django.db.models.deletion.PROTECT,
+                                    to='registry.AgencyLookup'),
+        ),
+        migrations.AlterField(
+            model_name='registry',
+            name='altitude_datum',
+            field=models.ForeignKey(db_column='altitude_datum_cd', on_delete=django.db.models.deletion.PROTECT,
+                                    to='registry.AltitudeDatumLookup'),
+        ),
+        migrations.AlterField(
+            model_name='registry',
+            name='altitude_units',
+            field=models.ForeignKey(db_column='altitude_units', on_delete=django.db.models.deletion.PROTECT,
+                                    to='registry.UnitsLookup'),
+        ),
+        migrations.AlterField(
+            model_name='registry',
+            name='country',
+            field=models.ForeignKey(db_column='country_cd', on_delete=django.db.models.deletion.PROTECT,
+                                    to='registry.CountryLookup'),
+        ),
+        migrations.AlterField(
+            model_name='registry',
+            name='county',
+            field=models.ForeignKey(db_column='county_id', on_delete=django.db.models.deletion.PROTECT,
+                                    to='registry.CountyLookup'),
+        ),
+        migrations.AlterField(
+            model_name='registry',
+            name='horizontal_datum',
+            field=models.ForeignKey(db_column='horizontal_datum_cd', on_delete=django.db.models.deletion.PROTECT,
+                                    to='registry.HorizontalDatumLookup'),
+        ),
+        migrations.AlterField(
+            model_name='registry',
+            name='nat_aqfr',
+            field=models.ForeignKey(db_column='nat_aqfr_cd', on_delete=django.db.models.deletion.PROTECT,
+                                    to='registry.NatAqfrLookup'),
+        ),
+        migrations.AlterField(
+            model_name='registry',
+            name='state',
+            field=models.ForeignKey(db_column='state_id', on_delete=django.db.models.deletion.PROTECT,
+                                    to='registry.StateLookup'),
         ),
     ]
