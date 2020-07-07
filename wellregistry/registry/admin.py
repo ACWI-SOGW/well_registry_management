@@ -78,6 +78,9 @@ class RegistryAdmin(admin.ModelAdmin):
         """Return True if user is a member of the group for registry's agency"""
         return registry.agency_cd in self._get_groups(user)
 
+    def get_readonly_fields(self, request, obj=None):
+        return ('agency_cd',) if not request.user.is_superuser else ()
+
     def get_queryset(self, request):
         return Registry.objects.all() if request.user.is_superuser \
             else Registry.objects.filter(agency_cd__in=self._get_groups(request.user))

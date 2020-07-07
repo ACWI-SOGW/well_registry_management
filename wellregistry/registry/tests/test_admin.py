@@ -3,7 +3,9 @@ Tests for registry admin module
 """
 import datetime
 
+from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import User, Group, Permission
+from django.http import HttpRequest
 from django.test import TestCase
 
 from ..admin import RegistryAdminForm, RegistryAdmin, check_mark
@@ -88,38 +90,45 @@ class TestRegistryAdminForm(TestCase):
 
 
 class TestRegistryAdmin(TestCase):
+    fixtures = ['test_country_lookups.json', 'test_registry.json']
 
     def setUp(self):
-
         self.agency1_group = Group.objects.create
         self.superuser = User.objects.create_superuser('my_superuser')
-        self.agency_user = User.objects.create_user('agency_user')
-        self.agency_user.g
+        self.adwr_group = Group.objects.get(name='adwr')
+        self.adwr_user = User.objects.create_user('adwr_user')
+        self.adwr_user.groups.add(self.adwr_group)
+        self.adwr_user.save()
 
+        self.site = AdminSite()
+        self.admin = RegistryAdmin(Registry, self.site)
 
     def test_site_id(self):
-        # SETUP
         reg_entry = Registry()
         reg_entry.agency_cd = 'provider'
         reg_entry.site_no = '12345'
-
-        # TEST ACTION
         site_id = RegistryAdmin.site_id(reg_entry)
 
-        # ASSERTION
         self.assertEqual(site_id, "provider:12345")
 
     def test_check_mark(self):
-        # SETUP
-        true_flag = True
-        false_flag = False
+        check_html = check_mark(True)
+        blank_html = check_mark(False)
 
-        # TEST ACTION
-        check_html = check_mark(true_flag)
-        blank_html = check_mark(false_flag)
-
-        # ASSERTION
         self.assertEqual(check_html, '&check;')
         self.assertEqual(blank_html, '')
 
-    def test
+    def test_get_queryset_with_superuser(self):
+        request = HttpRequest()
+        request.user = self.superuser
+        qs = self.admin.get_queryset(request)
+
+        self.assertEqual(qs.count(), 4)
+
+    def test_get_queryset_with_adwr_user(self):
+        request = HttpRequest()
+        request.user = self.adwr_user
+        qs = self.admin.get_queryset(request)
+
+        self.assertEqual(qs.count(), 2)
+        self.assertEqual(qs.filter(agency_cd='ADWR').count(), 2)
