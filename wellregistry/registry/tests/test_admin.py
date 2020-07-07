@@ -3,6 +3,7 @@ Tests for registry admin module
 """
 import datetime
 
+from django.contrib.auth.models import User, Group, Permission
 from django.test import TestCase
 
 from ..admin import RegistryAdminForm, RegistryAdmin, check_mark
@@ -88,6 +89,14 @@ class TestRegistryAdminForm(TestCase):
 
 class TestRegistryAdmin(TestCase):
 
+    def setUp(self):
+
+        self.agency1_group = Group.objects.create
+        self.superuser = User.objects.create_superuser('my_superuser')
+        self.agency_user = User.objects.create_user('agency_user')
+        self.agency_user.g
+
+
     def test_site_id(self):
         # SETUP
         reg_entry = Registry()
@@ -112,3 +121,5 @@ class TestRegistryAdmin(TestCase):
         # ASSERTION
         self.assertEqual(check_html, '&check;')
         self.assertEqual(blank_html, '')
+
+    def test

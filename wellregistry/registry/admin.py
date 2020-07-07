@@ -34,6 +34,10 @@ class RegistryAdminForm(forms.ModelForm):
         fields = '__all__'
 
 
+def _get_all_groups(user):
+    pass
+
+
 class RegistryAdmin(admin.ModelAdmin):
     """
     Django admin model for the registry application
@@ -66,23 +70,24 @@ class RegistryAdmin(admin.ModelAdmin):
         """Transforms water level boolean to HTML check mark."""
         return check_mark(obj.wl_sn_flag)
 
-    def _get_user_groups(self, user):
+    def _get_groups(self, user):
         """Return a list of upper case groups that this user belongs to"""
         return user.groups.all().values_list(Upper('name'), flat=True)
 
     def _is_user_in_registry_agency(self, user, registry):
-        return registry.agency_cd in self._get_user_groups(user)
+        """Return True if user is a member of the group for registry's agency"""
+        return registry.agency_cd in self._get_groups(user)
 
     def get_queryset(self, request):
         return Registry.objects.all() if request.user.is_superuser \
-            else Registry.objects.filter(agency_cd__in=self._get_user_groups(request.user))
+            else Registry.objects.filter(agency_cd__in=self._get_groups(request.user))
 
     def _has_permission(self, perm, request, obj=None):
         if request.user.is_superuser:
             return True
         else:
             return request.user.has_perm(perm) \
-                   and (not obj or obj.agency_cd in self._get_user_groups(request.user))
+                   and (not obj or obj.agency_cd in self._get_groups(request.user))
 
     def has_view_permission(self, request, obj=None):
         return self._has_permission('registry.view_registry', request, obj)
