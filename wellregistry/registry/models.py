@@ -91,4 +91,3 @@ class Registry(models.Model):
         """Default string."""
         str_rep = f'{self.agency_cd}:{self.site_no}'
         return str_rep
-

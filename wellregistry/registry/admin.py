@@ -34,8 +34,9 @@ class RegistryAdminForm(forms.ModelForm):
         fields = '__all__'
 
 
-def _get_all_groups(user):
-    pass
+def _get_groups(user):
+    """Return a list of upper case groups that this user belongs to"""
+    return user.groups.all().values_list(Upper('name'), flat=True)
 
 
 class RegistryAdmin(admin.ModelAdmin):
@@ -70,41 +71,53 @@ class RegistryAdmin(admin.ModelAdmin):
         """Transforms water level boolean to HTML check mark."""
         return check_mark(obj.wl_sn_flag)
 
-    def _get_groups(self, user):
+    @staticmethod
+    def _get_groups(user):
         """Return a list of upper case groups that this user belongs to"""
         return user.groups.all().values_list(Upper('name'), flat=True)
 
-    def _is_user_in_registry_agency(self, user, registry):
+    @staticmethod
+    def _is_user_in_registry_agency(user, registry):
         """Return True if user is a member of the group for registry's agency"""
-        return registry.agency_cd in self._get_groups(user)
+        return registry.agency_cd in _get_groups(user)
+
+    @staticmethod
+    def _has_permission(perm, user, obj=None):
+        """Return true if the user has permission, perm, for the obj"""
+        if user.is_superuser:
+            return True
+        else:
+            return user.has_perm(perm) \
+                   and (not obj or obj.agency_cd in _get_groups(user))
+
 
     def get_readonly_fields(self, request, obj=None):
+        """Overrides default implementation"""
         return ('agency_cd',) if not request.user.is_superuser else ()
 
     def get_queryset(self, request):
+        """Overrides default implementation"""
         return Registry.objects.all() if request.user.is_superuser \
-            else Registry.objects.filter(agency_cd__in=self._get_groups(request.user))
-
-    def _has_permission(self, perm, request, obj=None):
-        if request.user.is_superuser:
-            return True
-        else:
-            return request.user.has_perm(perm) \
-                   and (not obj or obj.agency_cd in self._get_groups(request.user))
+            else Registry.objects.filter(agency_cd__in=_get_groups(request.user))
 
     def has_view_permission(self, request, obj=None):
-        return self._has_permission('registry.view_registry', request, obj)
+        """Overrides default implementation"""
+        return self._has_permission('registry.view_registry', request.user, obj)
 
     def has_add_permission(self, request):
-        return self._has_permission('registry.add_registry', request)
+        """Overrides default implementation"""
+        return self._has_permission('registry.add_registry', request.user)
 
     def has_change_permission(self, request, obj=None):
-        return self._has_permission('registry.change_registry', request, obj)
+        """Overrides default implementation"""
+        return self._has_permission('registry.change_registry', request.user, obj)
 
     def has_delete_permission(self, request, obj=None):
-        return self._has_permission('registry.delete_registry', request, obj)
+        """Overrides default implementation"""
+        return self._has_permission('registry.delete_registry', request.user, obj)
 
     def get_changeform_initial_data(self, request):
+        """Overrides default implementation"""
         groups = request.user.groups.all()
         return {
             'agency_cd': '' if request.user.is_superuser or not groups.count() else list(groups)[0].name.upper()

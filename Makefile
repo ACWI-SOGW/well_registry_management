@@ -29,7 +29,6 @@ runmigrations:
 	$(PYTHON) wellregistry/manage.py migrate registry
 
 runlint:
-	$(PYLINT) wellregistry/postgres
 	$(PYLINT) wellregistry/registry
 	$(PYLINT) wellregistry/wellregistry/
 	$(PYLINT) ./**/*.py
