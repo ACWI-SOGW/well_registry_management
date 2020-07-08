@@ -7,7 +7,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class AgencyLookup(models.Model):
     """Model definition for the agency table, lookup only"""
-    agency_cd = models.CharField(max_length=50, primary_key=True)
+    agency_cd = models.CharField(max_length=50, unique=True)
     agency_nm = models.CharField(max_length=150, blank=True, null=True)
     agency_med = models.CharField(max_length=200, blank=True, null=True)
 
@@ -20,7 +20,7 @@ class AgencyLookup(models.Model):
 
 class AltitudeDatumLookup(models.Model):
     """Model definition for the altitude_datum table, lookup only"""
-    adatum_cd = models.CharField(max_length=10, primary_key=True)
+    adatum_cd = models.CharField(max_length=10, unique=True)
     adatum_desc = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
@@ -32,7 +32,7 @@ class AltitudeDatumLookup(models.Model):
 
 class CountryLookup(models.Model):
     """Model definition for the country table, lookup only"""
-    country_cd = models.CharField(primary_key=True, max_length=2)
+    country_cd = models.CharField(unique=True, max_length=2)
     country_nm = models.CharField(max_length=48)
 
     class Meta:
@@ -57,7 +57,7 @@ class CountyLookup(models.Model):
 
 class HorizontalDatumLookup(models.Model):
     """Model definition for the horizontal_datum table, lookup only"""
-    hdatum_cd = models.CharField(max_length=10, primary_key=True)
+    hdatum_cd = models.CharField(max_length=10, unique=True)
     hdatum_desc = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
@@ -69,7 +69,7 @@ class HorizontalDatumLookup(models.Model):
 
 class NatAqfrLookup(models.Model):
     """Model definition for the nat_aqfr table, lookup only"""
-    nat_aqfr_cd = models.CharField(primary_key=True, max_length=10)
+    nat_aqfr_cd = models.CharField(unique=True, max_length=10)
     nat_aqfr_desc = models.CharField(blank=True, null=True, max_length=100)
 
     class Meta:
@@ -95,7 +95,6 @@ class StateLookup(models.Model):
 
 class UnitsLookup(models.Model):
     """Model definition for the units_dim table, lookup only"""
-    unit_id = models.FloatField(primary_key=True)
     unit_desc = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
@@ -114,20 +113,25 @@ class Registry(models.Model):
 
     """
     # these columns use foreign keys
-    agency = models.ForeignKey(AgencyLookup, on_delete=models.PROTECT, db_column='agency_cd') # AGENCY.AGENCY_CD
+    agency = models.ForeignKey(AgencyLookup, on_delete=models.PROTECT, db_column='agency_cd', null=True,
+                               to_field='agency_cd') # AGENCY.AGENCY_CD
     well_depth_units = models.ForeignKey(UnitsLookup, related_name='+', db_column='well_depth_units',
-                                         on_delete=models.PROTECT) # UNIT.UNIT_ID
+                                         on_delete=models.PROTECT, null=True) # UNIT.ID
     altitude_datum = models.ForeignKey(AltitudeDatumLookup, on_delete=models.PROTECT,
-                                       db_column='altitude_datum_cd') # ALTITUDE_DATUM.ADATUM_CD
-    altitude_units = models.ForeignKey(UnitsLookup, on_delete=models.PROTECT, db_column='altitude_units') # UNIT.UNIT_ID
+                                       db_column='altitude_datum_cd', default=0, null=True,
+                                       to_field='adatum_cd') # ALTITUDE_DATUM.ADATUM_CD
+    altitude_units = models.ForeignKey(UnitsLookup, on_delete=models.PROTECT, db_column='altitude_units',
+                                       null=True) # UNIT.UNIT_ID
     horizontal_datum = models.ForeignKey(HorizontalDatumLookup, on_delete=models.PROTECT,
-                                         db_column='horizontal_datum_cd') # HORZONITAL_DATUM.HDATUM_CD
+                                         db_column='horizontal_datum_cd', null=True,
+                                         to_field='hdatum_cd') # HORZONITAL_DATUM.HDATUM_CD
     nat_aqfr = models.ForeignKey(NatAqfrLookup, on_delete=models.PROTECT,
-                                 db_column='nat_aqfr_cd') # NAT_AQFR.NAT_AQFR_CD
-    country = models.ForeignKey(CountryLookup, on_delete=models.PROTECT, db_column='country_cd')  # COUNTRY.COUNTRY_CD
-    state = models.ForeignKey(StateLookup, on_delete=models.PROTECT, db_column='state_id') # STATE.STATE_CD
+                                 db_column='nat_aqfr_cd', to_field='nat_aqfr_cd', null=True) # NAT_AQFR.NAT_AQFR_CD
+    country = models.ForeignKey(CountryLookup, on_delete=models.PROTECT, db_column='country_cd',
+                                null=True, to_field='country_cd')  # COUNTRY.COUNTRY_CD
+    state = models.ForeignKey(StateLookup, on_delete=models.PROTECT, db_column='state_id', null=True) # STATE.ID
     county = models.ForeignKey(CountyLookup, on_delete=models.PROTECT,
-                               db_column='county_id') # COUNTY.{country_cd,state_cd,county_cd'}
+                               db_column='county_id', null=True) # COUNTY.ID
 
     agency_nm = models.CharField(max_length=200)
     agency_med = models.CharField(max_length=200)

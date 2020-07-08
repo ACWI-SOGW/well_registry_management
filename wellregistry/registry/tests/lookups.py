@@ -5,13 +5,6 @@ Module for Managing lookups used in tests.
 from ..models import AgencyLookup, AltitudeDatumLookup, CountryLookup, CountyLookup, HorizontalDatumLookup
 from ..models import NatAqfrLookup, StateLookup, UnitsLookup
 
-def create_units_dim(unit_id, unit_desc):
-    """Creates a Units Dim lookup data with the specified unit_id and unit_desc. """
-    UnitsLookup.objects.create(
-        unit_id=unit_id,
-        unit_desc=unit_desc
-    )
-
 def create_lookup_data():
     """Create test lookup data."""
     AgencyLookup.objects.create(
@@ -45,5 +38,11 @@ def create_lookup_data():
         county_cd='SF',
         county_nm='United States'
     )
-    create_units_dim(1, 'Feet')
-    create_units_dim(2, 'Centimeters')
+    UnitsLookup.objects.create(
+        id=1,
+        unit_desc='Feet'
+    )
+    UnitsLookup.objects.create(
+        id=2,
+        unit_desc='Centimeters'
+    )

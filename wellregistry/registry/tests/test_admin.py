@@ -117,7 +117,7 @@ class TestRegistryAdmin(TestCase):
     def test_site_id(self):
         # SETUP
         reg_entry = Registry()
-        reg_entry.agency_cd = AgencyLookup.objects.get(agency_cd='provider')
+        reg_entry.agency = AgencyLookup.objects.get(agency_cd='provider')
         reg_entry.site_no = '12345'
 
         # TEST ACTION

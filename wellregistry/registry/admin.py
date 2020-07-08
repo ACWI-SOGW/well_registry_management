@@ -45,7 +45,7 @@ class RegistryAdmin(admin.ModelAdmin):
     def site_id(obj):
         """Constructs a site id from agency code and site number."""
         # The obj field agency_cd is the AgencyLovLookup model, retrieve agency_cd from the model
-        return f"{obj.agency_cd.agency_cd}:{obj.site_no}"
+        return f"{obj.agency.agency_cd}:{obj.site_no}"
 
     @staticmethod
     def displayed(obj):
