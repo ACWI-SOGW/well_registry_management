@@ -29,10 +29,12 @@ runmigrations:
 	$(PYTHON) wellregistry/manage.py migrate registry
 
 runlint:
-	$(PYLINT) wellregistry/postgres
 	$(PYLINT) wellregistry/registry
+	$(PYLINT) wellregistry/registry/migrations/0001_registry_table.py
+	$(PYLINT) wellregistry/registry/migrations/0002_add_agency_groups.py.py
+	$(PYLINT) wellregistry/registry/migrations/0003_country_lookups.py
+	$(PYLINT) wellregistry/registry/migrations/0004_lookup_tables.py
 	$(PYLINT) wellregistry/wellregistry/
-	$(PYLINT) ./**/*.py
 
 env:
 	@echo 'Creating local environment....'

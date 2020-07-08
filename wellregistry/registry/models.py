@@ -5,20 +5,103 @@ Well Registry ORM object.
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+class AgencyLookup(models.Model):
+    """Model definition for the agency table, lookup only"""
+    agency_cd = models.CharField(max_length=50, unique=True)
+    agency_nm = models.CharField(max_length=150, blank=True, null=True)
+    agency_med = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        db_table = 'agency'
+
+    def __str__(self):
+        return self.agency_nm
+
+
+class AltitudeDatumLookup(models.Model):
+    """Model definition for the altitude_datum table, lookup only"""
+    adatum_cd = models.CharField(max_length=10, unique=True)
+    adatum_desc = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        db_table = 'altitude_datum'
+
+    def __str__(self):
+        return self.adatum_desc
+
 
 class CountryLookup(models.Model):
-    """
-    Country lookup table for the Registry app.
+    """Model definition for the country table, lookup only"""
+    country_cd = models.CharField(unique=True, max_length=2)
+    country_nm = models.CharField(max_length=48)
 
-    Used to populate drop downs.
-
-    """
-    country_cd = models.CharField(max_length=10, primary_key=True)
-    country_nm = models.CharField(max_length=200)
+    class Meta:
+        db_table = 'country'
 
     def __str__(self):
         return self.country_nm
 
+class CountyLookup(models.Model):
+    """Model definition for the county table, lookup only"""
+    country_cd = models.ForeignKey('CountryLookup', models.DO_NOTHING, db_column='country_cd')
+    state_cd = models.ForeignKey('StateLookup', models.DO_NOTHING, db_column='state_cd')
+    county_cd = models.CharField(max_length=3)
+    county_nm = models.CharField(max_length=48)
+
+    class Meta:
+        db_table = 'county'
+        unique_together = (('country_cd', 'state_cd', 'county_cd'),)
+
+    def __str__(self):
+        return self.county_nm
+
+class HorizontalDatumLookup(models.Model):
+    """Model definition for the horizontal_datum table, lookup only"""
+    hdatum_cd = models.CharField(max_length=10, unique=True)
+    hdatum_desc = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        db_table = 'horizontal_datum'
+
+    def __str__(self):
+        return self.hdatum_desc
+
+
+class NatAqfrLookup(models.Model):
+    """Model definition for the nat_aqfr table, lookup only"""
+    nat_aqfr_cd = models.CharField(unique=True, max_length=10)
+    nat_aqfr_desc = models.CharField(blank=True, null=True, max_length=100)
+
+    class Meta:
+        db_table = 'nat_aqfr'
+
+    def __str__(self):
+        return self.nat_aqfr_desc
+
+
+class StateLookup(models.Model):
+    """Model definition for the state table, lookup only"""
+    country_cd = models.ForeignKey('CountryLookup', models.DO_NOTHING, db_column='country_cd')
+    state_cd = models.CharField(max_length=2)
+    state_nm = models.CharField(max_length=53)
+
+    class Meta:
+        db_table = 'state'
+        unique_together = (('country_cd', 'state_cd'),)
+
+    def __str__(self):
+        return self.state_nm
+
+
+class UnitsLookup(models.Model):
+    """Model definition for the units_dim table, lookup only"""
+    unit_desc = models.CharField(max_length=20, blank=True, null=True)
+
+    class Meta:
+        db_table = 'units'
+
+    def __str__(self):
+        return self.unit_desc
 
 class Registry(models.Model):
     """
@@ -29,16 +112,26 @@ class Registry(models.Model):
     We could refactor later.
 
     """
-    # these will become lookups with                    foreign keys
-    agency_cd = models.CharField(max_length=20)       # AGENCY_LOV.AGENCY_CD
-    well_depth_units = models.IntegerField()          # UNITS_DIM.UNIT_ID
-    alt_datum_cd = models.CharField(max_length=10)    # ALT_DATUM_DIM.ADATUM_CD
-    alt_units = models.IntegerField()                 # UNITS_DIM.UNIT_ID
-    horz_datum = models.CharField(max_length=10)      # HORZ_DATUM_DIM.HDATUM_CD
-    nat_aquifer_cd = models.CharField(max_length=10)  # NAT_AQFR.NAT_AQFR_CD
-    country_cd = models.ForeignKey(CountryLookup, on_delete=models.CASCADE)       # COUNTRY.COUNTRY_CD
-    state_cd = models.CharField(max_length=2)         # STATE.STATE_CD and STATE.COUNTRY_CD
-    county_cd = models.CharField(max_length=3)        # COUNTY.COUNTY_CD and COUNTY.STATE_CD and COUNTY.COUNTRY_CD
+    # these columns use foreign keys
+    agency = models.ForeignKey(AgencyLookup, on_delete=models.PROTECT, db_column='agency_cd', null=True,
+                               to_field='agency_cd') # AGENCY.AGENCY_CD
+    well_depth_units = models.ForeignKey(UnitsLookup, related_name='+', db_column='well_depth_units',
+                                         on_delete=models.PROTECT, null=True) # UNIT.ID
+    altitude_datum = models.ForeignKey(AltitudeDatumLookup, on_delete=models.PROTECT,
+                                       db_column='altitude_datum_cd', default=0, null=True,
+                                       to_field='adatum_cd') # ALTITUDE_DATUM.ADATUM_CD
+    altitude_units = models.ForeignKey(UnitsLookup, on_delete=models.PROTECT, db_column='altitude_units',
+                                       null=True) # UNIT.UNIT_ID
+    horizontal_datum = models.ForeignKey(HorizontalDatumLookup, on_delete=models.PROTECT,
+                                         db_column='horizontal_datum_cd', null=True,
+                                         to_field='hdatum_cd') # HORZONITAL_DATUM.HDATUM_CD
+    nat_aqfr = models.ForeignKey(NatAqfrLookup, on_delete=models.PROTECT,
+                                 db_column='nat_aqfr_cd', to_field='nat_aqfr_cd', null=True) # NAT_AQFR.NAT_AQFR_CD
+    country = models.ForeignKey(CountryLookup, on_delete=models.PROTECT, db_column='country_cd',
+                                null=True, to_field='country_cd')  # COUNTRY.COUNTRY_CD
+    state = models.ForeignKey(StateLookup, on_delete=models.PROTECT, db_column='state_id', null=True) # STATE.ID
+    county = models.ForeignKey(CountyLookup, on_delete=models.PROTECT,
+                               db_column='county_id', null=True) # COUNTY.ID
 
     agency_nm = models.CharField(max_length=200)
     agency_med = models.CharField(max_length=200)

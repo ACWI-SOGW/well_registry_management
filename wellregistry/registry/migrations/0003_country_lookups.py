@@ -1,3 +1,7 @@
+# The below suppresses pylint message: Module name "0003_country_lookups" doesn't conform to snake_case naming style
+# pylint: disable-msg=C0103
+# Enable check for the rest of the file
+# pylint: enable-msg=C0103
 """
 Migration for adding the country lookup table and
 foreign key relationship with the registry table
