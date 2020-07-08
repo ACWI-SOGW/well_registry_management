@@ -99,10 +99,10 @@ class RegistryAdmin(admin.ModelAdmin):
         return self._has_permission('registry.add_registry', request)
 
     def has_change_permission(self, request, obj=None):
-        return self._has_permission('registry.change_registry', request)
+        return self._has_permission('registry.change_registry', request, obj)
 
     def has_delete_permission(self, request, obj=None):
-        return self._has_permission('registry.delete_registry', request)
+        return self._has_permission('registry.delete_registry', request, obj)
 
     def get_changeform_initial_data(self, request):
         groups = request.user.groups.all()
