@@ -6,7 +6,7 @@ from django import forms
 from django.contrib import admin
 from django.db.models.functions import Upper
 from django.utils.html import format_html
-from .models import CountryLookup, Registry
+from .models import Registry
 
 # this is the Django property for the admin main page header
 admin.site.site_header = 'NGWMN Well Registry Administration'
@@ -25,10 +25,6 @@ class RegistryAdminForm(forms.ModelForm):
     This model form is based on fields in models.Registry
 
     """
-
-    # override the country_cd field
-    country_cd = forms.ModelChoiceField(queryset=CountryLookup.objects.all())
-
     class Meta:
         model = Registry
         fields = '__all__'
@@ -45,8 +41,8 @@ class RegistryAdmin(admin.ModelAdmin):
 
     """
     form = RegistryAdminForm
-    list_display = ('site_id', 'agency_cd', 'site_no', 'displayed', 'has_qw', 'has_wl', 'insert_date', 'update_date')
-    list_filter = ('agency_cd', 'site_no', 'update_date')
+    list_display = ('site_id', 'agency', 'site_no', 'displayed', 'has_qw', 'has_wl', 'insert_date', 'update_date')
+    list_filter = ('agency', 'site_no', 'update_date')
 
     # change this value when we have an full UI
     # change_list_template = 'path/to/ui/templates/registry.html
@@ -54,7 +50,8 @@ class RegistryAdmin(admin.ModelAdmin):
     @staticmethod
     def site_id(obj):
         """Constructs a site id from agency code and site number."""
-        return f"{obj.agency_cd}:{obj.site_no}"
+        # The obj field agency_cd is the AgencyLovLookup model, retrieve agency_cd from the model
+        return f"{obj.agency.agency_cd}:{obj.site_no}"
 
     @staticmethod
     def displayed(obj):
