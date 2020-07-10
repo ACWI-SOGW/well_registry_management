@@ -83,9 +83,9 @@ class RegistryAdmin(admin.ModelAdmin):
         """Return true if the user has permission, perm, for the obj"""
         if user.is_superuser:
             return True
-        else:
-            return user.has_perm(perm) \
-                   and (not obj or obj.agency.agency_cd in _get_groups(user))
+
+        return user.has_perm(perm) \
+               and (not obj or obj.agency.agency_cd in _get_groups(user))
 
     def save_model(self, request, obj, form, change):
         if not obj.insert_user:

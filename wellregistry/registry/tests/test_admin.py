@@ -4,7 +4,7 @@ Tests for registry admin module
 import datetime
 
 from django.contrib.admin.sites import AdminSite
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import User, Group
 from django.http import HttpRequest
 from django.test import TestCase
 

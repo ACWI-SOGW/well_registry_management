@@ -107,7 +107,7 @@ class UnitsLookup(models.Model):
         return self.unit_desc
 
 WELL_TYPES = [('1', 'Surveillance'), ('2', 'Trend'), ('3', 'Special')]
-WELL_CHARACTERISTICS = [('1', 'Background'),('2', 'Suspected/Anticipated Changes'), ('3', 'Known Changes')]
+WELL_CHARACTERISTICS = [('1', 'Background'), ('2', 'Suspected/Anticipated Changes'), ('3', 'Known Changes')]
 WELL_PURPOSES = [('1', 'Dedicated Monitoring/Observation'), ('2', 'Other')]
 
 class Registry(models.Model):
