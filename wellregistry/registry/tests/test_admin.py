@@ -18,7 +18,7 @@ class TestRegistryAdminForm(TestCase):
     def setUp(self):
         create_lookup_data()
         self.form_values = {
-            'agency': 'provider',
+            'agency': AgencyLookup.objects.get(agency_cd='provider').id,
             'well_depth_units': 1,
             'altitude_datum': 'NAVD88',
             'altitude_units': 2,
@@ -27,14 +27,11 @@ class TestRegistryAdminForm(TestCase):
             'country': 'US',
             'state': StateLookup.objects.get(state_cd='CA'),
             'county': CountyLookup.objects.get(county_cd='SF'),
-            'agency_nm': 'Die Katze',
-            'agency_med': 'Der Hund',
             'site_no': '048043273',
             'site_name': 'blauer See',
             'dec_lat_va': 100.23,
             'dec_long_va': 49.23,
             'alt_va': 5.3,
-            'nat_aqfr_desc': 'An Aquifer',
             'local_aquifer_name': 'der Aquifer',
             'qw_sn_flag': 1,
             'qw_baseline_flag': 1,
@@ -44,33 +41,14 @@ class TestRegistryAdminForm(TestCase):
             'wl_baseline_flag': 1,
             'wl_well_chars': 'LK',
             'wl_well_purpose': 'well purpose',
-            'data_provider': 'das Unterseeboot',
             'qw_sys_name': 'die Fledermaus',
             'wl_sys_name': 'der Tiger',
-            'pk_siteid': 'blah',
+
             'display_flag': 0,
-            'wl_data_provider': 'der Eisbar',
-            'qw_data_provider': 'der Falke',
-            'lith_data_provider': 'die Ente',
-            'const_data_provider': 'der Haifisch',
-            'well_depth': 17.8,
+
             'link': 'das Kaninchen',
             'wl_well_purpose_notes': 'der Dachshund',
-            'qw_well_purpose_notes': 'der Krake',
-            'insert_user_id': 'my user',
-            'update_user_id': 'my mser',
-            'wl_well_type': 'DKE',
-            'qw_well_type': 'KAL',
-            'local_aquifer_cd': 'local aquifer',
-            'review_flag': 'L',
-            'site_type': 'Spring',
-            'aqfr_char': 'blah',
-            'horz_method': 'Horizontal Method',
-            'horz_acy': 'Horizontal Accuracy',
-            'alt_method': 'Alt Method',
-            'alt_acy': 'Alt Accuracy',
-            'insert_date': datetime.datetime(2020, 6, 18, 21, 55, 9),
-            'update_date': datetime.datetime(2020, 6, 18, 21, 55, 10)
+            'qw_well_purpose_notes': 'der Krake'
         }
 
     def test_form_valid(self):
@@ -115,7 +93,7 @@ class TestRegistryAdminForm(TestCase):
         self.assertIsNotNone(form_errors.get(field))
 
 class TestRegistryAdmin(TestCase):
-    fixtures = ['test_country_lookups.json', 'test_registry.json']
+    fixtures = ['test_registry.json', 'test_user.json']
 
     def setUp(self):
         self.superuser = User.objects.create_superuser('my_superuser')
@@ -128,10 +106,11 @@ class TestRegistryAdmin(TestCase):
         self.admin = RegistryAdmin(Registry, self.site)
 
     def test_site_id(self):
-        reg_entry = Registry.objects.get(site_no='10101010')
+        reg_entry = Registry.objects.get(site_no='44445555',
+                                         agency='ADWR')
         site_id = RegistryAdmin.site_id(reg_entry)
 
-        self.assertEqual(site_id, "ADWR:10101010")
+        self.assertEqual(site_id, "ADWR:44445555")
 
     def test_check_mark(self):
         check_html = check_mark(True)
@@ -145,29 +124,29 @@ class TestRegistryAdmin(TestCase):
         request.user = self.superuser
         qs = self.admin.get_queryset(request)
 
-        self.assertEqual(qs.count(), 4)
+        self.assertEqual(qs.count(), 3)
 
     def test_get_queryset_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
         qs = self.admin.get_queryset(request)
 
-        self.assertEqual(qs.count(), 2)
-        self.assertEqual(qs.filter(agency_cd='ADWR').count(), 2)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.filter(agency='ADWR').count(), 1)
 
     def test_has_view_permission_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
 
         self.assertTrue(self.admin.has_view_permission(request))
-        self.assertTrue(self.admin.has_view_permission(request, Registry.objects.get(site_no='10101010')))
+        self.assertTrue(self.admin.has_view_permission(request, Registry.objects.get(site_no='12345678')))
 
     def test_has_view_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
 
         self.assertTrue(self.admin.has_view_permission(request))
-        self.assertTrue(self.admin.has_view_permission(request, Registry.objects.get(site_no='10101010')))
+        self.assertTrue(self.admin.has_view_permission(request, Registry.objects.get(site_no='44445555')))
         self.assertFalse(self.admin.has_view_permission(request, Registry.objects.get(site_no='12345678')))
 
     def test_has_add_permission_with_superuser(self):
@@ -187,14 +166,14 @@ class TestRegistryAdmin(TestCase):
         request.user = self.superuser
 
         self.assertTrue(self.admin.has_change_permission(request))
-        self.assertTrue(self.admin.has_change_permission(request, Registry.objects.get(site_no='10101010')))
+        self.assertTrue(self.admin.has_change_permission(request, Registry.objects.get(site_no='12345678')))
 
     def test_has_change_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
 
         self.assertTrue(self.admin.has_change_permission(request))
-        self.assertTrue(self.admin.has_change_permission(request, Registry.objects.get(site_no='10101010')))
+        self.assertTrue(self.admin.has_change_permission(request, Registry.objects.get(site_no='44445555')))
         self.assertFalse(self.admin.has_change_permission(request, Registry.objects.get(site_no='12345678')))
 
 
@@ -203,14 +182,14 @@ class TestRegistryAdmin(TestCase):
         request.user = self.superuser
 
         self.assertTrue(self.admin.has_delete_permission(request))
-        self.assertTrue(self.admin.has_delete_permission(request, Registry.objects.get(site_no='10101010')))
+        self.assertTrue(self.admin.has_delete_permission(request, Registry.objects.get(site_no='12345678')))
 
     def test_has_delete_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
 
         self.assertTrue(self.admin.has_delete_permission(request))
-        self.assertTrue(self.admin.has_delete_permission(request, Registry.objects.get(site_no='10101010')))
+        self.assertTrue(self.admin.has_delete_permission(request, Registry.objects.get(site_no='44445555')))
         self.assertFalse(self.admin.has_delete_permission(request, Registry.objects.get(site_no='12345678')))
 
     def test_get_changeform_initial_data_with_superuser(self):
@@ -218,7 +197,7 @@ class TestRegistryAdmin(TestCase):
         request.user = self.superuser
 
         self.assertEqual(self.admin.get_changeform_initial_data(request), {
-            'agency_cd': ''
+            'agency': ''
         })
 
     def test_get_changeform_initial_data_with_adwr_user(self):
@@ -226,5 +205,5 @@ class TestRegistryAdmin(TestCase):
         request.user = self.adwr_user
 
         self.assertEqual(self.admin.get_changeform_initial_data(request), {
-            'agency_cd': 'ADWR'
+            'agency': 'ADWR'
         })

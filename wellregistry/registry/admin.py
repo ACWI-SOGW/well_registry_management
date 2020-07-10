@@ -76,7 +76,7 @@ class RegistryAdmin(admin.ModelAdmin):
     @staticmethod
     def _is_user_in_registry_agency(user, registry):
         """Return True if user is a member of the group for registry's agency"""
-        return registry.agency_cd in _get_groups(user)
+        return registry.agency.agency_cd in _get_groups(user)
 
     @staticmethod
     def _has_permission(perm, user, obj=None):
@@ -85,17 +85,22 @@ class RegistryAdmin(admin.ModelAdmin):
             return True
         else:
             return user.has_perm(perm) \
-                   and (not obj or obj.agency_cd in _get_groups(user))
+                   and (not obj or obj.agency.agency_cd in _get_groups(user))
 
+    def save_model(self, request, obj, form, change):
+        if not obj.insert_user:
+            obj.insert_user = request.user
+        obj.update_user = request.user
+        super().save_model(request, obj, form, change)
 
     def get_readonly_fields(self, request, obj=None):
         """Overrides default implementation"""
-        return ('agency_cd',) if not request.user.is_superuser else ()
+        return ('agency',) if not request.user.is_superuser else ()
 
     def get_queryset(self, request):
         """Overrides default implementation"""
         return Registry.objects.all() if request.user.is_superuser \
-            else Registry.objects.filter(agency_cd__in=_get_groups(request.user))
+            else Registry.objects.filter(agency__in=_get_groups(request.user))
 
     def has_view_permission(self, request, obj=None):
         """Overrides default implementation"""
@@ -117,7 +122,7 @@ class RegistryAdmin(admin.ModelAdmin):
         """Overrides default implementation"""
         groups = request.user.groups.all()
         return {
-            'agency_cd': '' if request.user.is_superuser or not groups.count() else list(groups)[0].name.upper()
+            'agency': '' if request.user.is_superuser or not groups.count() else list(groups)[0].name.upper()
         }
 
 # below here will maintain all the tables Django admin should be aware

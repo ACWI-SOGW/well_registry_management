@@ -40,9 +40,11 @@ def create_lookup_data():
     )
     UnitsLookup.objects.create(
         id=1,
+        unit_id=2,
         unit_desc='Feet'
     )
     UnitsLookup.objects.create(
         id=2,
+        unit_id=3,
         unit_desc='Centimeters'
     )
