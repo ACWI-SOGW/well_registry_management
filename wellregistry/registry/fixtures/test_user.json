@@ -3,7 +3,7 @@
     "model": "auth.user",
     "pk": 1,
     "fields": {
-      "password": "!GeVKNX64EnQIjxa59YUorR0d9xzUw4bwHqEP8O2Z",
+      "password": "fakepassword",
       "last_login": "2020-07-09T20:20:33.929Z",
       "is_superuser": true,
       "username": "superuser",
@@ -23,7 +23,7 @@
     "model": "auth.user",
     "pk": 2,
     "fields": {
-      "password": "!GeVKNX64EnQIjxa59YUorR0d9xzUw4bwHqEP8O2Z",
+      "password": "fakepassword",
       "last_login": "2020-07-09T20:20:33.929Z",
       "is_superuser": false,
       "username": "adwruser",
