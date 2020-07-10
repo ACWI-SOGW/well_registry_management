@@ -34,15 +34,17 @@ def create_lookup_data():
     )
     CountyLookup.objects.create(
         country_cd=CountryLookup.objects.get(country_cd='US'),
-        state_cd=StateLookup.objects.get(state_cd='CA'),
+        state_id=StateLookup.objects.get(state_cd='CA'),
         county_cd='SF',
         county_nm='United States'
     )
     UnitsLookup.objects.create(
         id=1,
+        unit_id=1,
         unit_desc='Feet'
     )
     UnitsLookup.objects.create(
         id=2,
+        unit_id=2,
         unit_desc='Centimeters'
     )
