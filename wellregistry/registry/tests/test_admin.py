@@ -1,15 +1,14 @@
 """
 Tests for registry admin module
 """
-import datetime
 
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import User, Group
 from django.http import HttpRequest
 from django.test import TestCase
 
-from ..admin import RegistryAdminForm, RegistryAdmin, check_mark
-from ..models import AgencyLookup, CountyLookup, StateLookup, Registry
+from ..admin import RegistryAdmin, check_mark
+from ..models import AgencyLookup, Registry
 
 class TestRegistryAdmin(TestCase):
     fixtures = ['test_registry.json', 'test_user.json']
