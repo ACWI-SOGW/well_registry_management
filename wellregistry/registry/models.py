@@ -43,14 +43,15 @@ class CountryLookup(models.Model):
 
 class CountyLookup(models.Model):
     """Model definition for the county table, lookup only"""
-    country_cd = models.ForeignKey('CountryLookup', models.DO_NOTHING, db_column='country_cd')
-    state_cd = models.ForeignKey('StateLookup', models.DO_NOTHING, db_column='state_cd')
+    country_cd = models.ForeignKey('CountryLookup', on_delete=models.PROTECT, db_column='country_cd',
+                                   to_field='country_cd')
+    state_id = models.ForeignKey('StateLookup', on_delete=models.PROTECT, db_column='state_id')
     county_cd = models.CharField(max_length=3)
     county_nm = models.CharField(max_length=48)
 
     class Meta:
         db_table = 'county'
-        unique_together = (('country_cd', 'state_cd', 'county_cd'),)
+        unique_together = (('country_cd', 'state_id', 'county_cd'),)
 
     def __str__(self):
         return self.county_nm
@@ -81,7 +82,8 @@ class NatAqfrLookup(models.Model):
 
 class StateLookup(models.Model):
     """Model definition for the state table, lookup only"""
-    country_cd = models.ForeignKey('CountryLookup', models.DO_NOTHING, db_column='country_cd')
+    country_cd = models.ForeignKey('CountryLookup', on_delete=models.PROTECT, db_column='country_cd',
+                                   to_field='country_cd')
     state_cd = models.CharField(max_length=2)
     state_nm = models.CharField(max_length=53)
 
@@ -95,6 +97,7 @@ class StateLookup(models.Model):
 
 class UnitsLookup(models.Model):
     """Model definition for the units_dim table, lookup only"""
+    unit_id = models.IntegerField(unique=True)
     unit_desc = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:

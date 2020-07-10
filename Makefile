@@ -34,6 +34,7 @@ runlint:
 	$(PYLINT) wellregistry/registry/migrations/0002_add_agency_groups.py.py
 	$(PYLINT) wellregistry/registry/migrations/0003_country_lookups.py
 	$(PYLINT) wellregistry/registry/migrations/0004_lookup_tables.py
+	$(PYLINT) wellregistry/registry/migrations/0005_lookups_fk.py
 	$(PYLINT) wellregistry/wellregistry/
 
 env:
