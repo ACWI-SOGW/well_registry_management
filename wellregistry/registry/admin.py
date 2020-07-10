@@ -6,7 +6,7 @@ from django import forms
 from django.contrib import admin
 from django.db.models.functions import Upper
 from django.utils.html import format_html
-from .models import Registry
+from .models import Registry, AgencyLookup
 
 # this is the Django property for the admin main page header
 admin.site.site_header = 'NGWMN Well Registry Administration'
@@ -91,6 +91,10 @@ class RegistryAdmin(admin.ModelAdmin):
         if not obj.insert_user:
             obj.insert_user = request.user
         obj.update_user = request.user
+
+        if not obj.agency and not request.user.is_superuser:
+            obj.agency = AgencyLookup.objects.get(agency_cd=_get_groups(request.user)[0])
+
         super().save_model(request, obj, form, change)
 
     def get_readonly_fields(self, request, obj=None):
@@ -118,12 +122,6 @@ class RegistryAdmin(admin.ModelAdmin):
         """Overrides default implementation"""
         return self._has_permission('registry.delete_registry', request.user, obj)
 
-    def get_changeform_initial_data(self, request):
-        """Overrides default implementation"""
-        groups = request.user.groups.all()
-        return {
-            'agency': '' if request.user.is_superuser or not groups.count() else list(groups)[0].name.upper()
-        }
 
 # below here will maintain all the tables Django admin should be aware
 admin.site.register(Registry, RegistryAdmin)

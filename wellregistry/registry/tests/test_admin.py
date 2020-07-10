@@ -40,6 +40,44 @@ class TestRegistryAdmin(TestCase):
         self.assertEqual(check_html, '&check;')
         self.assertEqual(blank_html, '')
 
+    def test_save_model_new_registry_with_adwr_user(self):
+        request = HttpRequest()
+        request.user = self.adwr_user
+        registry = Registry.objects.create(site_no='11111111')
+        self.admin.save_model(request, registry, None, None)
+
+        saved_registry = Registry.objects.get(site_no='11111111')
+        self.assertEqual(saved_registry.insert_user, self.adwr_user)
+        self.assertEqual(saved_registry.update_user, self.adwr_user)
+        self.assertEqual(saved_registry.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
+
+    def test_save_model_new_registry_with_super_user(self):
+        request = HttpRequest()
+        request.user = self.superuser
+        registry = Registry.objects.create(site_no='11111111', agency=AgencyLookup.objects.get(agency_cd='ADWR'))
+        self.admin.save_model(request, registry, None, None)
+
+        saved_registry = Registry.objects.get(site_no='11111111')
+        self.assertEqual(saved_registry.insert_user, self.superuser)
+        self.assertEqual(saved_registry.update_user, self.superuser)
+        self.assertEqual(saved_registry.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
+
+    def test_save_model_existing_registry_with_adwr_user(self):
+        request = HttpRequest()
+        request.user = self.superuser
+        registry = Registry.objects.create(site_no='11111111', agency=AgencyLookup.objects.get(agency_cd='ADWR'))
+        self.admin.save_model(request, registry, None, None)
+
+        saved_registry = Registry.objects.get(site_no='11111111')
+        saved_registry.site_name = 'A site'
+        request.user = self.adwr_user
+        self.admin.save_model(request, saved_registry, None, None)
+        saved_registry = Registry.objects.get(site_no='11111111')
+
+        self.assertEqual(saved_registry.insert_user, self.superuser)
+        self.assertEqual(saved_registry.update_user, self.adwr_user)
+        self.assertEqual(saved_registry.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
+
     def test_get_queryset_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
@@ -112,19 +150,3 @@ class TestRegistryAdmin(TestCase):
         self.assertTrue(self.admin.has_delete_permission(request))
         self.assertTrue(self.admin.has_delete_permission(request, Registry.objects.get(site_no='44445555')))
         self.assertFalse(self.admin.has_delete_permission(request, Registry.objects.get(site_no='12345678')))
-
-    def test_get_changeform_initial_data_with_superuser(self):
-        request = HttpRequest()
-        request.user = self.superuser
-
-        self.assertEqual(self.admin.get_changeform_initial_data(request), {
-            'agency': ''
-        })
-
-    def test_get_changeform_initial_data_with_adwr_user(self):
-        request = HttpRequest()
-        request.user = self.adwr_user
-
-        self.assertEqual(self.admin.get_changeform_initial_data(request), {
-            'agency': 'ADWR'
-        })

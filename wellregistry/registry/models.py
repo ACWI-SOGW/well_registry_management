@@ -137,7 +137,7 @@ class Registry(models.Model):
 
     alt_va = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)
     altitude_datum = models.ForeignKey(AltitudeDatumLookup, on_delete=models.PROTECT,
-                                       db_column='altitude_datum_cd', default=0, null=True, blank=True,
+                                       db_column='altitude_datum_cd', null=True, blank=True,
                                        to_field='adatum_cd')
     altitude_units = models.ForeignKey(UnitsLookup, on_delete=models.PROTECT, db_column='altitude_units',
                                        to_field='unit_id', null=True, blank=True)
@@ -181,6 +181,9 @@ class Registry(models.Model):
 
     insert_date = models.DateTimeField(auto_now_add=True, editable=False)
     update_date = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        unique_together = (('site_no', 'agency'),)
 
     def __str__(self):
         """Default string."""
