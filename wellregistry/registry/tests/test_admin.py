@@ -11,8 +11,6 @@ from django.test import TestCase
 from ..admin import RegistryAdminForm, RegistryAdmin, check_mark
 from ..models import AgencyLookup, CountyLookup, StateLookup, Registry
 
-from .lookups import create_lookup_data
-
 class TestRegistryAdmin(TestCase):
     fixtures = ['test_registry.json', 'test_user.json']
 
