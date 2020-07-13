@@ -2,8 +2,10 @@
 Well Registry ORM object.
 """
 
-from django.db import models
+from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+
 
 class AgencyLookup(models.Model):
     """Model definition for the agency table, lookup only"""
@@ -106,88 +108,86 @@ class UnitsLookup(models.Model):
     def __str__(self):
         return self.unit_desc
 
+WELL_TYPES = [('1', 'Surveillance'), ('2', 'Trend'), ('3', 'Special')]
+WELL_CHARACTERISTICS = [('1', 'Background'), ('2', 'Suspected/Anticipated Changes'), ('3', 'Known Changes')]
+WELL_PURPOSES = [('1', 'Dedicated Monitoring/Observation'), ('2', 'Other')]
+
 class Registry(models.Model):
     """
     Django Registry Model.
 
     # python manage.py makemigrations and migrate
-    These fields names are nasty but they are to match the original.
-    We could refactor later.
-
     """
-    # these columns use foreign keys
-    agency = models.ForeignKey(AgencyLookup, on_delete=models.PROTECT, db_column='agency_cd', null=True,
-                               to_field='agency_cd') # AGENCY.AGENCY_CD
-    well_depth_units = models.ForeignKey(UnitsLookup, related_name='+', db_column='well_depth_units',
-                                         on_delete=models.PROTECT, null=True) # UNIT.ID
-    altitude_datum = models.ForeignKey(AltitudeDatumLookup, on_delete=models.PROTECT,
-                                       db_column='altitude_datum_cd', default=0, null=True,
-                                       to_field='adatum_cd') # ALTITUDE_DATUM.ADATUM_CD
-    altitude_units = models.ForeignKey(UnitsLookup, on_delete=models.PROTECT, db_column='altitude_units',
-                                       null=True) # UNIT.UNIT_ID
-    horizontal_datum = models.ForeignKey(HorizontalDatumLookup, on_delete=models.PROTECT,
-                                         db_column='horizontal_datum_cd', null=True,
-                                         to_field='hdatum_cd') # HORZONITAL_DATUM.HDATUM_CD
-    nat_aqfr = models.ForeignKey(NatAqfrLookup, on_delete=models.PROTECT,
-                                 db_column='nat_aqfr_cd', to_field='nat_aqfr_cd', null=True) # NAT_AQFR.NAT_AQFR_CD
-    country = models.ForeignKey(CountryLookup, on_delete=models.PROTECT, db_column='country_cd',
-                                null=True, to_field='country_cd')  # COUNTRY.COUNTRY_CD
-    state = models.ForeignKey(StateLookup, on_delete=models.PROTECT, db_column='state_id', null=True) # STATE.ID
-    county = models.ForeignKey(CountyLookup, on_delete=models.PROTECT,
-                               db_column='county_id', null=True) # COUNTY.ID
-
-    agency_nm = models.CharField(max_length=200)
-    agency_med = models.CharField(max_length=200)
     site_no = models.CharField(max_length=16)
-    site_name = models.CharField(max_length=300)
-    # have to keep an eye on these when in postgres. in sqlite3 they loose the given precision
-    dec_lat_va = models.DecimalField(max_digits=11, decimal_places=8)
-    dec_long_va = models.DecimalField(max_digits=11, decimal_places=8)
-    alt_va = models.DecimalField(max_digits=10, decimal_places=6)
-    nat_aqfr_desc = models.CharField(max_length=100)
-    local_aquifer_name = models.CharField(max_length=100)
-    # for all flags ensure null->0 on load
-    qw_sn_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
-    qw_baseline_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
-    qw_well_chars = models.CharField(max_length=3)
-    qw_well_purpose = models.CharField(max_length=15)
-    wl_sn_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
-    # for some reason this field has a couple with 999 but there is no cache use case and not a lookup field
-    wl_baseline_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
-    wl_well_chars = models.CharField(max_length=3)
-    wl_well_purpose = models.CharField(max_length=15)
-    data_provider = models.CharField(max_length=30)
-    qw_sys_name = models.CharField(max_length=50)
-    wl_sys_name = models.CharField(max_length=50)
-    pk_siteid = models.CharField(max_length=37)
-    display_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
-    wl_data_provider = models.CharField(max_length=20)
-    qw_data_provider = models.CharField(max_length=20)
-    lith_data_provider = models.CharField(max_length=20)
-    const_data_provider = models.CharField(max_length=20)
-    well_depth = models.DecimalField(max_digits=11, decimal_places=8)
-    link = models.CharField(max_length=500)
-    wl_well_purpose_notes = models.CharField(max_length=4000)
-    qw_well_purpose_notes = models.CharField(max_length=4000)
-    insert_user_id = models.CharField(max_length=50)
-    update_user_id = models.CharField(max_length=50)
-    wl_well_type = models.CharField(max_length=3)
-    qw_well_type = models.CharField(max_length=3)
-    local_aquifer_cd = models.CharField(max_length=20)
-    review_flag = models.CharField(max_length=1)
-    site_type = models.CharField(max_length=10)
-    aqfr_char = models.CharField(max_length=10)
-    horz_method = models.CharField(max_length=300)
-    horz_acy = models.CharField(max_length=300)
-    alt_method = models.CharField(max_length=300)
-    alt_acy = models.CharField(max_length=300)
+    site_name = models.CharField(max_length=300, blank=True)
+    agency = models.ForeignKey(AgencyLookup, on_delete=models.PROTECT, db_column='agency_cd', null=True,
+                               to_field='agency_cd')
 
-    insert_date = models.DateTimeField()
-    update_date = models.DateTimeField()
+    country = models.ForeignKey(CountryLookup, on_delete=models.PROTECT, db_column='country_cd',
+                                null=True, blank=True, to_field='country_cd')
+    state = models.ForeignKey(StateLookup, on_delete=models.PROTECT, db_column='state_id', null=True, blank=True)
+    county = models.ForeignKey(CountyLookup, on_delete=models.PROTECT,
+                               db_column='county_id', null=True, blank=True)
+
+    dec_lat_va = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True)
+    dec_long_va = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True)
+    horizontal_datum = models.ForeignKey(HorizontalDatumLookup, on_delete=models.PROTECT,
+                                         db_column='horizontal_datum_cd', null=True, blank=True,
+                                         to_field='hdatum_cd')
+    horz_method = models.CharField(max_length=300, blank=True)
+    horz_acy = models.CharField(max_length=300, blank=True)
+
+    alt_va = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)
+    altitude_datum = models.ForeignKey(AltitudeDatumLookup, on_delete=models.PROTECT,
+                                       db_column='altitude_datum_cd', null=True, blank=True,
+                                       to_field='adatum_cd')
+    altitude_units = models.ForeignKey(UnitsLookup, on_delete=models.PROTECT, db_column='altitude_units',
+                                       to_field='unit_id', null=True, blank=True)
+    alt_method = models.CharField(max_length=300, blank=True)
+    alt_acy = models.CharField(max_length=300, blank=True)
+
+    well_depth = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True)
+    well_depth_units = models.ForeignKey(UnitsLookup, related_name='+', db_column='well_depth_units',
+                                         on_delete=models.PROTECT, to_field='unit_id', null=True, blank=True)
+
+    nat_aqfr = models.ForeignKey(NatAqfrLookup, on_delete=models.PROTECT,
+                                 db_column='nat_aqfr_cd', to_field='nat_aqfr_cd', null=True, blank=True)
+    local_aquifer_name = models.CharField(max_length=100, blank=True)
+
+    site_type = models.CharField(max_length=10, blank=True, choices=[('WELL', 'Well'), ('SPRING', 'Spring')])
+    aqfr_type = models.CharField(max_length=10, blank=True, db_column='aqfr_char',
+                                 choices=[('CONFINED', 'Confined'), ('UNCONFINED', 'Unconfined')])
+
+    wl_sn_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
+    wl_network_name = models.CharField(max_length=50, blank=True, db_column='wl_sys_name')
+    wl_baseline_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
+    wl_well_type = models.CharField(max_length=3, blank=True, choices=WELL_TYPES)
+    wl_well_chars = models.CharField(max_length=3, blank=True, choices=WELL_CHARACTERISTICS)
+    wl_well_purpose = models.CharField(max_length=15, blank=True, choices=WELL_PURPOSES)
+    wl_well_purpose_notes = models.CharField(max_length=4000, blank=True)
+
+    qw_sn_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
+    qw_network_name = models.CharField(max_length=50, blank=True, db_column='qw_sys_name')
+    qw_baseline_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
+    qw_well_type = models.CharField(max_length=3, blank=True, choices=WELL_TYPES)
+    qw_well_chars = models.CharField(max_length=3, blank=True, choices=WELL_CHARACTERISTICS)
+    qw_well_purpose = models.CharField(max_length=15, blank=True, choices=WELL_PURPOSES)
+    qw_well_purpose_notes = models.CharField(max_length=4000, blank=True)
+
+    link = models.CharField(max_length=500, blank=True)
+
+    display_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
+
+    insert_user = models.ForeignKey(User, null=True, on_delete=models.PROTECT, editable=False, related_name='+')
+    update_user = models.ForeignKey(User, null=True, on_delete=models.PROTECT, editable=False, related_name='+')
+
+    insert_date = models.DateTimeField(auto_now_add=True, editable=False)
+    update_date = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        unique_together = (('site_no', 'agency'),)
 
     def __str__(self):
         """Default string."""
-        # Django does not honor tabs \t, multiple spaces '   ', nor &nbsp for formatting
-        str_rep = f"{self.agency_nm}:{self.site_no} display:{self.display_flag} "
-        str_rep += f"qw:{self.qw_sn_flag} wl:{self.wl_sn_flag}"
+        str_rep = f'{self.agency}:{self.site_no}'
         return str_rep

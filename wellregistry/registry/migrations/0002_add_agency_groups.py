@@ -30,15 +30,24 @@ def apply_migration(apps, schema_editor):
     content_type = ContentType.objects.get_for_model(Registry)
 
     # Create permissions if the post migrate signal has not been issued after Registry table creation
-    add_p, created = Permission.objects.get_or_create(codename='add_registry', content_type=content_type)
-    change_p, created = Permission.objects.get_or_create(codename='change_registry', content_type=content_type)
-    delete_p, created = Permission.objects.get_or_create(codename='delete_registry', content_type=content_type)
+    view_p, created = Permission.objects.get_or_create(codename='view_registry',
+                                                       name='Can view registry',
+                                                       content_type=content_type)
+    add_p, created = Permission.objects.get_or_create(codename='add_registry',
+                                                      name='Can add registry',
+                                                      content_type=content_type)
+    change_p, created = Permission.objects.get_or_create(codename='change_registry',
+                                                         name='Can change registry',
+                                                         content_type=content_type)
+    delete_p, created = Permission.objects.get_or_create(codename='delete_registry',
+                                                         name='Can delete registry',
+                                                         content_type=content_type)
 
     existing_agencies = Group.objects.all().values_list('name', flat=True)
     for agency in AGENCIES:
         if agency not in existing_agencies:
             group = Group.objects.create(name=agency)
-            group.permissions.set([add_p, change_p, delete_p])
+            group.permissions.set([view_p, add_p, change_p, delete_p])
             group.save()
 
 

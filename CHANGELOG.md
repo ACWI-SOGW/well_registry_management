@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added Registry model and admin prototype interface.
 -   Added initial registry model with migrations and admin 
 -   Added keycloak as the authentication method for the admin.
+-   Added lookup models
+-   Added filtering of the list of registry to show only sites that are in the user's agency and added permissions to prevent the editing of any other agencies sites.
+
+### Changed
+-   Modified the Registry model to more closely resemble the editable fields in the Apex Well Registry application. Also added choices to some of the fields to match the Apex well registry.
 
 ### Fixed
 -   Using whitenoise to serve out the staticfiles when using gunicorn to run the server. Added collectstaticfiles to the Dockerfile.

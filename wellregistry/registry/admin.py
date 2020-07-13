@@ -4,8 +4,9 @@ Django Registry Administration.
 
 from django import forms
 from django.contrib import admin
+from django.db.models.functions import Upper
 from django.utils.html import format_html
-from .models import Registry
+from .models import Registry, AgencyLookup
 
 # this is the Django property for the admin main page header
 admin.site.site_header = 'NGWMN Well Registry Administration'
@@ -28,6 +29,19 @@ class RegistryAdminForm(forms.ModelForm):
         model = Registry
         fields = '__all__'
 
+
+def _get_groups(user):
+    """Return a list of upper case groups that this user belongs to"""
+    return user.groups.all().values_list(Upper('name'), flat=True)
+
+
+def _has_permission(perm, user, obj=None):
+    """Return true if the user has permission, perm, for the obj"""
+    if user.is_superuser:
+        return True
+
+    return user.has_perm(perm) \
+           and (not obj or obj.agency.agency_cd in _get_groups(user))
 
 class RegistryAdmin(admin.ModelAdmin):
     """
@@ -61,6 +75,41 @@ class RegistryAdmin(admin.ModelAdmin):
     def has_wl(obj):
         """Transforms water level boolean to HTML check mark."""
         return check_mark(obj.wl_sn_flag)
+
+    def save_model(self, request, obj, form, change):
+        if not obj.insert_user:
+            obj.insert_user = request.user
+        obj.update_user = request.user
+
+        if not obj.agency and not request.user.is_superuser:
+            obj.agency = AgencyLookup.objects.get(agency_cd=_get_groups(request.user)[0])
+
+        super().save_model(request, obj, form, change)
+
+    def get_readonly_fields(self, request, obj=None):
+        """Overrides default implementation"""
+        return ('agency',) if not request.user.is_superuser else ()
+
+    def get_queryset(self, request):
+        """Overrides default implementation"""
+        return Registry.objects.all() if request.user.is_superuser \
+            else Registry.objects.filter(agency__in=_get_groups(request.user))
+
+    def has_view_permission(self, request, obj=None):
+        """Overrides default implementation"""
+        return _has_permission('registry.view_registry', request.user, obj)
+
+    def has_add_permission(self, request):
+        """Overrides default implementation"""
+        return _has_permission('registry.add_registry', request.user)
+
+    def has_change_permission(self, request, obj=None):
+        """Overrides default implementation"""
+        return _has_permission('registry.change_registry', request.user, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        """Overrides default implementation"""
+        return _has_permission('registry.delete_registry', request.user, obj)
 
 
 # below here will maintain all the tables Django admin should be aware

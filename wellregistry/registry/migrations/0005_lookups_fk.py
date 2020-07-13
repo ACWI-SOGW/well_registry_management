@@ -12,10 +12,7 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-    """
-    Defines the migrations for creating look up tables.
 
-    """
 
     dependencies = [
         ('registry', '0004_lookup_tables'),
