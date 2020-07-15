@@ -12,7 +12,9 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
+    """
+    Defines the migrations for updating the Registry model.
+    """
     dependencies = [
         ('registry', '0006_registry_updates'),
     ]
