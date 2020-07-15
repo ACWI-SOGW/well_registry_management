@@ -7,8 +7,9 @@ from django.contrib.auth.models import User, Group
 from django.http import HttpRequest
 from django.test import TestCase
 
-from ..admin import RegistryAdmin, check_mark
+from ..admin import RegistryAdmin
 from ..models import AgencyLookup, Registry
+
 
 class TestRegistryAdmin(TestCase):
     fixtures = ['test_registry.json', 'test_user.json']
@@ -29,13 +30,6 @@ class TestRegistryAdmin(TestCase):
         site_id = RegistryAdmin.site_id(reg_entry)
 
         self.assertEqual(site_id, "ADWR:44445555")
-
-    def test_check_mark(self):
-        check_html = check_mark(True)
-        blank_html = check_mark(False)
-
-        self.assertEqual(check_html, '&check;')
-        self.assertEqual(blank_html, '')
 
     def test_save_model_new_registry_with_adwr_user(self):
         request = HttpRequest()
@@ -131,7 +125,6 @@ class TestRegistryAdmin(TestCase):
         self.assertTrue(self.admin.has_change_permission(request))
         self.assertTrue(self.admin.has_change_permission(request, Registry.objects.get(site_no='44445555')))
         self.assertFalse(self.admin.has_change_permission(request, Registry.objects.get(site_no='12345678')))
-
 
     def test_has_delete_permission_with_superuser(self):
         request = HttpRequest()
