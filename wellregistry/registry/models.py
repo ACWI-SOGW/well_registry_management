@@ -3,7 +3,6 @@ Well Registry ORM object.
 """
 
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
@@ -43,6 +42,7 @@ class CountryLookup(models.Model):
     def __str__(self):
         return self.country_nm
 
+
 class CountyLookup(models.Model):
     """Model definition for the county table, lookup only"""
     country_cd = models.ForeignKey('CountryLookup', on_delete=models.PROTECT, db_column='country_cd',
@@ -57,6 +57,7 @@ class CountyLookup(models.Model):
 
     def __str__(self):
         return self.county_nm
+
 
 class HorizontalDatumLookup(models.Model):
     """Model definition for the horizontal_datum table, lookup only"""
@@ -108,9 +109,11 @@ class UnitsLookup(models.Model):
     def __str__(self):
         return self.unit_desc
 
+
 WELL_TYPES = [('1', 'Surveillance'), ('2', 'Trend'), ('3', 'Special')]
 WELL_CHARACTERISTICS = [('1', 'Background'), ('2', 'Suspected/Anticipated Changes'), ('3', 'Known Changes')]
 WELL_PURPOSES = [('1', 'Dedicated Monitoring/Observation'), ('2', 'Other')]
+
 
 class Registry(models.Model):
     """
@@ -118,10 +121,12 @@ class Registry(models.Model):
 
     # python manage.py makemigrations and migrate
     """
-    site_no = models.CharField(max_length=16)
-    site_name = models.CharField(max_length=300, blank=True)
+    display_flag = models.BooleanField(default=False, verbose_name='Display Site?')
+
     agency = models.ForeignKey(AgencyLookup, on_delete=models.PROTECT, db_column='agency_cd', null=True,
                                to_field='agency_cd')
+    site_no = models.CharField(max_length=16)
+    site_name = models.CharField(max_length=300, blank=True)
 
     country = models.ForeignKey(CountryLookup, on_delete=models.PROTECT, db_column='country_cd',
                                 null=True, blank=True, to_field='country_cd')
@@ -129,54 +134,65 @@ class Registry(models.Model):
     county = models.ForeignKey(CountyLookup, on_delete=models.PROTECT,
                                db_column='county_id', null=True, blank=True)
 
-    dec_lat_va = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True)
-    dec_long_va = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True)
+    dec_lat_va = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True,
+                                     verbose_name='Latitude(decimal degrees)')
+    dec_long_va = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True,
+                                      verbose_name='Longitude(decimal degrees)')
     horizontal_datum = models.ForeignKey(HorizontalDatumLookup, on_delete=models.PROTECT,
                                          db_column='horizontal_datum_cd', null=True, blank=True,
                                          to_field='hdatum_cd')
-    horz_method = models.CharField(max_length=300, blank=True)
-    horz_acy = models.CharField(max_length=300, blank=True)
+    horz_method = models.CharField(max_length=300, blank=True, verbose_name='Lat/Long method')
+    horz_acy = models.CharField(max_length=300, blank=True, verbose_name='Lat/Long accuracy')
 
-    alt_va = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)
+    alt_va = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True,
+                                 verbose_name='Altitude')
+    altitude_units = models.ForeignKey(UnitsLookup, on_delete=models.PROTECT, db_column='altitude_units',
+                                       to_field='unit_id', null=True, blank=True)
     altitude_datum = models.ForeignKey(AltitudeDatumLookup, on_delete=models.PROTECT,
                                        db_column='altitude_datum_cd', null=True, blank=True,
                                        to_field='adatum_cd')
-    altitude_units = models.ForeignKey(UnitsLookup, on_delete=models.PROTECT, db_column='altitude_units',
-                                       to_field='unit_id', null=True, blank=True)
-    alt_method = models.CharField(max_length=300, blank=True)
-    alt_acy = models.CharField(max_length=300, blank=True)
+    alt_method = models.CharField(max_length=300, blank=True, verbose_name='Altitude method')
+    alt_acy = models.CharField(max_length=300, blank=True, verbose_name='Altitude accuracy')
 
     well_depth = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True)
     well_depth_units = models.ForeignKey(UnitsLookup, related_name='+', db_column='well_depth_units',
                                          on_delete=models.PROTECT, to_field='unit_id', null=True, blank=True)
 
-    nat_aqfr = models.ForeignKey(NatAqfrLookup, on_delete=models.PROTECT,
-                                 db_column='nat_aqfr_cd', to_field='nat_aqfr_cd', null=True, blank=True)
+    nat_aqfr = models.ForeignKey(NatAqfrLookup, on_delete=models.PROTECT, db_column='nat_aqfr_cd',
+                                 to_field='nat_aqfr_cd', null=True, blank=True, verbose_name='National aquifer')
     local_aquifer_name = models.CharField(max_length=100, blank=True)
 
     site_type = models.CharField(max_length=10, blank=True, choices=[('WELL', 'Well'), ('SPRING', 'Spring')])
     aqfr_type = models.CharField(max_length=10, blank=True, db_column='aqfr_char',
-                                 choices=[('CONFINED', 'Confined'), ('UNCONFINED', 'Unconfined')])
+                                 choices=[('CONFINED', 'Confined'), ('UNCONFINED', 'Unconfined')],
+                                 verbose_name='Aquifer type')
 
-    wl_sn_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
-    wl_network_name = models.CharField(max_length=50, blank=True, db_column='wl_sys_name')
-    wl_baseline_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
-    wl_well_type = models.CharField(max_length=3, blank=True, choices=WELL_TYPES)
-    wl_well_chars = models.CharField(max_length=3, blank=True, choices=WELL_CHARACTERISTICS)
-    wl_well_purpose = models.CharField(max_length=15, blank=True, choices=WELL_PURPOSES)
-    wl_well_purpose_notes = models.CharField(max_length=4000, blank=True)
+    wl_sn_flag = models.BooleanField(default=False, verbose_name='In WL sub-network?')
+    wl_network_name = models.CharField(max_length=50, blank=True, db_column='wl_sys_name',
+                                       verbose_name='WL network name')
+    wl_baseline_flag = models.BooleanField(default=False, verbose_name='WL baseline?')
+    wl_well_type = models.CharField(max_length=3, blank=True, choices=WELL_TYPES,
+                                    verbose_name='WL well type')
+    wl_well_chars = models.CharField(max_length=3, blank=True, choices=WELL_CHARACTERISTICS,
+                                     verbose_name='WL well characteristics')
+    wl_well_purpose = models.CharField(max_length=15, blank=True, choices=WELL_PURPOSES,
+                                       verbose_name='WL well purpose')
+    wl_well_purpose_notes = models.CharField(max_length=4000, blank=True, verbose_name='WL well purpose notes')
 
-    qw_sn_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
-    qw_network_name = models.CharField(max_length=50, blank=True, db_column='qw_sys_name')
-    qw_baseline_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
-    qw_well_type = models.CharField(max_length=3, blank=True, choices=WELL_TYPES)
-    qw_well_chars = models.CharField(max_length=3, blank=True, choices=WELL_CHARACTERISTICS)
-    qw_well_purpose = models.CharField(max_length=15, blank=True, choices=WELL_PURPOSES)
-    qw_well_purpose_notes = models.CharField(max_length=4000, blank=True)
+    qw_sn_flag = models.BooleanField(default=False, verbose_name='In QW sub-network?')
+    qw_network_name = models.CharField(max_length=50, blank=True, db_column='qw_sys_name',
+                                       verbose_name='QW network name')
+    qw_baseline_flag = models.BooleanField(default=False, verbose_name='QW baseline?')
+    qw_well_type = models.CharField(max_length=3, blank=True, choices=WELL_TYPES,
+                                    verbose_name='QW well type')
+    qw_well_chars = models.CharField(max_length=3, blank=True, choices=WELL_CHARACTERISTICS,
+                                     verbose_name='QW well characteristics')
+    qw_well_purpose = models.CharField(max_length=15, blank=True, choices=WELL_PURPOSES,
+                                       verbose_name='QW well purpose')
+    qw_well_purpose_notes = models.CharField(max_length=4000, blank=True,
+                                             verbose_name='QW well purpose notes')
 
     link = models.CharField(max_length=500, blank=True)
-
-    display_flag = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1)])
 
     insert_user = models.ForeignKey(User, null=True, on_delete=models.PROTECT, editable=False, related_name='+')
     update_user = models.ForeignKey(User, null=True, on_delete=models.PROTECT, editable=False, related_name='+')

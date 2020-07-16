@@ -1,4 +1,4 @@
-# The below suppresses pylint message: Module name "0005_lookups_fk" doesn't conform to snake_case naming style
+# The below suppresses pylint message: Module name "*" doesn't conform to snake_case naming style
 # pylint: disable-msg=C0103
 # Enable check for the rest of the file
 # pylint: enable-msg=C0103
