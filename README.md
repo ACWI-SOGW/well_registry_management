@@ -89,7 +89,7 @@ You can stop the container using:
 ```
 You can start the container again:
 ```bash
-% docker start registry_posgres
+% docker start registry_postgres
 ```
 
 ## Environment Variables

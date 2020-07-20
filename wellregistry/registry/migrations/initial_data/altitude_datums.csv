@@ -1,0 +1,11 @@
+"ADATUM_CD","ADATUM_DESC","DATUM_TYPE"
+NAVD88,North American Vertical Datum of 1988,Gravimetric
+NGVD29,National Geodetic Vertical Datum of 1929,Geodetic
+WGS84,World Geodetic System of 1984,Geodetic
+NAD83,"NAD83 North American Datum of 1983",Geodetic
+MSL,Mean Sea-Level,Sea-Level
+NA,UNKNOWN,
+HILOCAL,Local Hawaiian Datum,
+LMSL,Local Mean Sea Level,Sea-Level
+GUVD04,Guam Vertical Datum of 2004,
+OLDAK,Old Alaska (Mainland) and Aleutian Island Datum,

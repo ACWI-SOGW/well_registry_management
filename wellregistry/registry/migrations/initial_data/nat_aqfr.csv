@@ -1,0 +1,69 @@
+"NAT_AQFR_CD","NAT_AQFR_DESC"
+N100AKUNCD,Alaska unconsolidated-deposit aquifers
+N100ALLUVL,Alluvial aquifers
+N100BSNRGB,Basin and Range basin-fill aquifers
+N100CACSTL,California Coastal Basin aquifers
+N100CMBPLB,Columbia Plateau basin-fill aquifers
+N100GLCIAL,Sand and gravel aquifers (glaciated regions)
+N100HGHPLN,High Plains aquifer
+N100MSRVVL,Mississippi River Valley alluvial aquifer
+N100PCFNWB,Pacific Northwest basin-fill aquifers
+N100PCFNWV,Pacific Northwest volcanic-rock aquifers
+N100PCSRVR,Pecos River Basin alluvial aquifer
+N100SYMOUR,Seymour aquifer
+N100WLMLWD,Willamette Lowland basin-fill aquifers
+N300ADAVMS,Ada-Vamoosa aquifer
+N300CNRLOK,Central Oklahoma aquifer
+N300COPLTS,Colorado Plateaus aquifers
+N300ERLMZC,Early Mesozoic basin aquifers
+N300JCBSVL,Jacobsville aquifer
+N300LCRTCS,Lower Cretaceous aquifers
+N300LTRTRY,Lower Tertiary aquifers
+N300MRSHLL,Marshall aquifer
+N300NYSDSN,New York sandstone aquifers
+N300PNSLVN,Pennsylvanian aquifers
+N300RSHSPG,Rush Springs aquifer
+N300STHCST,South Coast aquifer (Puerto Rico)
+N300UPCTCS,Upper Cretaceous aquifers
+N300WYTRTR,Wyoming Tertiary aquifers
+N400ABKSMP,Arbuckle-Simpson aquifer
+N400BISCYN,Biscayne aquifer
+N400BLAINE,Blaine aquifer
+N400BSNRGC,Basin and Range carbonate-rock aquifers
+N400CSLHYN,Castle Hayne aquifer
+N400KNGSHL,Kingshill aquifer (Virgin Islands)
+N400NCSTLM,North Coast Limestone aquifer system (Puerto Rico)
+N400NYNECB,New York and New England carbonate-rock aquifers
+N400ORDVCN,Ordovician aquifers
+N400PDMBRC,Piedmont and Blue Ridge carbonate-rock aquifers
+N400PDMBRX,Piedmont and Blue Ridge crystalline-rock aquifers
+N400SLRDVN,Silurian-Devonian aquifers
+N400UPCRBN,Upper carbonate aquifer
+N500MSSPPI,Mississippian aquifers
+N500PLOZOC,Paleozoic aquifers
+N500VLYRDG,Valley and Ridge aquifers
+N600CMBPLV,Columbia Plateau basaltic-rock aquifers
+N600HIVLCC,Hawaii volcanic-rock aquifers
+N600NECRSN,New England crystalline-rock aquifers
+N600SKRVPB,Snake River Plain basin-fill aquifers
+N600SKRVPV,Snake River Plain basaltic-rock aquifers
+N600SRNVDV,Southern Nevada volcanic-rock aquifers
+N9999OTHER,Other aquifers
+S100CNRLVL,Central Valley aquifer system
+S100CSLLWD,Coastal lowlands aquifer system
+S100MSEMBM,Mississippi embayment aquifer system
+S100NATLCP,Northern Atlantic Coastal Plain aquifer system
+S100NRMTIB,Northern Rocky Mountains Intermontane Basins aquifer systems
+S100PGTSND,Puget Sound aquifer system
+S100RIOGRD,Rio Grande aquifer system
+S100SECSLP,Southeastern Coastal Plain aquifer system
+S100SURFCL,Surficial aquifer system
+S100TXCLUP,Texas coastal uplands aquifer system
+S300CAMORD,Cambrian-Ordovician aquifer system
+S300DNVRBS,Denver Basin aquifer system
+S400FLORDN,Floridan aquifer system
+S400OZRKPL,Ozark Plateaus aquifer system
+S400RSWLBS,Roswell Basin aquifer system
+S500EDRTRN,Edwards-Trinity aquifer system
+S500INTRMD,Intermediate aquifer system
+NA,UNCLASSIFIED
