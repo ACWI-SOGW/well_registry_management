@@ -170,7 +170,7 @@ def load_agency_lookups(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('registry', '0006_registry_updates'),
+        ('registry', '0007_registry_flags_to_boolean'),
     ]
 
     operations = [
