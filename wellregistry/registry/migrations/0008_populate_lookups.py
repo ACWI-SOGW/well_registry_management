@@ -173,6 +173,10 @@ def load_agency_lookups(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
+    """
+    Insert initial data into lookup tables.
+
+    """
 
     dependencies = [
         ('registry', '0007_registry_flags_to_boolean'),
