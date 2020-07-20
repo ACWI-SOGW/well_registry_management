@@ -16,13 +16,16 @@ from django.core.files.storage import default_storage
 from django.db import migrations
 
 
+INITIAL_DATA_DIR = os.path.join(settings.BASE_DIR, 'registry/migrations/initial_data/')
+
+
 def load_country_lookups(apps, schema_editor):
     """
     Load country lookup table from data in a CSV.
 
     """
     country_lookup = apps.get_model('registry', 'CountryLookup')
-    data_src = os.path.join(settings.BASE_DIR, 'registry/migrations/initial_data/country.csv')
+    data_src = os.path.join(INITIAL_DATA_DIR, 'country.csv')
     with default_storage.open(data_src, 'r') as csvfile:
         csvreader = csv.reader(csvfile)
         next(csvreader)  # skip the header row
@@ -42,7 +45,7 @@ def load_state_lookups(apps, schema_editor):
     """
     country_lookup = apps.get_model('registry', 'CountryLookup')
     state_lookup = apps.get_model('registry', 'StateLookup')
-    data_src = os.path.join(settings.BASE_DIR, 'registry/migrations/initial_data/state.csv')
+    data_src = os.path.join(INITIAL_DATA_DIR, 'state.csv')
     with default_storage.open(data_src, 'r') as csvfile:
         csvreader = csv.reader(csvfile)
         next(csvreader)
@@ -65,7 +68,7 @@ def load_county_lookups(apps, schema_editor):
     country_lookup = apps.get_model('registry', 'CountryLookup')
     state_lookup = apps.get_model('registry', 'StateLookup')
     county_lookup = apps.get_model('registry', 'CountyLookup')
-    data_src = os.path.join(settings.BASE_DIR, 'registry/migrations/initial_data/county.csv')
+    data_src = os.path.join(INITIAL_DATA_DIR, 'county.csv')
     with default_storage.open(data_src, 'r') as csvfile:
         csvreader = csv.reader(csvfile)
         next(csvreader)
@@ -87,7 +90,7 @@ def load_national_aquifer_lookups(apps, schema_editor):
 
     """
     aquifer_lookup = apps.get_model('registry', 'NatAqfrLookup')
-    data_src = os.path.join(settings.BASE_DIR, 'registry/migrations/initial_data/nat_aqfr.csv')
+    data_src = os.path.join(INITIAL_DATA_DIR, 'nat_aqfr.csv')
     with default_storage.open(data_src, 'r') as csvfile:
         csvreader = csv.reader(csvfile)
         next(csvreader)
@@ -105,7 +108,7 @@ def load_altitude_datum_lookups(apps, schema_editor):
 
     """
     altitude_datum_lookup = apps.get_model('registry', 'AltitudeDatumLookup')
-    data_src = os.path.join(settings.BASE_DIR, 'registry/migrations/initial_data/altitude_datums.csv')
+    data_src = os.path.join(INITIAL_DATA_DIR, 'altitude_datums.csv')
     with default_storage.open(data_src, 'r') as csvfile:
         csvreader = csv.reader(csvfile)
         next(csvreader)
@@ -123,7 +126,7 @@ def load_horizontal_datum_lookups(apps, schema_editor):
 
     """
     horizontal_datum_lookup = apps.get_model('registry', 'HorizontalDatumLookup')
-    data_src = os.path.join(settings.BASE_DIR, 'registry/migrations/initial_data/horizontal_datums.csv')
+    data_src = os.path.join(INITIAL_DATA_DIR, 'horizontal_datums.csv')
     with default_storage.open(data_src, 'r') as csvfile:
         csvreader = csv.reader(csvfile)
         next(csvreader)
@@ -141,7 +144,7 @@ def load_unit_lookups(apps, schema_editor):
 
     """
     unit_lookup = apps.get_model('registry', 'UnitsLookup')
-    data_src = os.path.join(settings.BASE_DIR, 'registry/migrations/initial_data/units.csv')
+    data_src = os.path.join(INITIAL_DATA_DIR, 'units.csv')
     with default_storage.open(data_src, 'r') as csvfile:
         csvreader = csv.reader(csvfile)
         next(csvreader)
@@ -159,7 +162,7 @@ def load_agency_lookups(apps, schema_editor):
 
     """
     agency_lookup = apps.get_model('registry', 'AgencyLookup')
-    data_src = os.path.join(settings.BASE_DIR, 'registry/migrations/initial_data/agency.csv')
+    data_src = os.path.join(INITIAL_DATA_DIR, 'agency.csv')
     with default_storage.open(data_src, 'r') as csvfile:
         csvreader = csv.reader(csvfile)
         next(csvreader)
