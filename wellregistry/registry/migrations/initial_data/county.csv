@@ -1,44 +1,8 @@
 "COUNTRY_CD","STATE_CD","COUNTY_CD","COUNTY_NM"
-AF,"00","000",Unspecified
-AR,"00","000",Unspecified
-AY,"00","000",Unspecified
-BG,"00","000",Unspecified
-CI,"00","000",Unspecified
-CN,"00","000",Unspecified
-CN,"90","000",Unspecified
-CN,"91","000",Unspecified
-CN,"92","000",Unspecified
-CN,"93","000",Unspecified
-CN,"94","000",Unspecified
-CN,"95","000",Unspecified
-CN,"96","000",Unspecified
-CN,"97","000",Unspecified
-CN,"98","000",Unspecified
-CV,"00","000",Unspecified
-DR,"00","000",Unspecified
-ES,"00","000",Unspecified
-FM,"00","000",Unspecified
 FM,"00","005",Kosrae
 FM,"00","040",Pohnpei
 FM,"00","050",Chuuk
 FM,"00","060",Yap
-GT,"00","000",Unspecified
-HA,"00","000",Unspecified
-HO,"00","000",Unspecified
-IZ,"00","000",Unspecified
-JA,"00","000",Unspecified
-MX,"00","000",Unspecified
-MX,"81","000",Unspecified
-MX,"82","000",Unspecified
-MX,"83","000",Unspecified
-MX,"84","000",Unspecified
-MX,"85","000",Unspecified
-MX,"86","000",Unspecified
-NU,"00","000",Unspecified
-PE,"00","000",Unspecified
-PM,"00","000",Unspecified
-PM,"61","000",Unspecified
-PS,"00","000",Unspecified
 PS,"00","002",Aimeliik
 PS,"00","004",Airai
 PS,"00","010",Angaur
@@ -56,7 +20,6 @@ PS,"00","300",Palau-Unorg.
 PS,"00","350",Peleiu
 PS,"00","370",Sonsorol
 PS,"00","380",Tobi
-RM,"00","000",Unspecified
 RM,"00","007",AILINGINAE
 RM,"00","010",AILINGLAPLAP
 RM,"00","030",AILUK
@@ -90,10 +53,6 @@ RM,"00","400",UJELANG
 RM,"00","410",UTRIK
 RM,"00","420",WOTHO
 RM,"00","430",WOTJE
-RP,"00","000",Unspecified
-UP,"00","000",Unspecified
-US,"00","000",Unspecified
-US,"01","000",Unspecified
 US,"01","001",Autauga County
 US,"01","003",Baldwin County
 US,"01","005",Barbour County
@@ -161,7 +120,6 @@ US,"01","127",Walker County
 US,"01","129",Washington County
 US,"01","131",Wilcox County
 US,"01","133",Winston County
-US,"02","000",Unspecified
 US,"02","013",Aleutians East Borough
 US,"02","016",Aleutians West Census Area
 US,"02","020",Municipality of Anchorage
@@ -189,7 +147,6 @@ US,"02","270",Wade Hampton Census Area
 US,"02","280",WRANGELL-PETERSBURG DIVISION
 US,"02","282",City and Borough of Yakutat
 US,"02","290",Yukon-Koyukuk Census Area
-US,"04","000",Unspecified
 US,"04","001",Apache County
 US,"04","003",Cochise County
 US,"04","005",Coconino County
@@ -205,7 +162,6 @@ US,"04","021",Pinal County
 US,"04","023",Santa Cruz County
 US,"04","025",Yavapai County
 US,"04","027",Yuma County
-US,"05","000",Unspecified
 US,"05","001",Arkansas County
 US,"05","003",Ashley County
 US,"05","005",Baxter County
@@ -281,7 +237,6 @@ US,"05","143",Washington County
 US,"05","145",White County
 US,"05","147",Woodruff County
 US,"05","149",Yell County
-US,"06","000",Unspecified
 US,"06","001",Alameda County
 US,"06","003",Alpine County
 US,"06","005",Amador County
@@ -340,7 +295,6 @@ US,"06","109",Tuolumne County
 US,"06","111",Ventura County
 US,"06","113",Yolo County
 US,"06","115",Yuba County
-US,"08","000",Unspecified
 US,"08","001",Adams County
 US,"08","003",Alamosa County
 US,"08","005",Arapahoe County
@@ -400,7 +354,6 @@ US,"17","197",Will County
 US,"17","199",Williamson County
 US,"17","201",Winnebago County
 US,"17","203",Woodford County
-US,"18","000",Unspecified
 US,"18","001",Adams County
 US,"18","003",Allen County
 US,"18","005",Bartholomew County
@@ -493,7 +446,6 @@ US,"18","177",Wayne County
 US,"18","179",Wells County
 US,"18","181",White County
 US,"18","183",Whitley County
-US,"19","000",Unspecified
 US,"19","001",Adair County
 US,"19","003",Adams County
 US,"19","005",Allamakee County
@@ -593,7 +545,6 @@ US,"19","191",Winneshiek County
 US,"19","193",Woodbury County
 US,"19","195",Worth County
 US,"19","197",Wright County
-US,"20","000",Unspecified
 US,"20","001",Allen County
 US,"20","003",Anderson County
 US,"20","005",Atchison County
@@ -646,7 +597,6 @@ US,"08","119",Teller County
 US,"08","121",Washington County
 US,"08","123",Weld County
 US,"08","125",Yuma County
-US,"09","000",Unspecified
 US,"09","001",Fairfield County
 US,"09","003",Hartford County
 US,"09","005",Litchfield County
@@ -655,13 +605,10 @@ US,"09","009",New Haven County
 US,"09","011",New London County
 US,"09","013",Tolland County
 US,"09","015",Windham County
-US,"10","000",Unspecified
 US,"10","001",Kent County
 US,"10","003",New Castle County
 US,"10","005",Sussex County
-US,"11","000",Unspecified
 US,"11","001",District of Columbia
-US,"12","000",Unspecified
 US,"12","001",Alachua County
 US,"12","003",Baker County
 US,"12","005",Bay County
@@ -729,7 +676,6 @@ US,"12","127",Volusia County
 US,"12","129",Wakulla County
 US,"12","131",Walton County
 US,"12","133",Washington County
-US,"13","000",Unspecified
 US,"13","001",Appling County
 US,"13","003",Atkinson County
 US,"13","005",Bacon County
@@ -889,13 +835,11 @@ US,"13","315",Wilcox County
 US,"13","317",Wilkes County
 US,"13","319",Wilkinson County
 US,"13","321",Worth County
-US,"15","000",Unspecified
 US,"15","001",Hawaii County
 US,"15","003",Honolulu County
 US,"15","005",Kalawao County
 US,"15","007",Kauai County
 US,"15","009",Maui County
-US,"16","000",Unspecified
 US,"16","001",Ada County
 US,"16","003",Adams County
 US,"16","005",Bannock County
@@ -940,7 +884,6 @@ US,"16","081",Teton County
 US,"16","083",Twin Falls County
 US,"16","085",Valley County
 US,"16","087",Washington County
-US,"17","000",Unspecified
 US,"17","001",Adams County
 US,"17","003",Alexander County
 US,"17","005",Bond County
@@ -1109,7 +1052,6 @@ US,"26","159",Van Buren County
 US,"26","161",Washtenaw County
 US,"26","163",Wayne County
 US,"26","165",Wexford County
-US,"27","000",Unspecified
 US,"27","001",Aitkin County
 US,"27","003",Anoka County
 US,"27","005",Becker County
@@ -1197,7 +1139,6 @@ US,"27","167",Wilkin County
 US,"27","169",Winona County
 US,"27","171",Wright County
 US,"27","173",Yellow Medicine County
-US,"28","000",Unspecified
 US,"28","001",Adams County
 US,"28","003",Alcorn County
 US,"28","005",Amite County
@@ -1287,7 +1228,6 @@ US,"22","121",West Baton Rouge Parish
 US,"22","123",West Carroll Parish
 US,"22","125",West Feliciana Parish
 US,"22","127",Winn Parish
-US,"23","000",Unspecified
 US,"23","001",Androscoggin County
 US,"23","003",Aroostook County
 US,"23","005",Cumberland County
@@ -1304,7 +1244,6 @@ US,"23","025",Somerset County
 US,"23","027",Waldo County
 US,"23","029",Washington County
 US,"23","031",York County
-US,"24","000",Unspecified
 US,"24","001",Allegany County
 US,"24","003",Anne Arundel County
 US,"24","005",Baltimore County
@@ -1329,7 +1268,6 @@ US,"24","043",Washington County
 US,"24","045",Wicomico County
 US,"24","047",Worcester County
 US,"24","510",Baltimore City
-US,"25","000",Unspecified
 US,"25","001",Barnstable County
 US,"25","003",Berkshire County
 US,"25","005",Bristol County
@@ -1344,7 +1282,6 @@ US,"25","021",Norfolk County
 US,"25","023",Plymouth County
 US,"25","025",Suffolk County
 US,"25","027",Worcester County
-US,"26","000",Unspecified
 US,"26","001",Alcona County
 US,"26","003",Alger County
 US,"26","005",Allegan County
@@ -1420,7 +1357,6 @@ US,"20","203",Wichita County
 US,"20","205",Wilson County
 US,"20","207",Woodson County
 US,"20","209",Wyandotte County
-US,"21","000",Unspecified
 US,"21","001",Adair County
 US,"21","003",Allen County
 US,"21","005",Anderson County
@@ -1541,7 +1477,6 @@ US,"21","233",Webster County
 US,"21","235",Whitley County
 US,"21","237",Wolfe County
 US,"21","239",Woodford County
-US,"22","000",Unspecified
 US,"22","001",Acadia Parish
 US,"22","003",Allen Parish
 US,"22","005",Ascension Parish
@@ -1615,7 +1550,6 @@ US,"36","117",Wayne County
 US,"36","119",Westchester County
 US,"36","121",Wyoming County
 US,"36","123",Yates County
-US,"37","000",Unspecified
 US,"37","001",Alamance County
 US,"37","003",Alexander County
 US,"37","005",Alleghany County
@@ -1716,7 +1650,6 @@ US,"37","193",Wilkes County
 US,"37","195",Wilson County
 US,"37","197",Yadkin County
 US,"37","199",Yancey County
-US,"38","000",Unspecified
 US,"38","001",Adams County
 US,"38","003",Barnes County
 US,"38","005",Benson County
@@ -1770,7 +1703,6 @@ US,"38","099",Walsh County
 US,"38","101",Ward County
 US,"38","103",Wells County
 US,"38","105",Williams County
-US,"39","000",Unspecified
 US,"39","001",Adams County
 US,"39","003",Allen County
 US,"39","005",Ashland County
@@ -1840,7 +1772,6 @@ US,"39","131",Pike County
 US,"28","159",Winston County
 US,"28","161",Yalobusha County
 US,"28","163",Yazoo County
-US,"29","000",Unspecified
 US,"29","001",Adair County
 US,"29","003",Andrew County
 US,"29","005",Atchison County
@@ -1956,7 +1887,6 @@ US,"29","225",Webster County
 US,"29","227",Worth County
 US,"29","229",Wright County
 US,"29","510",St. Louis City
-US,"30","000",Unspecified
 US,"30","001",Beaverhead County
 US,"30","003",Big Horn County
 US,"30","005",Blaine County
@@ -2014,7 +1944,6 @@ US,"30","107",Wheatland County
 US,"30","109",Wibaux County
 US,"30","111",Yellowstone County
 US,"30","113",Yellowstone National Park - Part
-US,"31","000",Unspecified
 US,"31","001",Adams County
 US,"31","003",Antelope County
 US,"31","005",Arthur County
@@ -2108,7 +2037,6 @@ US,"31","179",Wayne County
 US,"31","181",Webster County
 US,"31","183",Wheeler County
 US,"31","185",York County
-US,"32","000",Unspecified
 US,"32","001",Churchill County
 US,"32","003",Clark County
 US,"32","005",Douglas County
@@ -2126,7 +2054,6 @@ US,"32","029",Storey County
 US,"32","031",Washoe County
 US,"32","033",White Pine County
 US,"32","510",Carson City
-US,"33","000",Unspecified
 US,"33","001",Belknap County
 US,"33","003",Carroll County
 US,"33","005",Cheshire County
@@ -2137,7 +2064,6 @@ US,"33","013",Merrimack County
 US,"33","015",Rockingham County
 US,"33","017",Strafford County
 US,"33","019",Sullivan County
-US,"34","000",Unspecified
 US,"34","001",Atlantic County
 US,"34","003",Bergen County
 US,"34","005",Burlington County
@@ -2159,7 +2085,6 @@ US,"34","035",Somerset County
 US,"34","037",Sussex County
 US,"34","039",Union County
 US,"34","041",Warren County
-US,"35","000",Unspecified
 US,"35","001",Bernalillo County
 US,"35","003",Catron County
 US,"35","005",Chaves County
@@ -2193,7 +2118,6 @@ US,"35","055",Taos County
 US,"35","057",Torrance County
 US,"35","059",Union County
 US,"35","061",Valencia County
-US,"36","000",Unspecified
 US,"36","001",Albany County
 US,"36","003",Allegany County
 US,"36","005",Bronx County
@@ -2241,7 +2165,6 @@ US,"46","127",Union County
 US,"46","129",Walworth County
 US,"46","135",Yankton County
 US,"46","137",Ziebach County
-US,"47","000",Unspecified
 US,"47","001",Anderson County
 US,"47","003",Bedford County
 US,"47","005",Benton County
@@ -2337,7 +2260,6 @@ US,"47","183",Weakley County
 US,"47","185",White County
 US,"47","187",Williamson County
 US,"47","189",Wilson County
-US,"48","000",Unspecified
 US,"48","001",Anderson County
 US,"48","003",Andrews County
 US,"48","005",Angelina County
@@ -2495,7 +2417,6 @@ US,"45","085",Sumter County
 US,"45","087",Union County
 US,"45","089",Williamsburg County
 US,"45","091",York County
-US,"46","000",Unspecified
 US,"46","003",Aurora County
 US,"46","005",Beadle County
 US,"46","007",Bennett County
@@ -2580,7 +2501,6 @@ US,"39","169",Wayne County
 US,"39","171",Williams County
 US,"39","173",Wood County
 US,"39","175",Wyandot County
-US,"40","000",Unspecified
 US,"40","001",Adair County
 US,"40","003",Alfalfa County
 US,"40","005",Atoka County
@@ -2658,7 +2578,6 @@ US,"40","147",Washington County
 US,"40","149",Washita County
 US,"40","151",Woods County
 US,"40","153",Woodward County
-US,"41","000",Unspecified
 US,"41","001",Baker County
 US,"41","003",Benton County
 US,"41","005",Clackamas County
@@ -2695,7 +2614,6 @@ US,"41","065",Wasco County
 US,"41","067",Washington County
 US,"41","069",Wheeler County
 US,"41","071",Yamhill County
-US,"42","000",Unspecified
 US,"42","001",Adams County
 US,"42","003",Allegheny County
 US,"42","005",Armstrong County
@@ -2763,13 +2681,11 @@ US,"42","127",Wayne County
 US,"42","129",Westmoreland County
 US,"42","131",Wyoming County
 US,"42","133",York County
-US,"44","000",Unspecified
 US,"44","001",Bristol County
 US,"44","003",Kent County
 US,"44","005",Newport County
 US,"44","007",Providence County
 US,"44","009",Washington County
-US,"45","000",Unspecified
 US,"45","001",Abbeville County
 US,"45","003",Aiken County
 US,"45","005",Allendale County
@@ -2822,7 +2738,6 @@ US,"55","135",Waupaca County
 US,"55","137",Waushara County
 US,"55","139",Winnebago County
 US,"55","141",Wood County
-US,"56","000",Unspecified
 US,"56","001",Albany County
 US,"56","003",Big Horn County
 US,"56","005",Campbell County
@@ -2846,23 +2761,16 @@ US,"56","039",Teton County
 US,"56","041",Uinta County
 US,"56","043",Washakie County
 US,"56","045",Weston County
-US,"60","000",Unspecified
 US,"60","010",Eastern District
 US,"60","020",Manu'a District
 US,"60","030",Rose Island
 US,"60","040",Swains Island
 US,"60","050",Western District
-US,"62","000",Unspecified
-US,"66","000",Unspecified
 US,"66","010",Guam
-US,"67","000",Unspecified
-US,"69","000",Unspecified
 US,"69","085",Northern Islands Municipality
 US,"69","100",Rota Municipality
 US,"69","110",Saipan Municipality
 US,"69","120",Tinian Municipality
-US,"71","000",Unspecified
-US,"72","000",Unspecified
 US,"72","001",Adjuntas Municipio
 US,"72","003",Aguada Municipio
 US,"72","005",Aguadilla Municipio
@@ -2941,16 +2849,9 @@ US,"72","147",Vieques Municipio
 US,"72","149",Villalba Municipio
 US,"72","151",Yabucoa Municipio
 US,"72","153",Yauco Municipio
-US,"73","000",Unspecified
-US,"74","000",Unspecified
-US,"75","000",Unspecified
-US,"76","000",Unspecified
-US,"77","000",Unspecified
-US,"78","000",Unspecified
 US,"78","010",St. Croix Island
 US,"78","020",St. John Island
 US,"78","030",St. Thomas Island
-US,"79","000",Unspecified
 US,"48","281",Lampasas County
 US,"48","283",La Salle County
 US,"48","285",Lavaca County
@@ -3065,7 +2966,6 @@ US,"48","501",Yoakum County
 US,"48","503",Young County
 US,"48","505",Zapata County
 US,"48","507",Zavala County
-US,"49","000",Unspecified
 US,"49","001",Beaver County
 US,"49","003",Box Elder County
 US,"49","005",Cache County
@@ -3095,7 +2995,6 @@ US,"49","051",Wasatch County
 US,"49","053",Washington County
 US,"49","055",Wayne County
 US,"49","057",Weber County
-US,"50","000",Unspecified
 US,"50","001",Addison County
 US,"50","003",Bennington County
 US,"50","005",Caledonia County
@@ -3110,7 +3009,6 @@ US,"50","021",Rutland County
 US,"50","023",Washington County
 US,"50","025",Windham County
 US,"50","027",Windsor County
-US,"51","000",Unspecified
 US,"51","001",Accomack County
 US,"51","003",Albemarle County
 US,"51","005",Alleghany County
@@ -3247,7 +3145,6 @@ US,"51","810",Virginia Beach City
 US,"51","820",Waynesboro City
 US,"51","830",Williamsburg City
 US,"51","840",Winchester City
-US,"53","000",Unspecified
 US,"53","001",Adams County
 US,"53","003",Asotin County
 US,"53","005",Benton County
@@ -3287,7 +3184,6 @@ US,"53","071",Walla Walla County
 US,"53","073",Whatcom County
 US,"53","075",Whitman County
 US,"53","077",Yakima County
-US,"54","000",Unspecified
 US,"54","001",Barbour County
 US,"54","003",Berkeley County
 US,"54","005",Boone County
@@ -3343,7 +3239,6 @@ US,"54","103",Wetzel County
 US,"54","105",Wirt County
 US,"54","107",Wood County
 US,"54","109",Wyoming County
-US,"55","000",Unspecified
 US,"55","001",Adams County
 US,"55","003",Ashland County
 US,"55","005",Barron County
@@ -3393,41 +3288,27 @@ US,"55","089",Ozaukee County
 US,"55","091",Pepin County
 US,"55","093",Pierce County
 US,"55","095",Polk County
-CA,"95","000",Unspecified
 PS,"70","214",Ngaraard
-CA,"00","000",Unspecified
 FM,"64","040",Pohnpei
-CA,"98","000",Unspecified
 PS,"70","004",Airai
 PS,"70","150",Koror
 PS,"70","226",Ngchesar
-CA,"90","000",Unspecified
-CA,"94","000",Unspecified
-CA,"92","000",Unspecified
 PS,"70","010",Angaur
-VC,"00","000",Unspecified
 PS,"70","218",Ngarchelong
 PS,"70","223",Ngaremlengui
 PS,"70","380",Tobi
 PS,"70","212",Melekeok
-AM,"00","000",Unspecified
-CA,"96","000",Unspecified
 PS,"70","100",Kayangel
 PS,"70","222",Ngardmau
-FM,"64","000",Unspecified
 FM,"64","060",Yap
 FM,"64","050",Chuuk
-PS,"70","000",Unspecified
-CA,"97","000",Unspecified
 PS,"70","002",Aimeliik
 PS,"70","370",Sonsorol
 PS,"70","350",Peleiu
-CA,"91","000",Unspecified
 PS,"70","224",Ngatpang
 FM,"64","005",Kosrae
 PS,"70","300",Palau-Unorg.
 PS,"70","228",Ngiwal
-CA,"93","000",Unspecified
 RM,"68","060",Bikar
 RM,"68","350",Rongelap
 RM,"68","070",Bikini and Kili
@@ -3441,7 +3322,6 @@ RM,"68","007",Ailinginae
 RM,"68","170",Lib
 US,"02","158",Kusilvak Census Area
 RM,"68","360",Rongrik
-US,"65","000",Unspecified
 RM,"68","410",Utrik
 RM,"68","400",Ujelang
 RM,"68","330",Namorik
@@ -3449,7 +3329,6 @@ US,"02","275",City and Borough of Wrangell
 RM,"68","310",Mejit
 RM,"68","385",Toke
 RM,"68","110",Jabat
-ET,"00","000",Unspecified
 RM,"68","100",Erikub
 RM,"68","140",Kili
 RM,"68","130",Jemo Island
@@ -3470,4 +3349,3 @@ US,"02","230",Skagway Municipality
 RM,"68","090",Enewetak and Ujelang
 RM,"68","340",Namu
 RM,"68","120",Jaluit
-RM,"68","000",Unspecified
