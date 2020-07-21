@@ -1,10 +1,4 @@
 "COUNTRY_CD","STATE_CD","STATE_NM"
-AF,"00",Unspecified
-AR,"00",Unspecified
-AY,"00",Unspecified
-BG,"00",Unspecified
-CI,"00",Unspecified
-CN,"00",Unspecified
 CN,"90",New Brunswick
 CN,"91",Quebec
 CN,"92",Ontario
@@ -14,31 +8,13 @@ CN,"95",Alberta
 CN,"96",British Columbia
 CN,"97",Yukon Territories
 CN,"98",Nova Scotia
-CV,"00",Unspecified
-DR,"00",Unspecified
-ES,"00",Unspecified
-FM,"00",Unspecified
-GT,"00",Unspecified
-HA,"00",Unspecified
-HO,"00",Unspecified
-IZ,"00",Unspecified
-JA,"00",Unspecified
-MX,"00",Unspecified
 MX,"81",Tamulipas
 MX,"82",Nuevo Leon
 MX,"83",Coahuila
 MX,"84",Chihauhau
 MX,"85",Sonora
 MX,"86",Baja California Norte
-NU,"00",Unspecified
-PE,"00",Unspecified
-PM,"00",Unspecified
 PM,"61",Panama
-PS,"00",Unspecified
-RM,"00",Unspecified
-RP,"00",Unspecified
-UP,"00",Unspecified
-US,"00",Unspecified
 US,"01",Alabama
 US,"02",Alaska
 US,"04",Arizona
@@ -104,20 +80,16 @@ US,"76",U.S. Misc Caribbean Islands
 US,"77",U.S. Misc Pacific Islands
 US,"78",Virgin Islands
 US,"79",Wake Island
-ET,"00",Unspecified
 RM,"68",Marshall Islands
 US,"65",Palmyra Atoll
 CA,"90",New Brunswick
 PS,"70",Palau
 CA,"93",Manitoba
 CA,"92",Ontario
-CA,"00",Unspecified
 CA,"96",British Columbia
 CA,"97",Yukon Territories
-AM,"00",Unspecified
 CA,"95",Alberta
 CA,"94",Saskatchewan
 CA,"98",Nova Scotia
 FM,"64",Federated States Of Micronesia
-VC,"00",Unspecified
 CA,"91",Quebec
