@@ -73,15 +73,19 @@ def load_county_lookups(apps, schema_editor):
         csvreader = csv.reader(csvfile)
         next(csvreader)
         for country_cd, state_cd, county_cd, county_nm in csvreader:
-            country = country_lookup.objects.get(country_cd=country_cd)
-            state = state_lookup.objects.get(state_cd=state_cd, country_cd=country_cd)
-            county = county_lookup(
-                country_cd=country,
-                state_id=state,
-                county_cd=county_cd,
-                county_nm=county_nm
-            )
-            county.save()
+            try:
+                country = country_lookup.objects.get(country_cd=country_cd)
+                state = state_lookup.objects.get(state_cd=state_cd, country_cd=country_cd)
+            except (country_lookup.DoesNotExist, state_lookup.DoesNotExist):
+                continue
+            else:
+                county = county_lookup(
+                    country_cd=country,
+                    state_id=state,
+                    county_cd=county_cd,
+                    county_nm=county_nm
+                )
+                county.save()
 
 
 def load_national_aquifer_lookups(apps, schema_editor):
