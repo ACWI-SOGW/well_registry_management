@@ -1,0 +1,26 @@
+{
+  "name": "well_registry_management",
+  "version": "0.1.0",
+  "description": "Application to add, change, and delete wells from the NGWMN",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ACWI-SOGW/well_registry_management.git"
+  },
+  "keywords": [
+    "groundwater",
+    "wells"
+  ],
+  "author": "",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/ACWI-SOGW/well_registry_management/issues"
+  },
+  "homepage": "https://github.com/ACWI-SOGW/well_registry_management#readme",
+  "dependencies": {
+    "uswds": "2.8.0"
+  }
+}

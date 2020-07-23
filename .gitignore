@@ -12,3 +12,4 @@ env/
 wellregistry/.env
 wellregistry/staticfiles
 .DS_Store
+wellregistry/node_modules/

@@ -18,6 +18,8 @@ from django.core.management.utils import get_random_secret_key
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print(PROJECT_DIR)
+print(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -239,6 +241,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_DIR, 'static'),
+    ('uswds', os.path.join(BASE_DIR, 'node_modules/uswds/dist'))
+]
 STATIC_URL = '/registry/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "wellregistry/staticfiles")
