@@ -3,60 +3,101 @@
 {% block title %}NGWMN Well Registry Administration{% endblock %}
 
 {% block extrastyle %}
-    <link rel="stylesheet" href="{% static 'uswds/css/uswds.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'uswds/css/uswds.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'admin.css' %}" />
     <script src="{% static 'uswds/js/uswds.min.js' %}" type="application/javascript"></script>
 {% endblock %}
 
 {% block branding %}
     <a class="usa-skipnav" href="#content">Skip to main content</a>
     <section class="usa-banner" aria-label="Official government website">
-      <div class="usa-accordion">
-        <header class="usa-banner__header">
-          <div class="usa-banner__inner">
-            <div class="grid-col-auto">
-              <img class="usa-banner__header-flag" src="{% static  'uswds/img/us_flag_small.png' %}" alt="U.S. flag">
-            </div>
-            <div class="grid-col-fill tablet:grid-col-auto">
-              <p class="usa-banner__header-text">An official website of the United States government</p>
-              <p class="usa-banner__header-action" aria-hidden="true">Here’s how you know</p>
-            </div>
-            <button class="usa-accordion__button usa-banner__button"
-              aria-expanded="false" aria-controls="gov-banner">
-              <span class="usa-banner__button-text">Here’s how you know</span>
-            </button>
-          </div>
-        </header>
-        <div class="usa-banner__content usa-accordion__content" id="gov-banner">
-          <div class="grid-row grid-gap-lg">
-            <div class="usa-banner__guidance tablet:grid-col-6">
-              <img class="usa-banner__icon usa-media-block__img" src="{% static 'uswds/img/icon-dot-gov.svg' %}" role="img" alt="Dot gov">
-              <div class="usa-media-block__body">
-                <p>
-                  <strong>
-                    Official websites use .gov
-                  </strong>
-                  <br/>
-                  A <strong>.gov</strong> website belongs to an official government organization in the United States.
+        <div class="usa-accordion">
+            <header class="usa-banner__header">
+                <div class="usa-banner__inner">
+                    <div class="grid-col-auto">
+                        <img class="usa-banner__header-flag" src="{% static  'uswds/img/us_flag_small.png' %}"
+                             alt="U.S. flag">
+                    </div>
+                    <div class="grid-col-fill tablet:grid-col-auto">
+                        <p class="usa-banner__header-text">An official website of the United States government</p>
+                        <p class="usa-banner__header-action" aria-hidden="true">Here’s how you know</p>
+                    </div>
+                    <button class="usa-accordion__button usa-banner__button"
+                            aria-expanded="false" aria-controls="gov-banner">
+                        <span class="usa-banner__button-text">Here’s how you know</span>
+                    </button>
+                </div>
+            </header>
+            <div class="usa-banner__content usa-accordion__content" id="gov-banner">
+                <div class="grid-row grid-gap-lg">
+                    <div class="usa-banner__guidance tablet:grid-col-6">
+                        <img class="usa-banner__icon usa-media-block__img"
+                             src="{% static 'uswds/img/icon-dot-gov.svg' %}" role="img" alt="Dot gov">
+                        <div class="usa-media-block__body">
+                            <p>
+                                <strong>
+                                    Official websites use .gov
+                                </strong>
+                                <br/>
+                                A <strong>.gov</strong> website belongs to an official government organization in the
+                                United States.
 
-                </p>
-              </div>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="usa-banner__guidance tablet:grid-col-6">
+                        <img class="usa-banner__icon usa-media-block__img"
+                             src={% static 'uswds/assets/img/icon-https.svg' %}" role=" img" alt="Https">
+                        <div class="usa-media-block__body">
+                            <p>
+                                <strong>
+                                    Secure .gov websites use HTTPS
+                                </strong>
+                                <br/>
+                                A <strong>lock</strong> (
+                                <span class="icon-lock"><svg xmlns="http://www.w3.org/2000/svg" width="52" height="64"
+                                                             viewBox="0 0 52 64" class="usa-banner__lock-image"
+                                                             role="img"
+                                                             aria-labelledby="banner-lock-title banner-lock-description"><title
+                                        id="banner-lock-title">Lock</title><desc id="banner-lock-description">A locked padlock</desc><path
+                                        fill="#000000" fill-rule="evenodd"
+                                        d="M26 0c10.493 0 19 8.507 19 19v9h3a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V32a4 4 0 0 1 4-4h3v-9C7 8.507 15.507 0 26 0zm0 8c-5.979 0-10.843 4.77-10.996 10.712L15 19v9h22v-9c0-6.075-4.925-11-11-11z"/></svg></span>
+                                ) or <strong>https://</strong> means you’ve safely connected to the .gov website. Share
+                                sensitive information only on official, secure websites.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="usa-banner__guidance tablet:grid-col-6">
-              <img class="usa-banner__icon usa-media-block__img" src={% static 'uswds/assets/img/icon-https.svg' %}" role="img" alt="Https">
-              <div class="usa-media-block__body">
-                <p>
-                  <strong>
-                    Secure .gov websites use HTTPS
-                  </strong>
-                  <br/>
-                  A <strong>lock</strong> (
-                    <span class="icon-lock"><svg xmlns="http://www.w3.org/2000/svg" width="52" height="64" viewBox="0 0 52 64" class="usa-banner__lock-image" role="img" aria-labelledby="banner-lock-title banner-lock-description"><title id="banner-lock-title">Lock</title><desc id="banner-lock-description">A locked padlock</desc><path fill="#000000" fill-rule="evenodd" d="M26 0c10.493 0 19 8.507 19 19v9h3a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V32a4 4 0 0 1 4-4h3v-9C7 8.507 15.507 0 26 0zm0 8c-5.979 0-10.843 4.77-10.996 10.712L15 19v9h22v-9c0-6.075-4.925-11-11-11z"/></svg></span>
-                    ) or <strong>https://</strong> means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </section>
+    <div class="banner-container">
+        <div class="banner-title grid-col-8 mobile-lg:grid-col-10">
+            <a href="https://cida.usgs.gov/ngwmn/">
+                National <span class="ngwmn-highlight">Ground-Water</span> Monitoring Network
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <footer id="footer" class="usa-footer usa-footer--slim bg-primary text-white" role="contentinfo">
+        <nav aria-label="Footer Navigation">
+            <div>
+                <a href="https://www.doi.gov/privacy">DOI Privacy Policy</a> |
+                <a href="https://www.usgs.gov/laws/policies_notices.html">Legal</a> |
+                <a href="https://www2.usgs.gov/laws/accessibility.html">Accessibility</a> |
+                <a href="https://www.usgs.gov/sitemap.html">Site Map</a> |
+                <a href="https://answers.usgs.gov/">Contact USGS</a>
+            </div>
+            <div>
+                <a href="https://www.doi.gov/">U.S. Department of the Interior</a> |
+                <a href="https://www.doioig.gov/">DOI Inspector General</a> |
+                <a href="https://www.whitehouse.gov/">White House</a> |
+                <a href="https://www.whitehouse.gov/omb/management/egov/">E-gov</a> |
+                <a href="https://www.doi.gov/pmb/eeo/no-fear-act">No Fear Act</a> |
+                <a href="https://www2.usgs.gov/foia">FOIA</a>
+            </div>
+        </nav>
+    </footer>
 {% endblock %}
