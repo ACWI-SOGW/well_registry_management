@@ -1,10 +1,6 @@
 {% extends "base.html" %}
 
 {% block base_content %}
-    <div class="grid-row margin-left-5 margin-bottom-5">
-        <div>
-            <h1> Welcome to the NGWMN Well Registry Management</h1>
-            <a href="{% url 'admin:index' %}">Enter Admin Interface</a>
-        </div>
-    </div>
+    <h1> Welcome to the NGWMN Well Registry Management</h1>
+    <a class="usa-link" href="{% url 'admin:index' %}">Enter Admin Interface</a>
 {% endblock %}
