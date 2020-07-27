@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
+{% load static %}
+
 <head>
     <title>
         {% block title %}
             Well Registry Management
         {% endblock %}
     </title>
+    <link rel="stylesheet" href="{% static 'uswds/css/uswds.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'main.css' %}" />
+    <script src="{% static 'uswds/js/uswds.min.js' %}" type="application/javascript"></script>
+
+    {% block custom_static %}{% endblock %}
+
 </head>
 <body>
-    {% block base_content %}
-    {% endblock %}
+    <div id="header">
+    {% include "partials/header.html" %}
+    </div>
+
+    <div id="content">
+        {% block base_content %}{% endblock %}
+    </div>
+
+    {% include "partials/footer.html" %}
 </body>
 </html>
