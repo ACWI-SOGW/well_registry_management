@@ -5,6 +5,8 @@
   text-decoration: none;
 }
 
-#footer a:link, footer a:visited {
+
+footer a:visited,
+#footer a:link {
   color: white;
 }

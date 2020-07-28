@@ -1,16 +1,17 @@
-#header, .usa-banner {
+#header,
+.usa-banner {
   color: black;
   background-color: white;
 }
 
 #header {
-  margin-left: 0px;
-  padding-left: 0px;
-  border-bottom: solid 10px #0050d8
+  margin-left: 0;
+  padding-left: 0;
+  border-bottom: solid 10px #0050d8;
 }
 
 #header .usa-banner__inner {
-  margin-left: 0px;
+  margin-left: 0;
 }
 
 .banner-title {

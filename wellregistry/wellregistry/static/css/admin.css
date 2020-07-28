@@ -5,7 +5,8 @@
   width: 100%;
 }
 
-#user-tools a:link, #user-tools a:visited {
+#user-tools a:link,
+#user-tools a:visited {
   color: black;
 }
 
