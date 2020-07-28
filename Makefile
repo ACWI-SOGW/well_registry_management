@@ -8,14 +8,14 @@ PYLINT := env/bin/pylint
 
 cleanenv:
 	@echo 'Cleaning environment....'
-	rm -rf env/ && rm -rf wellregistry/wellregistry/staticfiles
+	rm -rf env/ && rm -rf wellregistry/wellregistry/staticfiles && rm -rf wellregistry/node_modules
 
 watch:
 	$(PYTHON) wellregistry/manage.py runserver
 
-devenv: env common-env-requirements local-dev-requirements wellregistry/.env
+devenv: env common-env-requirements local-dev-requirements env-static wellregistry/.env
 
-prodenv: env common-env-requirements prod-requirements wellregistry/.env
+prodenv: env common-env-requirements prod-requirements env-static wellregistry/.env
 
 test:
 	cd wellregistry && ../$(PYTHON) manage.py test
@@ -32,6 +32,10 @@ runlint:
 	$(PYLINT) wellregistry/registry
 	$(PYLINT) wellregistry/registry/migrations/0002_add_agency_groups.py
 	$(PYLINT) wellregistry/wellregistry/
+
+env-static:
+	@echo "Installing node modules"
+	cd wellregistry && npm install && cd ../
 
 env:
 	@echo 'Creating local environment....'
