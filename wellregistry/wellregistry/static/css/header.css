@@ -10,21 +10,10 @@
 #header .usa-banner__inner {
     margin-left: 0px;
 }
-#user-tools a:link, #user-tools a:visited {
-    color: black;
-}
-#branding {
-    width: 100%;
-}
 .banner-title {
     font-family: calibri,tahoma,arial,verdana,sans-serif;
-    font-size: 1.25em;
+    font-size: 1.4em;
     display:inline-block;
-}
-.banner-title a {
-    text-decoration: none;
-    vertical-align: middle;
-    color: #233f8f !important;
 }
 @media screen and (min-width: 640px) {
     .banner-title {
@@ -36,11 +25,15 @@
         font-size: 2em;
     }
 }
-
 @media screen and (max-width: 480px) {
     .banner-title img {
         display: none;
     }
+}
+.banner-title a {
+    text-decoration: none;
+    vertical-align: middle;
+    color: #233f8f !important;
 }
 .ngwmn-highlight {
     color: #d1544a;

@@ -1,6 +1,12 @@
 @import "header.css";
 @import "footer.css";
 
+#branding {
+    width: 100%;
+}
+#user-tools a:link, #user-tools a:visited {
+    color: black;
+}
 #changelist-filter select {
     width: 210px;
 }
