@@ -39,6 +39,9 @@ def _has_permission(perm, user, obj=None):
     return user.has_perm(perm) and (not obj or obj.agency.agency_cd in _get_groups(user))
 
 class SelectListFilter(admin.RelatedFieldListFilter):
+    """
+    Django admin select list filter to implement a picker for the filter.
+    """
     template = "admin/choice_list_filter.html"
 
 class RegistryAdmin(admin.ModelAdmin):

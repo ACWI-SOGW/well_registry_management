@@ -3,7 +3,6 @@ FROM usgswma/python:3.8
 ENV PYTHONUNBUFFERED 1
 
 COPY . $HOME/application
-WORKDIR $HOME/application
 
 # Install npm to be used to install application dependencies
 RUN apt-get update \
@@ -11,8 +10,10 @@ RUN apt-get update \
 	&& curl --silent --location https://deb.nodesource.com/setup_12.x | bash - \
 	&& apt-get install -y nodejs
 
-RUN cd wellregistry && npm install && cd ..
+WORKDIR $HOME/application/wellregistry
+RUN npm install
 
+WORKDIR $HOME/application
 RUN apt-get update \
  && apt-get install gcc libpq-dev python3-dev -y \
  && pip install --no-cache-dir -r requirements-prod.txt \

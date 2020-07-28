@@ -1,9 +1,10 @@
 #footer a {
-    color: white;
-    padding-left: 10px;
-    padding-right: 10px;
-    text-decoration: none;
+  color: white;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-decoration: none;
 }
+
 #footer a:link, footer a:visited {
-    color: white;
+  color: white;
 }
