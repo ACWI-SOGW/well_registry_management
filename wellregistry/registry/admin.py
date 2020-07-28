@@ -38,6 +38,11 @@ def _has_permission(perm, user, obj=None):
 
     return user.has_perm(perm) and (not obj or obj.agency.agency_cd in _get_groups(user))
 
+class SelectListFilter(admin.RelatedFieldListFilter):
+    """
+    Django admin select list filter to implement a picker for the filter.
+    """
+    template = "admin/choice_list_filter.html"
 
 class RegistryAdmin(admin.ModelAdmin):
     """
@@ -46,10 +51,7 @@ class RegistryAdmin(admin.ModelAdmin):
     form = RegistryAdminForm
     list_display = ('site_id', 'agency', 'site_no', 'display_flag', 'wl_sn_flag', 'qw_sn_flag',
                     'insert_date', 'update_date')
-    list_filter = ('agency', 'site_no', 'update_date')
-
-    # change this value when we have an full UI
-    # change_list_template = 'path/to/ui/templates/registry.html
+    list_filter = (('agency', SelectListFilter), 'site_no', 'update_date')
 
     @staticmethod
     def site_id(obj):
@@ -94,4 +96,5 @@ class RegistryAdmin(admin.ModelAdmin):
 
 
 # below here will maintain all the tables Django admin should be aware
+admin.site.site_url = None
 admin.site.register(Registry, RegistryAdmin)
