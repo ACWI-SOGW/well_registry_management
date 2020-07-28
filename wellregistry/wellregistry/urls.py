@@ -18,7 +18,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
 
 
-
 urlpatterns = [
     # this is the django admin url which allows adding django users and table management
     path('registry/admin/', admin.site.urls),
