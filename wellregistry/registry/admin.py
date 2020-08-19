@@ -97,4 +97,5 @@ class RegistryAdmin(admin.ModelAdmin):
 
 # below here will maintain all the tables Django admin should be aware
 admin.site.site_url = None
+admin.site.enable_nav_sidebar = False
 admin.site.register(Registry, RegistryAdmin)
