@@ -6,13 +6,6 @@
 
 Application for management of groundwater monitoring locations.
 
-## Local Environment Setup
-A local development environment can be setup by running:
-
-```bash
-make env
-```
-
 ## Development Server
 Once the project has been cloned, the user should ensure a clean environment. This can be
 done with 
