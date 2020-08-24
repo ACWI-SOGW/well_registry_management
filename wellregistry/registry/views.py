@@ -35,6 +35,6 @@ class MonitoringLocationsListView(ListAPIView):
         """
         queryset = Registry.objects.all()
         if "display" in self.request.GET:
-            queryset = queryset.filter(display=self.request.GET.get('display'))
+            queryset = queryset.filter(display_flag__iexact=self.request.GET.get('display'))
 
         return queryset

@@ -28,7 +28,7 @@ class AltitudeDatumLookup(models.Model):
         db_table = 'altitude_datum'
 
     def __str__(self):
-        return self.adatum_desc
+        return self.adatum_cd
 
 
 class CountryLookup(models.Model):
@@ -68,7 +68,7 @@ class HorizontalDatumLookup(models.Model):
         db_table = 'horizontal_datum'
 
     def __str__(self):
-        return self.hdatum_desc
+        return self.hdatum_cd
 
 
 class NatAqfrLookup(models.Model):
@@ -110,9 +110,9 @@ class UnitsLookup(models.Model):
         return self.unit_desc
 
 
-WELL_TYPES = [('1', 'Surveillance'), ('2', 'Trend'), ('3', 'Special')]
-WELL_CHARACTERISTICS = [('1', 'Background'), ('2', 'Suspected/Anticipated Changes'), ('3', 'Known Changes')]
-WELL_PURPOSES = [('1', 'Dedicated Monitoring/Observation'), ('2', 'Other')]
+WELL_TYPES = [('Surveillance', 'Surveillance'), ('Trend', 'Trend'), ('Special', 'Special')]
+WELL_CHARACTERISTICS = [('Background', 'Background'), ('Suspected/Anticipated Changes', 'Suspected/Anticipated Changes'), ('Known Changes', 'Known Changes')]
+WELL_PURPOSES = [('Dedicated Monitoring/Observation', 'Dedicated Monitoring/Observation'), ('Other', 'Other')]
 
 
 class Registry(models.Model):
@@ -171,11 +171,11 @@ class Registry(models.Model):
     wl_network_name = models.CharField(max_length=50, blank=True, db_column='wl_sys_name',
                                        verbose_name='WL network name')
     wl_baseline_flag = models.BooleanField(default=False, verbose_name='WL baseline?')
-    wl_well_type = models.CharField(max_length=3, blank=True, choices=WELL_TYPES,
+    wl_well_type = models.CharField(max_length=32, blank=True, choices=WELL_TYPES,
                                     verbose_name='WL well type')
-    wl_well_chars = models.CharField(max_length=3, blank=True, choices=WELL_CHARACTERISTICS,
+    wl_well_chars = models.CharField(max_length=32, blank=True, choices=WELL_CHARACTERISTICS,
                                      verbose_name='WL well characteristics')
-    wl_well_purpose = models.CharField(max_length=15, blank=True, choices=WELL_PURPOSES,
+    wl_well_purpose = models.CharField(max_length=32, blank=True, choices=WELL_PURPOSES,
                                        verbose_name='WL well purpose')
     wl_well_purpose_notes = models.CharField(max_length=4000, blank=True, verbose_name='WL well purpose notes')
 
@@ -183,11 +183,11 @@ class Registry(models.Model):
     qw_network_name = models.CharField(max_length=50, blank=True, db_column='qw_sys_name',
                                        verbose_name='QW network name')
     qw_baseline_flag = models.BooleanField(default=False, verbose_name='QW baseline?')
-    qw_well_type = models.CharField(max_length=3, blank=True, choices=WELL_TYPES,
+    qw_well_type = models.CharField(max_length=32, blank=True, choices=WELL_TYPES,
                                     verbose_name='QW well type')
-    qw_well_chars = models.CharField(max_length=3, blank=True, choices=WELL_CHARACTERISTICS,
+    qw_well_chars = models.CharField(max_length=32, blank=True, choices=WELL_CHARACTERISTICS,
                                      verbose_name='QW well characteristics')
-    qw_well_purpose = models.CharField(max_length=15, blank=True, choices=WELL_PURPOSES,
+    qw_well_purpose = models.CharField(max_length=32, blank=True, choices=WELL_PURPOSES,
                                        verbose_name='QW well purpose')
     qw_well_purpose_notes = models.CharField(max_length=4000, blank=True,
                                              verbose_name='QW well purpose notes')
