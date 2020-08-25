@@ -2,7 +2,7 @@
 Well Registry ORM object.
 """
 
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 
 
@@ -111,7 +111,9 @@ class UnitsLookup(models.Model):
 
 
 WELL_TYPES = [('Surveillance', 'Surveillance'), ('Trend', 'Trend'), ('Special', 'Special')]
-WELL_CHARACTERISTICS = [('Background', 'Background'), ('Suspected/Anticipated Changes', 'Suspected/Anticipated Changes'), ('Known Changes', 'Known Changes')]
+WELL_CHARACTERISTICS = [('Background', 'Background'),
+                        ('Suspected/Anticipated Changes', 'Suspected/Anticipated Changes'),
+                        ('Known Changes', 'Known Changes')]
 WELL_PURPOSES = [('Dedicated Monitoring/Observation', 'Dedicated Monitoring/Observation'), ('Other', 'Other')]
 
 
@@ -194,8 +196,10 @@ class Registry(models.Model):
 
     link = models.CharField(max_length=500, blank=True)
 
-    insert_user = models.ForeignKey(User, null=True, on_delete=models.PROTECT, editable=False, related_name='+')
-    update_user = models.ForeignKey(User, null=True, on_delete=models.PROTECT, editable=False, related_name='+')
+    insert_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, editable=False,
+                                    related_name='+')
+    update_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, editable=False,
+                                    related_name='+')
 
     insert_date = models.DateTimeField(auto_now_add=True, editable=False)
     update_date = models.DateTimeField(auto_now=True, editable=False)

@@ -1,9 +1,9 @@
 """
 Tests for registry admin module
 """
-
+from django.contrib.auth import get_user_model
 from django.contrib.admin.sites import AdminSite
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from django.http import HttpRequest
 from django.test import TestCase
 
@@ -15,9 +15,9 @@ class TestRegistryAdmin(TestCase):
     fixtures = ['test_registry.json', 'test_user.json']
 
     def setUp(self):
-        self.superuser = User.objects.create_superuser('my_superuser')
+        self.superuser = get_user_model().objects.create_superuser('my_superuser')
         self.adwr_group = Group.objects.get(name='adwr')
-        self.adwr_user = User.objects.create_user('adwr_user')
+        self.adwr_user = get_user_model().objects.create_user('adwr_user')
         self.adwr_user.groups.add(self.adwr_group)
         self.adwr_user.save()
 

@@ -2,11 +2,7 @@
 Tests for the registry  views module
 """
 
-import json
-
 from django.test import RequestFactory, TestCase
-
-from rest_framework.test import APIClient
 
 from ..views import BasePage, MonitoringLocationsListView, status_check
 

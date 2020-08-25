@@ -31,7 +31,10 @@ def status_check(request):
     return JsonResponse(resp)
 
 
-class MonitoringLocationsListView(ListAPIView):
+class MonitoringLocationsListView(ListAPIView):  # pylint: disable=too-few-public-methods
+    """
+    REST API for monitoring locations
+    """
     serializer_class = RegistrySerializer
     queryset = Registry.objects.all()
     filter_backends = [DjangoFilterBackend]
