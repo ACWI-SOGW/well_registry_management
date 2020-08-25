@@ -4,10 +4,13 @@ Registry application views.
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework.generics import ListAPIView
 
 from .models import Registry
 from .serializers import RegistrySerializer
+
 
 class BasePage(TemplateView):
     """
@@ -15,6 +18,7 @@ class BasePage(TemplateView):
 
     """
     template_name = 'registry/index.html'
+
 
 def status_check(request):
     """
@@ -26,15 +30,9 @@ def status_check(request):
     resp = {'status': 'up'}
     return JsonResponse(resp)
 
+
 class MonitoringLocationsListView(ListAPIView):
     serializer_class = RegistrySerializer
-
-    def get_queryset(self):
-        """
-        Override to take query parameter display to filter results
-        """
-        queryset = Registry.objects.all()
-        if "display" in self.request.GET:
-            queryset = queryset.filter(display_flag__iexact=self.request.GET.get('display'))
-
-        return queryset
+    queryset = Registry.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['display_flag']

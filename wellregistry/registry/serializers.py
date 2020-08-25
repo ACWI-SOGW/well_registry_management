@@ -12,25 +12,30 @@ class AgencyLookupSerializer(ModelSerializer):
         model = AgencyLookup
         exclude = ['id']
 
+
 class NatAqfrLookupSerializer(ModelSerializer):
     class Meta:
         model = NatAqfrLookup
         exclude = ['id']
+
 
 class CountryLookupSerializer(ModelSerializer):
     class Meta:
         model = CountryLookup
         fields = ['country_cd', 'country_nm']
 
+
 class StateLookupSerializer(ModelSerializer):
     class Meta:
         model = StateLookup
         fields = ['state_cd', 'state_nm']
 
+
 class CountyLookupSerializer(ModelSerializer):
     class Meta:
         model = CountyLookup
         fields = ['county_cd', 'county_nm']
+
 
 class RegistrySerializer(ModelSerializer):
     agency = AgencyLookupSerializer()
