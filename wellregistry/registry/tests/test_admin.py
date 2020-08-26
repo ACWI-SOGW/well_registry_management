@@ -7,9 +7,45 @@ from django.contrib.auth.models import Group
 from django.http import HttpRequest
 from django.test import TestCase
 
-from ..admin import RegistryAdmin
+from ..admin import RegistryAdmin, RegistryAdminForm
 from ..models import AgencyLookup, Registry
 
+
+class TestRegistryFormAdmin(TestCase):
+
+    def setUp(self):
+        self.form_data = {
+            'display_flag': False,
+            'agency': 'USGS',
+            'site_no': '1234567',
+            'wl_sn_flag': False,
+            'wl_baseline_flag': False,
+            'qw_sn_flag': False,
+            'qw_baseline_flag': False
+        }
+
+    def test_valid_when_display_flag_false(self):
+        form = RegistryAdminForm(self.form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_valid_when_display_flag_true_sn_flags_false(self):
+        self.form_data['display_flag'] = True
+        form = RegistryAdminForm(self.form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_invalid_when_display_flag_true_and_wl_sn_flag_true(self):
+        self.form_data['display_flag'] = True
+        self.form_data['wl_sn_flag'] = True
+        form = RegistryAdminForm(self.form_data)
+
+        self.assertFalse(form.is_valid())
+
+        self.form_data['wl_well_purpose'] = 'Other'
+        self.form_data['wl_well_type'] = 'Trend'
+        self.form_data['wl_baseline_flag'] = False
+        form = RegistryAdminForm(self.form_data)
+
+        self.assertFalse(form.is_valid())
 
 class TestRegistryAdmin(TestCase):
     fixtures = ['test_registry.json', 'test_user.json']
