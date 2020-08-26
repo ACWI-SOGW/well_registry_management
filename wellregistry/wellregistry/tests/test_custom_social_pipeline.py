@@ -1,16 +1,19 @@
 """
 Tests for custom_social_pipeline
 """
-from django.contrib.auth.models import User
+
+from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
 
 from ..custom_social_pipeline import change_usgs_user_to_staff, set_superuser_permission
 
 TEST_USERNAME = 'test_user'
+
+
 class TestChangeUsgsUserToStaff(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(TEST_USERNAME)
+        self.user = get_user_model().objects.create_user(TEST_USERNAME)
 
     def test_usgs_user(self):
         details = {
@@ -19,7 +22,7 @@ class TestChangeUsgsUserToStaff(TestCase):
         strategy = None
         backend = None
         result = change_usgs_user_to_staff(strategy, details, backend, user=self.user, is_new=True)
-        saved_user = User.objects.get(username=TEST_USERNAME)
+        saved_user = get_user_model().objects.get(username=TEST_USERNAME)
 
         self.assertIs(result.get('user'), self.user)
         self.assertEqual(result.get('is_new'), True)
@@ -33,7 +36,7 @@ class TestChangeUsgsUserToStaff(TestCase):
         strategy = None
         backend = None
         result = change_usgs_user_to_staff(strategy, details, backend, user=self.user, is_new=True)
-        saved_user = User.objects.get(username=TEST_USERNAME)
+        saved_user = get_user_model().objects.get(username=TEST_USERNAME)
 
         self.assertIs(result.get('user'), self.user)
         self.assertEqual(result.get('is_new'), True)
@@ -47,7 +50,7 @@ class TestChangeUsgsUserToStaff(TestCase):
         strategy = None
         backend = None
         result = change_usgs_user_to_staff(strategy, details, backend, user=self.user, is_new=False)
-        saved_user = User.objects.get(username=TEST_USERNAME)
+        saved_user = get_user_model().objects.get(username=TEST_USERNAME)
 
         self.assertIs(result.get('user'), self.user)
         self.assertEqual(result.get('is_new'), False)
@@ -58,7 +61,7 @@ class TestChangeUsgsUserToStaff(TestCase):
 class TestSetSuperuserPermission(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(TEST_USERNAME)
+        self.user = get_user_model().objects.create_user(TEST_USERNAME)
 
     @override_settings(SOCIAL_AUTH_DJANGO_SUPERUSERS=['testuser@usgs.gov'])
     def test_user_superuser(self):
@@ -68,7 +71,7 @@ class TestSetSuperuserPermission(TestCase):
         strategy = None
         backend = None
         result = set_superuser_permission(strategy, details, backend, user=self.user, is_new=True)
-        saved_user = User.objects.get(username=TEST_USERNAME)
+        saved_user = get_user_model().objects.get(username=TEST_USERNAME)
 
         self.assertIs(result.get('user'), self.user)
         self.assertEqual(result.get('is_new'), True)
@@ -82,7 +85,7 @@ class TestSetSuperuserPermission(TestCase):
         strategy = None
         backend = None
         result = set_superuser_permission(strategy, details, backend, user=self.user, is_new=False)
-        saved_user = User.objects.get(username=TEST_USERNAME)
+        saved_user = get_user_model().objects.get(username=TEST_USERNAME)
 
         self.assertIs(result.get('user'), self.user)
         self.assertEqual(result.get('is_new'), False)

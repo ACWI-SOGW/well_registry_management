@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'django_filters',
     'social_django'
 ]
 
@@ -129,7 +131,7 @@ TEMPLATES = [
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'formatters':{
+    'formatters': {
         'basic': {
             'format': '%(asctime)s [%(levelname)-8s] %(message)s'
         }
