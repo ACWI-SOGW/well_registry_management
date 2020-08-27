@@ -33,19 +33,40 @@ class TestRegistryFormAdmin(TestCase):
         form = RegistryAdminForm(self.form_data)
         self.assertTrue(form.is_valid())
 
+    def test_valid_when_display_flag_true_and_wl_sn_flags_true(self):
+        self.form_data['display_flag'] = True
+        self.form_data['wl_sn_flag'] = True
+        self.form_data['wl_well_purpose'] = 'Other'
+        self.form_data['wl_well_type'] = 'Trend'
+        self.form_data['wl_baseline_flag'] = True
+        form = RegistryAdminForm(self.form_data)
+
+        self.assertTrue(form.is_valid())
+
     def test_invalid_when_display_flag_true_and_wl_sn_flag_true(self):
         self.form_data['display_flag'] = True
         self.form_data['wl_sn_flag'] = True
         form = RegistryAdminForm(self.form_data)
-
         self.assertFalse(form.is_valid())
 
         self.form_data['wl_well_purpose'] = 'Other'
         self.form_data['wl_well_type'] = 'Trend'
         self.form_data['wl_baseline_flag'] = False
         form = RegistryAdminForm(self.form_data)
-
         self.assertFalse(form.is_valid())
+
+        self.form_data['wl_well_purpose'] = ''
+        self.form_data['wl_well_type'] = 'Trend'
+        self.form_data['wl_baseline_flag'] = True
+        form = RegistryAdminForm(self.form_data)
+        self.assertFalse(form.is_valid())
+
+        self.form_data['wl_well_purpose'] = 'Other'
+        self.form_data['wl_well_type'] = ''
+        self.form_data['wl_baseline_flag'] = True
+        form = RegistryAdminForm(self.form_data)
+        self.assertFalse(form.is_valid())
+
 
 class TestRegistryAdmin(TestCase):
     fixtures = ['test_registry.json', 'test_user.json']
