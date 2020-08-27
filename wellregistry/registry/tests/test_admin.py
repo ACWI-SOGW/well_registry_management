@@ -26,7 +26,7 @@ class TestRegistryAdmin(TestCase):
 
     def test_site_id(self):
         reg_entry = MonitoringLocation.objects.get(site_no='44445555',
-                                         agency='ADWR')
+                                                   agency='ADWR')
         site_id = MonitoringLocationAdmin.site_id(reg_entry)
 
         self.assertEqual(site_id, "ADWR:44445555")
@@ -45,7 +45,8 @@ class TestRegistryAdmin(TestCase):
     def test_save_model_new_registry_with_super_user(self):
         request = HttpRequest()
         request.user = self.superuser
-        registry = MonitoringLocation.objects.create(site_no='11111111', agency=AgencyLookup.objects.get(agency_cd='ADWR'))
+        registry = MonitoringLocation.objects.create(site_no='11111111',
+                                                     agency=AgencyLookup.objects.get(agency_cd='ADWR'))
         self.admin.save_model(request, registry, None, None)
 
         saved_registry = MonitoringLocation.objects.get(site_no='11111111')
@@ -56,7 +57,8 @@ class TestRegistryAdmin(TestCase):
     def test_save_model_existing_registry_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.superuser
-        registry = MonitoringLocation.objects.create(site_no='11111111', agency=AgencyLookup.objects.get(agency_cd='ADWR'))
+        registry = MonitoringLocation.objects.create(site_no='11111111',
+                                                     agency=AgencyLookup.objects.get(agency_cd='ADWR'))
         self.admin.save_model(request, registry, None, None)
 
         saved_registry = MonitoringLocation.objects.get(site_no='11111111')
