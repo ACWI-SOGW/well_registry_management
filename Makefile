@@ -40,6 +40,7 @@ env-static:
 env:
 	@echo 'Creating local environment....'
 	virtualenv --python=python3.8 --no-download env
+	$(PIP) install --upgrade pip
 
 common-env-requirements:
 	$(PIP) install -r requirements.txt
