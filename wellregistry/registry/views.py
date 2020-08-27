@@ -8,8 +8,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework.generics import ListAPIView
 
-from .models import Registry
-from .serializers import RegistrySerializer
+from .models import MonitoringLocation
+from .serializers import MonitoringLocationSerializer
 
 
 class BasePage(TemplateView):
@@ -35,7 +35,7 @@ class MonitoringLocationsListView(ListAPIView):  # pylint: disable=too-few-publi
     """
     REST API for monitoring locations
     """
-    serializer_class = RegistrySerializer
-    queryset = Registry.objects.all()
+    serializer_class = MonitoringLocationSerializer
+    queryset = MonitoringLocation.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['display_flag']

@@ -1,6 +1,6 @@
 [
   {
-    "model": "registry.registry",
+    "model": "registry.monitoringlocation",
     "pk": 3,
     "fields": {
       "site_no": "12345678",
@@ -48,7 +48,7 @@
     }
   },
   {
-    "model": "registry.registry",
+    "model": "registry.monitoringlocation",
     "pk": 4,
     "fields": {
       "site_no": "11112222",
@@ -96,7 +96,7 @@
     }
   },
   {
-    "model": "registry.registry",
+    "model": "registry.monitoringlocation",
     "pk": 5,
     "fields": {
       "site_no": "44445555",

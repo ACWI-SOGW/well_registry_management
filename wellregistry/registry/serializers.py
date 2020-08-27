@@ -5,7 +5,7 @@ Serializers for the REST API
 
 from rest_framework.serializers import ModelSerializer, StringRelatedField
 
-from .models import AgencyLookup, CountryLookup, CountyLookup, NatAqfrLookup, Registry, StateLookup
+from .models import AgencyLookup, CountryLookup, CountyLookup, NatAqfrLookup, MonitoringLocation, StateLookup
 
 
 class AgencyLookupSerializer(ModelSerializer):
@@ -53,7 +53,7 @@ class CountyLookupSerializer(ModelSerializer):
         fields = ['county_cd', 'county_nm']
 
 
-class RegistrySerializer(ModelSerializer):
+class MonitoringLocationSerializer(ModelSerializer):
     """
     Serializer for RegistrySerializer
     """
@@ -66,5 +66,5 @@ class RegistrySerializer(ModelSerializer):
     nat_aqfr = NatAqfrLookupSerializer()
 
     class Meta:
-        model = Registry
+        model = MonitoringLocation
         exclude = ['insert_user', 'update_user']
