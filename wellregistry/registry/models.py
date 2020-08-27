@@ -3,6 +3,7 @@ Well Registry ORM object.
 """
 
 from django.conf import settings
+from django.core.validators import MinLengthValidator
 from django.db import models
 
 
@@ -128,7 +129,7 @@ class Registry(models.Model):
     agency = models.ForeignKey(AgencyLookup, on_delete=models.PROTECT, db_column='agency_cd', null=True,
                                to_field='agency_cd')
     site_no = models.CharField(max_length=16)
-    site_name = models.CharField(max_length=300, blank=True)
+    site_name = models.CharField(max_length=300, validators=[MinLengthValidator(1)])
 
     country = models.ForeignKey(CountryLookup, on_delete=models.PROTECT, db_column='country_cd',
                                 null=True, blank=True, to_field='country_cd')

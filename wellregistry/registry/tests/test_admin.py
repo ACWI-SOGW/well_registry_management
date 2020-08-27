@@ -18,6 +18,7 @@ class TestRegistryFormAdmin(TestCase):
             'display_flag': False,
             'agency': 'USGS',
             'site_no': '1234567',
+            'site_name': 'My test site',
             'wl_sn_flag': False,
             'wl_baseline_flag': False,
             'qw_sn_flag': False,
