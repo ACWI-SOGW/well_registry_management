@@ -21,6 +21,7 @@ from django.urls import include, path
 urlpatterns = [
     # this is the django admin url which allows adding django users and table management
     path('registry/admin/', admin.site.urls),
+    path('registry/chaining/', include('smart_selects.urls')),
 
     path('registry/', include('social_django.urls', namespace='social')),
     path('registry/accounts/', include('django.contrib.auth.urls')),

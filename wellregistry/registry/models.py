@@ -5,6 +5,9 @@ Well Registry ORM object.
 from django.conf import settings
 from django.db import models
 
+from smart_selects.db_fields import ChainedForeignKey
+
+
 
 class AgencyLookup(models.Model):
     """Model definition for the agency table, lookup only"""
@@ -14,6 +17,7 @@ class AgencyLookup(models.Model):
 
     class Meta:
         db_table = 'agency'
+        ordering = ['agency_nm']
 
     def __str__(self):
         return self.agency_nm
@@ -26,6 +30,7 @@ class AltitudeDatumLookup(models.Model):
 
     class Meta:
         db_table = 'altitude_datum'
+        ordering = ['adatum_cd']
 
     def __str__(self):
         return self.adatum_cd
@@ -38,6 +43,7 @@ class CountryLookup(models.Model):
 
     class Meta:
         db_table = 'country'
+        ordering = ['country_nm']
 
     def __str__(self):
         return self.country_nm
@@ -53,6 +59,7 @@ class CountyLookup(models.Model):
 
     class Meta:
         db_table = 'county'
+        ordering = ['county_nm']
         unique_together = (('country_cd', 'state_id', 'county_cd'),)
 
     def __str__(self):
@@ -66,6 +73,7 @@ class HorizontalDatumLookup(models.Model):
 
     class Meta:
         db_table = 'horizontal_datum'
+        ordering = ['hdatum_cd']
 
     def __str__(self):
         return self.hdatum_cd
@@ -78,6 +86,7 @@ class NatAqfrLookup(models.Model):
 
     class Meta:
         db_table = 'nat_aqfr'
+        ordering = ['nat_aqfr_desc']
 
     def __str__(self):
         return self.nat_aqfr_desc
@@ -92,6 +101,7 @@ class StateLookup(models.Model):
 
     class Meta:
         db_table = 'state'
+        ordering = ['state_nm']
         unique_together = (('country_cd', 'state_cd'),)
 
     def __str__(self):
@@ -105,6 +115,7 @@ class UnitsLookup(models.Model):
 
     class Meta:
         db_table = 'units'
+        ordering = ['unit_desc']
 
     def __str__(self):
         return self.unit_desc
@@ -132,8 +143,20 @@ class MonitoringLocation(models.Model):
 
     country = models.ForeignKey(CountryLookup, on_delete=models.PROTECT, db_column='country_cd',
                                 null=True, blank=True, to_field='country_cd')
-    state = models.ForeignKey(StateLookup, on_delete=models.PROTECT, db_column='state_id', null=True, blank=True)
-    county = models.ForeignKey(CountyLookup, on_delete=models.PROTECT,
+    state = ChainedForeignKey(StateLookup,
+                              chained_field="country",
+                              chained_model_field="country_cd",
+                              show_all=False,
+                              auto_choose=True,
+                              sort=True,
+                              on_delete=models.PROTECT, db_column='state_id', null=True, blank=True)
+    county = ChainedForeignKey(CountyLookup,
+                               chained_field="state",
+                               chained_model_field="state_id",
+                               show_all=False,
+                               auto_choose=True,
+                               sort=True,
+                               on_delete=models.PROTECT,
                                db_column='county_id', null=True, blank=True)
 
     dec_lat_va = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True,

@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
-    'social_django'
+    'social_django',
+    'smart_selects'
 ]
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
@@ -127,6 +128,9 @@ TEMPLATES = [
         },
     },
 ]
+
+# Needed for django-smart-selects
+USE_DJANGO_JQUERY = True
 
 LOGGING = {
     'version': 1,
