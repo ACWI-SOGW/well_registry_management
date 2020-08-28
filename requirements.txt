@@ -1,7 +1,7 @@
 Django==3.1
 django-allow-cidr==0.3.1
 django-filter==2.3.0
-django-smart-selects @ git+https://github.com/jazzband/django-smart-selects.git@60022d061be96eacbad21c1f0bafc562c88edb16
+django-smart-selects==1.5.9
 djangorestframework==3.11.1
 gunicorn==20.0.4
 pylint==2.5.3
