@@ -19,7 +19,7 @@ class TestBasePage(TestCase):
 
 
 class TestMonitoringLocationsListView(TestCase):
-    fixtures = ['test_registry.json', 'test_user.json']
+    fixtures = ['test_monitoring_location.json', 'test_user.json']
 
     def setUp(self):
         self.factory = RequestFactory()

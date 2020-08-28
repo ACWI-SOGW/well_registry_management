@@ -117,7 +117,7 @@ WELL_CHARACTERISTICS = [('Background', 'Background'),
 WELL_PURPOSES = [('Dedicated Monitoring/Observation', 'Dedicated Monitoring/Observation'), ('Other', 'Other')]
 
 
-class Registry(models.Model):
+class MonitoringLocation(models.Model):
     """
     Django Registry Model.
 
