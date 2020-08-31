@@ -7,8 +7,8 @@ from django.contrib.auth.models import Group
 from django.http import HttpRequest
 from django.test import TestCase
 
-from ..admin import RegistryAdmin, RegistryAdminForm
-from ..models import AgencyLookup, Registry
+from ..admin import MonitoringLocationAdmin, MonitoringLocationAdminForm
+from ..models import AgencyLookup, MonitoringLocation
 
 
 class TestRegistryFormAdmin(TestCase):
@@ -26,12 +26,12 @@ class TestRegistryFormAdmin(TestCase):
         }
 
     def test_valid_when_display_flag_false(self):
-        form = RegistryAdminForm(self.form_data)
+        form = MonitoringLocationAdminForm(self.form_data)
         self.assertTrue(form.is_valid())
 
     def test_valid_when_display_flag_true_sn_flags_false(self):
         self.form_data['display_flag'] = True
-        form = RegistryAdminForm(self.form_data)
+        form = MonitoringLocationAdminForm(self.form_data)
         self.assertTrue(form.is_valid())
 
     def test_valid_when_display_flag_true_and_wl_sn_flags_true(self):
@@ -40,37 +40,37 @@ class TestRegistryFormAdmin(TestCase):
         self.form_data['wl_well_purpose'] = 'Other'
         self.form_data['wl_well_type'] = 'Trend'
         self.form_data['wl_baseline_flag'] = True
-        form = RegistryAdminForm(self.form_data)
+        form = MonitoringLocationAdminForm(self.form_data)
 
         self.assertTrue(form.is_valid())
 
     def test_invalid_when_display_flag_true_and_wl_sn_flag_true(self):
         self.form_data['display_flag'] = True
         self.form_data['wl_sn_flag'] = True
-        form = RegistryAdminForm(self.form_data)
+        form = MonitoringLocationAdminForm(self.form_data)
         self.assertFalse(form.is_valid())
 
         self.form_data['wl_well_purpose'] = 'Other'
         self.form_data['wl_well_type'] = 'Trend'
         self.form_data['wl_baseline_flag'] = False
-        form = RegistryAdminForm(self.form_data)
+        form = MonitoringLocationAdminForm(self.form_data)
         self.assertFalse(form.is_valid())
 
         self.form_data['wl_well_purpose'] = ''
         self.form_data['wl_well_type'] = 'Trend'
         self.form_data['wl_baseline_flag'] = True
-        form = RegistryAdminForm(self.form_data)
+        form = MonitoringLocationAdminForm(self.form_data)
         self.assertFalse(form.is_valid())
 
         self.form_data['wl_well_purpose'] = 'Other'
         self.form_data['wl_well_type'] = ''
         self.form_data['wl_baseline_flag'] = True
-        form = RegistryAdminForm(self.form_data)
+        form = MonitoringLocationAdminForm(self.form_data)
         self.assertFalse(form.is_valid())
 
 
 class TestRegistryAdmin(TestCase):
-    fixtures = ['test_registry.json', 'test_user.json']
+    fixtures = ['test_monitoring_location.json', 'test_user.json']
 
     def setUp(self):
         self.superuser = get_user_model().objects.create_superuser('my_superuser')
@@ -80,22 +80,22 @@ class TestRegistryAdmin(TestCase):
         self.adwr_user.save()
 
         self.site = AdminSite()
-        self.admin = RegistryAdmin(Registry, self.site)
+        self.admin = MonitoringLocationAdmin(MonitoringLocation, self.site)
 
     def test_site_id(self):
-        reg_entry = Registry.objects.get(site_no='44445555',
-                                         agency='ADWR')
-        site_id = RegistryAdmin.site_id(reg_entry)
+        reg_entry = MonitoringLocation.objects.get(site_no='44445555',
+                                                   agency='ADWR')
+        site_id = MonitoringLocationAdmin.site_id(reg_entry)
 
         self.assertEqual(site_id, "ADWR:44445555")
 
     def test_save_model_new_registry_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
-        registry = Registry.objects.create(site_no='11111111')
+        registry = MonitoringLocation.objects.create(site_no='11111111')
         self.admin.save_model(request, registry, None, None)
 
-        saved_registry = Registry.objects.get(site_no='11111111')
+        saved_registry = MonitoringLocation.objects.get(site_no='11111111')
         self.assertEqual(saved_registry.insert_user, self.adwr_user)
         self.assertEqual(saved_registry.update_user, self.adwr_user)
         self.assertEqual(saved_registry.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
@@ -103,10 +103,11 @@ class TestRegistryAdmin(TestCase):
     def test_save_model_new_registry_with_super_user(self):
         request = HttpRequest()
         request.user = self.superuser
-        registry = Registry.objects.create(site_no='11111111', agency=AgencyLookup.objects.get(agency_cd='ADWR'))
+        registry = MonitoringLocation.objects.create(site_no='11111111',
+                                                     agency=AgencyLookup.objects.get(agency_cd='ADWR'))
         self.admin.save_model(request, registry, None, None)
 
-        saved_registry = Registry.objects.get(site_no='11111111')
+        saved_registry = MonitoringLocation.objects.get(site_no='11111111')
         self.assertEqual(saved_registry.insert_user, self.superuser)
         self.assertEqual(saved_registry.update_user, self.superuser)
         self.assertEqual(saved_registry.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
@@ -114,14 +115,15 @@ class TestRegistryAdmin(TestCase):
     def test_save_model_existing_registry_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.superuser
-        registry = Registry.objects.create(site_no='11111111', agency=AgencyLookup.objects.get(agency_cd='ADWR'))
+        registry = MonitoringLocation.objects.create(site_no='11111111',
+                                                     agency=AgencyLookup.objects.get(agency_cd='ADWR'))
         self.admin.save_model(request, registry, None, None)
 
-        saved_registry = Registry.objects.get(site_no='11111111')
+        saved_registry = MonitoringLocation.objects.get(site_no='11111111')
         saved_registry.site_name = 'A site'
         request.user = self.adwr_user
         self.admin.save_model(request, saved_registry, None, None)
-        saved_registry = Registry.objects.get(site_no='11111111')
+        saved_registry = MonitoringLocation.objects.get(site_no='11111111')
 
         self.assertEqual(saved_registry.insert_user, self.superuser)
         self.assertEqual(saved_registry.update_user, self.adwr_user)
@@ -147,15 +149,15 @@ class TestRegistryAdmin(TestCase):
         request.user = self.superuser
 
         self.assertTrue(self.admin.has_view_permission(request))
-        self.assertTrue(self.admin.has_view_permission(request, Registry.objects.get(site_no='12345678')))
+        self.assertTrue(self.admin.has_view_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_has_view_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
 
         self.assertTrue(self.admin.has_view_permission(request))
-        self.assertTrue(self.admin.has_view_permission(request, Registry.objects.get(site_no='44445555')))
-        self.assertFalse(self.admin.has_view_permission(request, Registry.objects.get(site_no='12345678')))
+        self.assertTrue(self.admin.has_view_permission(request, MonitoringLocation.objects.get(site_no='44445555')))
+        self.assertFalse(self.admin.has_view_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_has_add_permission_with_superuser(self):
         request = HttpRequest()
@@ -174,27 +176,27 @@ class TestRegistryAdmin(TestCase):
         request.user = self.superuser
 
         self.assertTrue(self.admin.has_change_permission(request))
-        self.assertTrue(self.admin.has_change_permission(request, Registry.objects.get(site_no='12345678')))
+        self.assertTrue(self.admin.has_change_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_has_change_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
 
         self.assertTrue(self.admin.has_change_permission(request))
-        self.assertTrue(self.admin.has_change_permission(request, Registry.objects.get(site_no='44445555')))
-        self.assertFalse(self.admin.has_change_permission(request, Registry.objects.get(site_no='12345678')))
+        self.assertTrue(self.admin.has_change_permission(request, MonitoringLocation.objects.get(site_no='44445555')))
+        self.assertFalse(self.admin.has_change_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_has_delete_permission_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
 
         self.assertTrue(self.admin.has_delete_permission(request))
-        self.assertTrue(self.admin.has_delete_permission(request, Registry.objects.get(site_no='12345678')))
+        self.assertTrue(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_has_delete_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
 
         self.assertTrue(self.admin.has_delete_permission(request))
-        self.assertTrue(self.admin.has_delete_permission(request, Registry.objects.get(site_no='44445555')))
-        self.assertFalse(self.admin.has_delete_permission(request, Registry.objects.get(site_no='12345678')))
+        self.assertTrue(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='44445555')))
+        self.assertFalse(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='12345678')))

@@ -5,14 +5,14 @@ Django Registry Administration.
 from django import forms
 from django.contrib import admin
 from django.db.models.functions import Upper
-from .models import Registry, AgencyLookup
+from .models import MonitoringLocation, AgencyLookup
 
 # this is the Django property for the admin main page header
 admin.site.site_header = 'NGWMN Well Registry Administration'
 admin.site.login_template = 'registration/login.html'
 
 
-class RegistryAdminForm(forms.ModelForm):
+class MonitoringLocationAdminForm(forms.ModelForm):
     """
     Registry admin form.
     """
@@ -29,7 +29,7 @@ class RegistryAdminForm(forms.ModelForm):
                 and enter a WL well type and WL well purpose')
 
     class Meta:
-        model = Registry
+        model = MonitoringLocation
         widgets = {
             'wl_well_purpose_notes': forms.Textarea(),
             'qw_well_purpose_notes': forms.Textarea(),
@@ -57,12 +57,11 @@ class SelectListFilter(admin.RelatedFieldListFilter):
     """
     template = "admin/choice_list_filter.html"
 
-
-class RegistryAdmin(admin.ModelAdmin):
+class MonitoringLocationAdmin(admin.ModelAdmin):
     """
     Django admin model for the registry application
     """
-    form = RegistryAdminForm
+    form = MonitoringLocationAdminForm
     list_display = ('site_id', 'agency', 'site_no', 'display_flag', 'wl_sn_flag', 'qw_sn_flag',
                     'insert_date', 'update_date')
     list_filter = (('agency', SelectListFilter), 'site_no', 'update_date')
@@ -89,8 +88,8 @@ class RegistryAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         """Overrides default implementation"""
-        return Registry.objects.all() if request.user.is_superuser \
-            else Registry.objects.filter(agency__in=_get_groups(request.user))
+        return MonitoringLocation.objects.all() if request.user.is_superuser \
+            else MonitoringLocation.objects.filter(agency__in=_get_groups(request.user))
 
     def has_view_permission(self, request, obj=None):
         """Overrides default implementation"""
@@ -112,4 +111,4 @@ class RegistryAdmin(admin.ModelAdmin):
 # below here will maintain all the tables Django admin should be aware
 admin.site.site_url = None
 admin.site.enable_nav_sidebar = False
-admin.site.register(Registry, RegistryAdmin)
+admin.site.register(MonitoringLocation, MonitoringLocationAdmin)
