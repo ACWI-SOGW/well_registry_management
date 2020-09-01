@@ -29,6 +29,15 @@ class TestRegistryFormAdmin(TestCase):
         form = MonitoringLocationAdminForm(self.form_data)
         self.assertTrue(form.is_valid())
 
+    def test_invalid_when_site_name_blank(self):
+        self.form_data['site_name'] = ''
+        form = MonitoringLocationAdminForm(self.form_data)
+        self.assertFalse(form.is_valid())
+
+        self.form_data['site_name'] = '     '
+        form = MonitoringLocationAdminForm(self.form_data)
+        self.assertFalse(form.is_valid())
+
     def test_valid_when_display_flag_true_sn_flags_false(self):
         self.form_data['display_flag'] = True
         form = MonitoringLocationAdminForm(self.form_data)
