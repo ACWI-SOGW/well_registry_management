@@ -16,6 +16,18 @@ class MonitoringLocationAdminForm(forms.ModelForm):
     """
     Registry admin form.
     """
+    def clean(self):
+        """
+        Override form clean to do multi field validation
+        """
+        cleaned_data = super().clean()
+        if (cleaned_data['display_flag'] and cleaned_data['wl_sn_flag']) and \
+            (not cleaned_data['wl_baseline_flag'] or cleaned_data['wl_well_type'] == '' \
+             or cleaned_data['wl_well_purpose'] == ''):
+            raise forms.ValidationError(
+                'If the well is In WL sub-network, then you must check WL Baseline \
+                and enter a WL well type and WL well purpose')
+
     class Meta:
         model = MonitoringLocation
         widgets = {
@@ -37,6 +49,7 @@ def _has_permission(perm, user, obj=None):
         return True
 
     return user.has_perm(perm) and (not obj or obj.agency.agency_cd in _get_groups(user))
+
 
 class SelectListFilter(admin.RelatedFieldListFilter):
     """
