@@ -186,7 +186,7 @@ class Migration(migrations.Migration):
     """
 
     dependencies = [
-        ('registry', '0007_registry_flags_to_boolean'),
+        ('registry', '0012_registry_lookup_ordering_and_chaining'),
     ]
 
     operations = [
