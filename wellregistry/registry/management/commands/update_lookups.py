@@ -6,7 +6,6 @@ import csv
 import os
 
 from django.conf import settings
-from django.core.files.storage import default_storage
 from django.core.management.base import BaseCommand
 
 from ...models import CountryLookup, StateLookup, CountyLookup, NatAqfrLookup, AltitudeDatumLookup, \
@@ -30,7 +29,7 @@ class Command(BaseCommand):
         :return:
         """
         data_src = os.path.join(INITIAL_DATA_DIR, filename)
-        with default_storage.open(data_src, 'r') as csvfile:
+        with open(data_src, 'r') as csvfile:
             csvreader = csv.reader(csvfile)
             next(csvreader)  # skip the header row
             for values in csvreader:
@@ -46,7 +45,7 @@ class Command(BaseCommand):
 
         """
         data_src = os.path.join(INITIAL_DATA_DIR, 'state.csv')
-        with default_storage.open(data_src, 'r') as csvfile:
+        with open(data_src, 'r') as csvfile:
             csvreader = csv.reader(csvfile)
             next(csvreader)
             for country_cd, state_cd, state_nm in csvreader:
@@ -64,7 +63,7 @@ class Command(BaseCommand):
         Foreign keys are set using records in the country and state lookup tables.
         """
         data_src = os.path.join(INITIAL_DATA_DIR, 'county.csv')
-        with default_storage.open(data_src, 'r') as csvfile:
+        with open(data_src, 'r') as csvfile:
             csvreader = csv.reader(csvfile)
             next(csvreader)
             for country_cd, state_cd, county_cd, county_nm in csvreader:
@@ -86,15 +85,15 @@ class Command(BaseCommand):
         self.stdout.write(f'Successfully updated registry.{CountyLookup._meta.db_table}')
         
     def handle(self, *args, **options):
-        self._update_simple_lookups('country.csv', CountryLookup, field_names=['country_cd', 'country_nm'])
-        self._update_simple_lookups('nat_aqfr.csv', NatAqfrLookup, field_names=['nat_aqfr_cd', 'nat_aqfr_desc'])
+        #self._update_simple_lookups('country.csv', CountryLookup, field_names=['country_cd', 'country_nm'])
+        #self._update_simple_lookups('nat_aqfr.csv', NatAqfrLookup, field_names=['nat_aqfr_cd', 'nat_aqfr_desc'])
         self._update_simple_lookups('altitude_datums.csv', AltitudeDatumLookup,
                                     field_names=['adatum_cd', 'adatum_desc'])
-        self._update_simple_lookups('horizontal_datums.csv', HorizontalDatumLookup,
-                                    field_names=['hdatum_cd', 'hdatum_desc'])
-        self._update_simple_lookups('units.csv', UnitsLookup, field_names=['unit_id', 'unit_desc'])
+        #self._update_simple_lookups('horizontal_datums.csv', HorizontalDatumLookup,
+        #                            field_names=['hdatum_cd', 'hdatum_desc'])
+        #self._update_simple_lookups('units.csv', UnitsLookup, field_names=['unit_id', 'unit_desc'])
         self._update_simple_lookups('agency.csv', AgencyLookup, field_names=['agency_cd', 'agency_nm', 'agency_med'])
-        self._update_state_lookups()
-        self._update_county_lookups()
+        #self._update_state_lookups()
+        #self._update_county_lookups()
 
         self.stdout.write('Successfully updated all lookups')
