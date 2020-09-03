@@ -1,0 +1,19 @@
+[
+  {
+    "model": "registry.agencylookup",
+    "pk": 3,
+    "fields": {
+      "agency_cd": "USGS",
+      "agency_nm": "United States Geological Survey",
+      "agency_med": "US Geological Survey"
+    }
+  },{
+    "model": "registry.agencylookup",
+    "pk": 4,
+    "fields": {
+      "agency_cd": "ADWR",
+      "agency_nm": "Arizona Department of Water Resources",
+      "agency_med": "AZ Department of Water Resources"
+    }
+  }
+]

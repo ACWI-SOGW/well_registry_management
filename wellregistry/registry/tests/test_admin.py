@@ -12,7 +12,7 @@ from ..models import AgencyLookup, MonitoringLocation
 
 
 class TestRegistryAdmin(TestCase):
-    fixtures = ['test_monitoring_location.json', 'test_user.json']
+    fixtures = ['test_agencies.json', 'test_monitoring_location.json', 'test_user.json']
 
     def setUp(self):
         self.superuser = get_user_model().objects.create_superuser('my_superuser')
