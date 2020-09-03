@@ -27,6 +27,7 @@ runmigrations:
 	$(PYTHON) wellregistry/manage.py migrate sessions
 	$(PYTHON) wellregistry/manage.py migrate social_django
 	$(PYTHON) wellregistry/manage.py migrate registry
+	$(PYTHON) wellregistry/manage.py update_lookups
 
 runlint:
 	$(PYLINT) wellregistry/registry

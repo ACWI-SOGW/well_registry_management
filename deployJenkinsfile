@@ -34,6 +34,7 @@ pipeline {
                     /usr/local/bin/python wellregistry/manage.py migrate sessions
                     /usr/local/bin/python wellregistry/manage.py migrate social_django
                     /usr/local/bin/python wellregistry/manage.py migrate registry
+                    /usr/local/bin/python wellregistry/manage.py update_lookups
                     '''
                 }
             }
