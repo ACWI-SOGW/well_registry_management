@@ -85,15 +85,15 @@ class Command(BaseCommand):
         self.stdout.write(f'Successfully updated registry.{CountyLookup._meta.db_table}')
         
     def handle(self, *args, **options):
-        #self._update_simple_lookups('country.csv', CountryLookup, field_names=['country_cd', 'country_nm'])
-        #self._update_simple_lookups('nat_aqfr.csv', NatAqfrLookup, field_names=['nat_aqfr_cd', 'nat_aqfr_desc'])
+        self._update_simple_lookups('agency.csv', AgencyLookup, field_names=['agency_cd', 'agency_nm', 'agency_med'])
         self._update_simple_lookups('altitude_datums.csv', AltitudeDatumLookup,
                                     field_names=['adatum_cd', 'adatum_desc'])
-        #self._update_simple_lookups('horizontal_datums.csv', HorizontalDatumLookup,
-        #                            field_names=['hdatum_cd', 'hdatum_desc'])
-        #self._update_simple_lookups('units.csv', UnitsLookup, field_names=['unit_id', 'unit_desc'])
-        self._update_simple_lookups('agency.csv', AgencyLookup, field_names=['agency_cd', 'agency_nm', 'agency_med'])
-        #self._update_state_lookups()
+        self._update_simple_lookups('country.csv', CountryLookup, field_names=['country_cd', 'country_nm'])
+        self._update_simple_lookups('horizontal_datums.csv', HorizontalDatumLookup,
+                                    field_names=['hdatum_cd', 'hdatum_desc'])
+        self._update_simple_lookups('nat_aqfr.csv', NatAqfrLookup, field_names=['nat_aqfr_cd', 'nat_aqfr_desc'])
+        self._update_simple_lookups('units.csv', UnitsLookup, field_names=['unit_id', 'unit_desc'])
+        self._update_state_lookups()
         #self._update_county_lookups()
 
         self.stdout.write('Successfully updated all lookups')
