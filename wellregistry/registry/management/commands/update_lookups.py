@@ -94,6 +94,6 @@ class Command(BaseCommand):
         self._update_simple_lookups('nat_aqfr.csv', NatAqfrLookup, field_names=['nat_aqfr_cd', 'nat_aqfr_desc'])
         self._update_simple_lookups('units.csv', UnitsLookup, field_names=['unit_id', 'unit_desc'])
         self._update_state_lookups()
-        #self._update_county_lookups()
+        self._update_county_lookups()
 
         self.stdout.write('Successfully updated all lookups')
