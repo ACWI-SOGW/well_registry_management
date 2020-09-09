@@ -24,8 +24,12 @@ class TestRegistryAdmin(TestCase):
 
         self.adwr_user = get_user_model().objects.create_user('adwruser')
         self.adwr_user.groups.add(self.adwr_group)
-        self.adwr_user.user_permissions.set([self.add_permission, self.view_permission, self.change_permission,
-                                            self.delete_permission])
+        self.adwr_user.user_permissions.set([
+            self.add_permission,
+            self.view_permission,
+            self.change_permission,
+            self.delete_permission
+        ])
         self.adwr_user.save()
 
         self.site = AdminSite()

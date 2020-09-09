@@ -1,14 +1,13 @@
 """
 Tests for update_lookups management command
 """
-
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import patch, MagicMock
 
 from django.test import TestCase
 
 from ..management.commands.update_lookups import Command
 from ..models import AgencyLookup, AltitudeDatumLookup, CountryLookup, CountyLookup, HorizontalDatumLookup, \
-    NatAqfrLookup,StateLookup, UnitsLookup
+    NatAqfrLookup, StateLookup, UnitsLookup
 
 TEST_AGENCY_CSV = ['"AGENCY_CD","AGENCY_NM","AGENCY_MED"',
                    'MPCA,Minnesota Pollution Control Agency,MN Pollution Control Agency',
@@ -44,8 +43,8 @@ TEST_COUNTY_CSV = ['"COUNTRY_CD","STATE_CD","COUNTY_CD","COUNTY_NM"',
                    'US,"01","003",Baldwin County',
                    'US,"02","068",Denali Borough']
 
-class TestUpdateLookups(TestCase):
 
+class TestUpdateLookups(TestCase):
     @staticmethod
     def get_open_mock(data):
         handle = MagicMock()
@@ -116,7 +115,8 @@ class TestUpdateLookups(TestCase):
 
         self.assertEqual(AgencyLookup.objects.count(), 3)
         self.assertEqual(AltitudeDatumLookup.objects.count(), 2)
-        self.assertEqual(AltitudeDatumLookup.objects.get(adatum_cd='NAVD88').adatum_desc, 'North American Vertical Datum of 2088')
+        self.assertEqual(AltitudeDatumLookup.objects.get(adatum_cd='NAVD88').adatum_desc,
+                         'North American Vertical Datum of 2088')
         self.assertEqual(CountryLookup.objects.count(), 3)
         self.assertEqual(HorizontalDatumLookup.objects.count(), 1)
         self.assertEqual(NatAqfrLookup.objects.count(), 3)
