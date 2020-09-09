@@ -31,7 +31,6 @@ runmigrations:
 
 runlint:
 	$(PYLINT) wellregistry/registry
-	$(PYLINT) wellregistry/registry/migrations/0002_add_agency_groups.py
 	$(PYLINT) wellregistry/wellregistry/
 
 env-static:
