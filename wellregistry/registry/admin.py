@@ -2,9 +2,17 @@
 Django Registry Administration.
 """
 
+import requests
+
 from django import forms
+from django.conf import settings
 from django.contrib import admin
 from django.db.models.functions import Upper
+from django.forms import Form, CharField
+from django.shortcuts import render
+from django.views.generic.edit import FormView
+from django.urls import path
+
 from .models import MonitoringLocation, AgencyLookup
 
 # this is the Django property for the admin main page header
@@ -57,6 +65,32 @@ class SelectListFilter(admin.RelatedFieldListFilter):
     """
     template = "admin/choice_list_filter.html"
 
+class FetchForm(Form):
+    site_no = CharField(label='Enter NWIS site number to add to the well registry', max_length=16)
+
+class FetchFromNwisView(FormView):
+    template_name = 'admin/fetch_from_nwis.html'
+    form_class = FetchForm
+
+    def form_valid(self, form):
+        site_no = form.cleaned_data['site_no']
+        resp = requests.get(settings.NWIS_SITE_SERVICE_ENDPOINT, params={
+            'format': 'rdb',
+            'siteOutput': 'expanded',
+            'sites': site_no,
+            'siteStatus': 'all'
+        })
+        context = self.get_context_data()
+        context['request_response'] = resp.status_code
+        return render(self.request, self.template_name, context=context)
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(dict(admin.site.each_context(self.request)))
+        return context
+
 class MonitoringLocationAdmin(admin.ModelAdmin):
     """
     Django admin model for the registry application
@@ -71,6 +105,14 @@ class MonitoringLocationAdmin(admin.ModelAdmin):
         """Constructs a site id from agency code and site number."""
         # The obj field agency_cd is the AgencyLovLookup model, retrieve agency_cd from the model
         return f"{obj.agency.agency_cd}:{obj.site_no}"
+
+    def get_urls(self):
+        urls = super(MonitoringLocationAdmin, self).get_urls()
+        nwis_fetch_url = [
+            path('fetch_from_nwis/', self.admin_site.admin_view(FetchFromNwisView.as_view()), name='fetch_from_nwis')
+        ]
+        return nwis_fetch_url + urls
+
 
     def save_model(self, request, obj, form, change):
         if not obj.insert_user:
@@ -108,7 +150,6 @@ class MonitoringLocationAdmin(admin.ModelAdmin):
         return _has_permission('registry.delete_monitoringlocation', request.user, obj)
 
 
-# below here will maintain all the tables Django admin should be aware
 admin.site.site_url = None
 admin.site.enable_nav_sidebar = False
 admin.site.register(MonitoringLocation, MonitoringLocationAdmin)

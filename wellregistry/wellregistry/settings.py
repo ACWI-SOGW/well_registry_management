@@ -251,3 +251,5 @@ STATICFILES_DIRS = [
 ]
 STATIC_URL = '/registry/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "wellregistry/staticfiles")
+
+NWIS_SITE_SERVICE_ENDPOINT = 'https://waterservices.usgs.gov/nwis/site'
