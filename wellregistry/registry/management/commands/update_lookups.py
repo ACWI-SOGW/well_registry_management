@@ -114,5 +114,4 @@ class Command(BaseCommand):
         self._update_state_lookups()
         self._update_county_lookups()
 
-
         self.stdout.write('Successfully updated all lookups')
