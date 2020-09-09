@@ -10,13 +10,16 @@ from django.contrib.auth.models import Group, Permission
 from django.core.management.base import BaseCommand
 from django.db.models.functions import Lower
 
-from ...models import CountryLookup, StateLookup, CountyLookup, NatAqfrLookup, AltitudeDatumLookup, \
+from registry.models import CountryLookup, StateLookup, CountyLookup, NatAqfrLookup, AltitudeDatumLookup, \
     HorizontalDatumLookup, UnitsLookup, AgencyLookup
 
 INITIAL_DATA_DIR = os.path.join(settings.BASE_DIR, 'registry/management/commands/initial_data/')
 
 
 class Command(BaseCommand):
+    """
+    Implememnts command to load lookup data from csv files
+    """
     help = 'Loads the lookup data from csv files'
 
     def _update_simple_lookups(self, filename, model, field_names):

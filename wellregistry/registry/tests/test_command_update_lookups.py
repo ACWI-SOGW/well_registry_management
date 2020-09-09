@@ -47,6 +47,11 @@ TEST_COUNTY_CSV = ['"COUNTRY_CD","STATE_CD","COUNTY_CD","COUNTY_NM"',
 class TestUpdateLookups(TestCase):
     @staticmethod
     def get_open_mock(data):
+        """
+        Creates a file open mock from data
+        :param data: list of strings, each representing a line in the file.
+        :return: MogicMock instance
+        """
         handle = MagicMock()
         handle.__enter__.return_value.__iter__.return_value = data
         handle.__exit__.return_value = False
