@@ -6,7 +6,9 @@ import csv
 import os
 
 from django.conf import settings
+from django.contrib.auth.models import Group, Permission
 from django.core.management.base import BaseCommand
+from django.db.models.functions import Lower
 
 from ...models import CountryLookup, StateLookup, CountyLookup, NatAqfrLookup, AltitudeDatumLookup, \
     HorizontalDatumLookup, UnitsLookup, AgencyLookup
@@ -50,7 +52,7 @@ class Command(BaseCommand):
             next(csvreader)
             for country_cd, state_cd, state_nm in csvreader:
                 country = CountryLookup.objects.get(country_cd=country_cd)
-                state = StateLookup.objects.update_or_create(
+                StateLookup.objects.update_or_create(
                     country_cd=country, state_cd=state_cd,
                     defaults={'country_cd': country, 'state_cd': state_cd, 'state_nm': state_nm}
                 )
@@ -73,7 +75,7 @@ class Command(BaseCommand):
                 except (CountryLookup.DoesNotExist, StateLookup.DoesNotExist):
                     continue
                 else:
-                    county = CountyLookup.objects.update_or_create(
+                    CountyLookup.objects.update_or_create(
                         county_cd=county_cd,
                         country_cd=country,
                         state_id=state,
@@ -83,9 +85,25 @@ class Command(BaseCommand):
                                   'county_nm': county_nm}
                     )
         self.stdout.write(f'Successfully updated registry.{CountyLookup._meta.db_table}')
-        
+
+    @staticmethod
+    def _update_agency_groups():
+        agencies = AgencyLookup.objects.annotate(agency_id=Lower('agency_cd')).values_list('agency_id', flat=True)
+
+        view_p = Permission.objects.get(codename='view_monitoringlocation')
+        add_p = Permission.objects.get(codename='add_monitoringlocation')
+        change_p = Permission.objects.get(codename='change_monitoringlocation')
+        delete_p = Permission.objects.get(codename='delete_monitoringlocation')
+
+        for agency in agencies:
+            group, _ = Group.objects.get_or_create(name=agency)
+            group.permissions.set([view_p, add_p, change_p, delete_p])
+            group.save()
+
     def handle(self, *args, **options):
         self._update_simple_lookups('agency.csv', AgencyLookup, field_names=['agency_cd', 'agency_nm', 'agency_med'])
+        self._update_agency_groups()
+
         self._update_simple_lookups('altitude_datums.csv', AltitudeDatumLookup,
                                     field_names=['adatum_cd', 'adatum_desc'])
         self._update_simple_lookups('country.csv', CountryLookup, field_names=['country_cd', 'country_nm'])
@@ -95,5 +113,6 @@ class Command(BaseCommand):
         self._update_simple_lookups('units.csv', UnitsLookup, field_names=['unit_id', 'unit_desc'])
         self._update_state_lookups()
         self._update_county_lookups()
+
 
         self.stdout.write('Successfully updated all lookups')
