@@ -30,11 +30,13 @@ class TestRegistryFormAdmin(TestCase):
             'nat_aqfr': 'N100GLCIAL',
             'site_type': 'WELL',
             'aqfr_type': 'UNCONFINED',
+            'well_depth': '4.2',
+            'well_depth_units': '1',
             'wl_sn_flag': False,
             'wl_baseline_flag': False,
             'qw_sn_flag': False,
             'qw_baseline_flag': False,
-            'wl_well_chars': 'Background'
+            'wl_well_chars': ''
         }
 
     def test_valid_when_display_flag_false(self):
@@ -127,8 +129,14 @@ class TestRegistryFormAdmin(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_invalid_when_site_type_well_and_aquifer_type_blank(self):
-       # self.form_data['site_type'] = 'Well'
+        self.form_data['site_type'] = 'WELL'
         self.form_data['aqfr_type'] = ''
+        form = MonitoringLocationAdminForm(self.form_data)
+        self.assertFalse(form.is_valid())
+
+    def test_invalid_depth_unit_blank(self):
+        self.form_data['well_depth'] = '5'
+        self.form_data['well_depth_units'] = ''
         form = MonitoringLocationAdminForm(self.form_data)
         self.assertFalse(form.is_valid())
 
@@ -157,6 +165,7 @@ class TestRegistryFormAdmin(TestCase):
         form = MonitoringLocationAdminForm(self.form_data)
         self.assertFalse(form.is_valid())
 
+#This test does not fail.  Perhaps if I understood how the previous test works/is broken up that would help?
     def test_invalid_when_display_flag_true_and_wl_sn_flag_true_and_wl_baseline_true(self):
         self.form_data['display_flag'] = True
         self.form_data['wl_sn_flag'] = True
