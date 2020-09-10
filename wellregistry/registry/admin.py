@@ -127,19 +127,19 @@ class MonitoringLocationAdmin(admin.ModelAdmin):
 
     def has_view_permission(self, request, obj=None):
         """Overrides default implementation"""
-        return _has_permission('registry.view_registry', request.user, obj)
+        return _has_permission('registry.view_monitoringlocation', request.user, obj)
 
     def has_add_permission(self, request):
         """Overrides default implementation"""
-        return _has_permission('registry.add_registry', request.user)
+        return _has_permission('registry.add_monitoringlocation', request.user)
 
     def has_change_permission(self, request, obj=None):
         """Overrides default implementation"""
-        return _has_permission('registry.change_registry', request.user, obj)
+        return _has_permission('registry.change_monitoringlocation', request.user, obj)
 
     def has_delete_permission(self, request, obj=None):
         """Overrides default implementation"""
-        return _has_permission('registry.delete_registry', request.user, obj)
+        return _has_permission('registry.delete_monitoringlocation', request.user, obj)
 
 
 # below here will maintain all the tables Django admin should be aware

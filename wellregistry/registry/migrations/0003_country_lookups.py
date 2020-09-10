@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
     """
 
     dependencies = [
-        ('registry', '0002_add_agency_groups'),
+        ('registry', '0001_registry_table'),
     ]
 
     operations = [

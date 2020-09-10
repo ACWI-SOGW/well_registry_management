@@ -11,6 +11,7 @@ TEST_USERNAME = 'test_user'
 
 
 class TestChangeUsgsUserToStaff(TestCase):
+    fixtures = ['test_groups.json']
 
     def setUp(self):
         self.user = get_user_model().objects.create_user(TEST_USERNAME)
@@ -59,6 +60,7 @@ class TestChangeUsgsUserToStaff(TestCase):
 
 
 class TestSetSuperuserPermission(TestCase):
+    fixtures = ['test_groups.json']
 
     def setUp(self):
         self.user = get_user_model().objects.create_user(TEST_USERNAME)
