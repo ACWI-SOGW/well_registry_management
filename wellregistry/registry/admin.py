@@ -21,6 +21,18 @@ class MonitoringLocationAdminForm(forms.ModelForm):
         Override form clean to do multi field validation
         """
         cleaned_data = super().clean()
+        if cleaned_data.get('site_type') == 'WELL' and cleaned_data.get('aqfr_type') == '':
+            raise forms.ValidationError(
+                'If the site is of type "WELL", then you must enter an Aquifer type')
+
+        if cleaned_data.get('well_depth') and not cleaned_data.get('well_depth_units'):
+            raise forms.ValidationError(
+                 'If Well depth is populated, then you must enter a Well depth unit')
+
+        if not cleaned_data.get('well_depth') and cleaned_data.get('well_depth_units'):
+            raise forms.ValidationError(
+                 'If Well depth is not populated, then Well depth unit must be left blank')
+
         if (cleaned_data.get('display_flag') and cleaned_data.get('wl_sn_flag')) and \
             (cleaned_data.get('wl_well_type') == '' \
              or cleaned_data.get('wl_well_purpose') == ''):
@@ -28,12 +40,12 @@ class MonitoringLocationAdminForm(forms.ModelForm):
                 'If the well is In WL sub-network, then you must \
                 enter a WL well type and WL well purpose')
 
-    #    if (cleaned_data.get('display_flag') and cleaned_data.get('wl_sn_flag') and \
-    #            cleaned_data.get('wl_baseline_flag') and \
-    #            cleaned_data.get('wl_well_chars') == '' ):
-    #        raise forms.ValidationError(
-    #            'If the well is in WL sub-network and in WL Baseline, \
-    #            then you must enter WL Well Characteristics')
+        if (cleaned_data.get('display_flag') and cleaned_data.get('wl_sn_flag') and \
+                cleaned_data.get('wl_baseline_flag') and \
+                cleaned_data.get('wl_well_chars') == '' ):
+            raise forms.ValidationError(
+                'If the well is in WL sub-network and in WL Baseline, \
+                then you must enter WL Well Characteristics')
 
         if (cleaned_data['display_flag'] and cleaned_data['qw_sn_flag']) and \
             (cleaned_data['qw_well_type'] == '' \
@@ -42,25 +54,12 @@ class MonitoringLocationAdminForm(forms.ModelForm):
                 'If the well is In QW sub-network, then you must \
                 enter a QW well type and QW well purpose')
 
-      #  if (cleaned_data.get('display_flag') and cleaned_data.get('qw_sn_flag') and \
-       #         cleaned_data.get('qw_baseline_flag') and \
-        #        cleaned_data.get('qw_well_chars') == '' ):
-        #    raise forms.ValidationError(
-         #       'If the well is in QW sub-network and in WL Baseline, \
-          #      then you must enter QW Well Characteristics')
-
-# This validation doesn't fix the test and it also doesn't work when I run the dev application:
-        if cleaned_data.get('well_depth') != '' and cleaned_data.get('well_depth_units') == '':
+        if (cleaned_data.get('display_flag') and cleaned_data.get('qw_sn_flag') and \
+                cleaned_data.get('qw_baseline_flag') and \
+                cleaned_data.get('qw_well_chars') == '' ):
             raise forms.ValidationError(
-                 'If Well depth is populated, then you must enter an Well depth unit')
-
-        if cleaned_data.get('site_type') == 'WELL' and cleaned_data.get('aqfr_type') == '':
-            raise forms.ValidationError(
-                'If the site is of type "WELL", then you must enter an Aquifer type')
-
-
-
-
+                'If the well is in QW sub-network and in WL Baseline, \
+                then you must enter QW Well Characteristics')
 
 
     class Meta:

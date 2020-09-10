@@ -36,7 +36,8 @@ class TestRegistryFormAdmin(TestCase):
             'wl_baseline_flag': False,
             'qw_sn_flag': False,
             'qw_baseline_flag': False,
-            'wl_well_chars': ''
+            'wl_well_chars': '',
+            'ql_well_chars': ''
         }
 
     def test_valid_when_display_flag_false(self):
@@ -140,6 +141,12 @@ class TestRegistryFormAdmin(TestCase):
         form = MonitoringLocationAdminForm(self.form_data)
         self.assertFalse(form.is_valid())
 
+    def test_invalid_depth_unit_not_blank(self):
+        self.form_data['well_depth'] = ''
+        self.form_data['well_depth_units'] = '1'
+        form = MonitoringLocationAdminForm(self.form_data)
+        self.assertFalse(form.is_valid())
+
     def test_valid_when_display_flag_true_and_wl_sn_flags_true(self):
         self.form_data['display_flag'] = True
         self.form_data['wl_sn_flag'] = True
@@ -165,12 +172,47 @@ class TestRegistryFormAdmin(TestCase):
         form = MonitoringLocationAdminForm(self.form_data)
         self.assertFalse(form.is_valid())
 
-#This test does not fail.  Perhaps if I understood how the previous test works/is broken up that would help?
     def test_invalid_when_display_flag_true_and_wl_sn_flag_true_and_wl_baseline_true(self):
         self.form_data['display_flag'] = True
         self.form_data['wl_sn_flag'] = True
+        self.form_data['wl_well_type'] = 'Trend'
+        self.form_data['wl_well_purpose'] = 'Other'
         self.form_data['wl_baseline_flag'] = True
         self.form_data['wl_well_chars'] = ''
+        form = MonitoringLocationAdminForm(self.form_data)
+        self.assertFalse(form.is_valid())
+
+    def test_valid_when_display_flag_true_and_qw_sn_flags_true(self):
+        self.form_data['display_flag'] = True
+        self.form_data['qw_sn_flag'] = True
+        self.form_data['qw_well_purpose'] = 'Other'
+        self.form_data['qw_well_type'] = 'Trend'
+        form = MonitoringLocationAdminForm(self.form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_invalid_when_display_flag_true_and_qw_sn_flag_true(self):
+        self.form_data['display_flag'] = True
+        self.form_data['qw_sn_flag'] = True
+        form = MonitoringLocationAdminForm(self.form_data)
+        self.assertFalse(form.is_valid())
+
+        self.form_data['qw_well_purpose'] = ''
+        self.form_data['qw_well_type'] = 'Trend'
+        form = MonitoringLocationAdminForm(self.form_data)
+        self.assertFalse(form.is_valid())
+
+        self.form_data['qw_well_purpose'] = 'Other'
+        self.form_data['qw_well_type'] = ''
+        form = MonitoringLocationAdminForm(self.form_data)
+        self.assertFalse(form.is_valid())
+
+    def test_invalid_when_display_flag_true_and_qw_sn_flag_true_and_qw_baseline_true(self):
+        self.form_data['display_flag'] = True
+        self.form_data['qw_sn_flag'] = True
+        self.form_data['qw_well_type'] = 'Trend'
+        self.form_data['qw_well_purpose'] = 'Other'
+        self.form_data['qw_baseline_flag'] = True
+        self.form_data['qw_well_chars'] = ''
         form = MonitoringLocationAdminForm(self.form_data)
         self.assertFalse(form.is_valid())
 
