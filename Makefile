@@ -27,10 +27,10 @@ runmigrations:
 	$(PYTHON) wellregistry/manage.py migrate sessions
 	$(PYTHON) wellregistry/manage.py migrate social_django
 	$(PYTHON) wellregistry/manage.py migrate registry
+	$(PYTHON) wellregistry/manage.py update_lookups
 
 runlint:
 	$(PYLINT) wellregistry/registry
-	$(PYLINT) wellregistry/registry/migrations/0002_add_agency_groups.py
 	$(PYLINT) wellregistry/wellregistry/
 
 env-static:

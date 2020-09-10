@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
     Defines the migrations for updating the Registry model.
     """
     dependencies = [
-        ('registry', '0008_populate_lookups'),
+        ('registry', '0007_registry_flags_to_boolean'),
     ]
 
     operations = [
