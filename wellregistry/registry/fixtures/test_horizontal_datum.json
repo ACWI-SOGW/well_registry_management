@@ -1,0 +1,17 @@
+[
+  {
+    "model": "registry.horizontaldatumlookup",
+    "pk": 1,
+    "fields": {
+      "hdatum_cd": "WGS84",
+      "hdatum_desc": "World Geodetic System of 1984"
+    }
+  },{
+    "model": "registry.horizontaldatumlookup",
+    "pk": 2,
+    "fields": {
+      "hdatum_cd": "NAD27",
+      "hdatum_desc": "North American Datum of 1927"
+    }
+  }
+]

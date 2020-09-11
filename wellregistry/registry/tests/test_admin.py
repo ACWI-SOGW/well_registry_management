@@ -12,7 +12,7 @@ from ..models import AgencyLookup, MonitoringLocation
 
 
 class TestRegistryFormAdmin(TestCase):
-    fixtures = ['test_agencies.json']
+    fixtures = ['test_agencies.json', 'test_countries.json', 'test_counties.json', 'test_states.json', 'test_altitude_datum.json', 'test_horizontal_datum.json', 'test_nat_aquifer.json', 'test_units.json']
 
     def setUp(self):
         self.form_data = {

@@ -1,0 +1,17 @@
+[
+  {
+    "model": "registry.unitslookup",
+    "pk": 1,
+    "fields": {
+      "unit_desc": "ft",
+      "unit_id": 1
+    }
+  },{
+    "model": "registry.unitslookup",
+    "pk": 2,
+    "fields": {
+      "unit_desc": "cm",
+      "unit_id": 2
+    }
+  }
+]

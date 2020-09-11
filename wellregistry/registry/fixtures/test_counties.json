@@ -1,0 +1,12 @@
+[
+  {
+    "model": "registry.countylookup",
+    "pk": 171,
+    "fields": {
+      "country_cd": "US",
+      "state_id": 39,
+      "county_cd": "123",
+      "county_nm": "St. Francis County"
+    }
+  }
+]

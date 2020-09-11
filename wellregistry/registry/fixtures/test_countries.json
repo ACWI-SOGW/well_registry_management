@@ -1,0 +1,10 @@
+[
+  {
+    "model": "registry.countrylookup",
+    "pk": 24,
+    "fields": {
+      "country_cd": "US",
+      "country_nm": "United States of America"
+    }
+  }
+]
