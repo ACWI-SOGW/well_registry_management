@@ -143,7 +143,7 @@ class MonitoringLocation(models.Model):
     agency = models.ForeignKey(AgencyLookup, on_delete=models.PROTECT, db_column='agency_cd', null=True,
                                to_field='agency_cd')
     site_no = models.CharField(max_length=16)
-    site_name = models.CharField(max_length=300, validators=[non_blank_validator,])
+    site_name = models.CharField(max_length=300)
 
     country = models.ForeignKey(CountryLookup, on_delete=models.PROTECT, db_column='country_cd',
                                 null=True, blank=True, to_field='country_cd')
@@ -153,7 +153,7 @@ class MonitoringLocation(models.Model):
                               show_all=False,
                               auto_choose=True,
                               sort=True,
-                              on_delete=models.PROTECT, db_column='state_id', null=True, blank=True)
+                              on_delete=models.PROTECT, db_column='state_id', null=True)
     county = ChainedForeignKey(CountyLookup,
                                chained_field="state",
                                chained_model_field="state_id",
@@ -161,24 +161,24 @@ class MonitoringLocation(models.Model):
                                auto_choose=True,
                                sort=True,
                                on_delete=models.PROTECT,
-                               db_column='county_id', null=True, blank=True)
+                               db_column='county_id', null=True)
 
-    dec_lat_va = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True,
+    dec_lat_va = models.DecimalField(max_digits=11, decimal_places=8, null=True,
                                      verbose_name='Latitude(decimal degrees)')
-    dec_long_va = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True,
+    dec_long_va = models.DecimalField(max_digits=11, decimal_places=8, null=True,
                                       verbose_name='Longitude(decimal degrees)')
     horizontal_datum = models.ForeignKey(HorizontalDatumLookup, on_delete=models.PROTECT,
-                                         db_column='horizontal_datum_cd', null=True, blank=True,
+                                         db_column='horizontal_datum_cd', null=True,
                                          to_field='hdatum_cd')
     horz_method = models.CharField(max_length=300, blank=True, verbose_name='Lat/Long method')
     horz_acy = models.CharField(max_length=300, blank=True, verbose_name='Lat/Long accuracy')
 
-    alt_va = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True,
+    alt_va = models.DecimalField(max_digits=10, decimal_places=6, null=True,
                                  verbose_name='Altitude')
     altitude_units = models.ForeignKey(UnitsLookup, on_delete=models.PROTECT, db_column='altitude_units',
-                                       to_field='unit_id', null=True, blank=True)
+                                       to_field='unit_id', null=True)
     altitude_datum = models.ForeignKey(AltitudeDatumLookup, on_delete=models.PROTECT,
-                                       db_column='altitude_datum_cd', null=True, blank=True,
+                                       db_column='altitude_datum_cd', null=True,
                                        to_field='adatum_cd')
     alt_method = models.CharField(max_length=300, blank=True, verbose_name='Altitude method')
     alt_acy = models.CharField(max_length=300, blank=True, verbose_name='Altitude accuracy')
@@ -188,10 +188,10 @@ class MonitoringLocation(models.Model):
                                          on_delete=models.PROTECT, to_field='unit_id', null=True, blank=True)
 
     nat_aqfr = models.ForeignKey(NatAqfrLookup, on_delete=models.PROTECT, db_column='nat_aqfr_cd',
-                                 to_field='nat_aqfr_cd', null=True, blank=True, verbose_name='National aquifer')
+                                 to_field='nat_aqfr_cd', null=True, verbose_name='National aquifer')
     local_aquifer_name = models.CharField(max_length=100, blank=True)
 
-    site_type = models.CharField(max_length=10, blank=True, choices=[('WELL', 'Well'), ('SPRING', 'Spring')])
+    site_type = models.CharField(max_length=10, choices=[('WELL', 'Well'), ('SPRING', 'Spring')])
     aqfr_type = models.CharField(max_length=10, blank=True, db_column='aqfr_char',
                                  choices=[('CONFINED', 'Confined'), ('UNCONFINED', 'Unconfined')],
                                  verbose_name='Aquifer type')

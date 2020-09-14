@@ -1,0 +1,17 @@
+[
+  {
+    "model": "registry.altitudedatumlookup",
+    "pk": 1,
+    "fields": {
+      "adatum_cd": "NAVD88",
+      "adatum_desc": "North American Vertical Datum of 1988"
+    }
+  },{
+    "model": "registry.altitudedatumlookup",
+    "pk": 4,
+    "fields": {
+      "adatum_cd": "NAD83",
+      "adatum_desc": "NAD83 North American Datum of 1983"
+    }
+  }
+]
