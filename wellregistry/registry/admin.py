@@ -8,7 +8,7 @@ from django import forms
 from django.conf import settings
 from django.contrib import admin
 from django.db.models.functions import Upper
-from django.forms import Form, CharField, BooleanField
+from django.forms import Form, CharField, ChoiceField
 from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
 from django.urls import path
@@ -71,7 +71,7 @@ class SelectListFilter(admin.RelatedFieldListFilter):
 
 class FetchForm(Form):
     site_no = CharField(label='Enter NWIS site number to add to the well registry', max_length=16)
-    overwrite = BooleanField(label='Do you want to overwrite the site\'s meta data')
+    overwrite = ChoiceField(label='Do you want to overwrite the site\'s meta data', choices=('Yes', 'No'))
 
 class FetchFromNwisView(FormView):
     template_name = 'admin/fetch_from_nwis.html'
@@ -84,7 +84,7 @@ class FetchFromNwisView(FormView):
             return False, 'Site is missing a well depth'
         return True, 'Valid site'
 
-    def _get_monitoring_location(self, site_data):
+    def _get_monitoring_location(self, site_data, existing_ml):
 
         AQFR_TYPE_CD_TO_NWIS = {
             'C': 'CONFINED',
@@ -93,10 +93,12 @@ class FetchFromNwisView(FormView):
             'U': 'UNCONFINED',
             'X': 'CONFINED'
         }
+        existing_ml_dict = {k: v for k, v in existing_ml.__dict__.iteritems() if v is not None}
+
         country = CountryLookup.objects.get(country_cd=site_data['country_cd'])
         state = StateLookup.objects.get(state_cd=site_data['state_cd'], country_cd=country)
 
-        return MonitoringLocation(
+        new_ml = MonitoringLocation(
             agency=AgencyLookup.objects.get(agency_cd=site_data['agency_cd']),
             site_no=site_data['site_no'],
             site_name=site_data['station_nm'],
@@ -120,41 +122,54 @@ class FetchFromNwisView(FormView):
             aqfr_type=AQFR_TYPE_CD_TO_NWIS[site_data['aqfr_type_cd']],
         )
 
+        return new_ml.__dict__.update(existing_ml_dict)
 
     def form_valid(self, form):
         site_no = form.cleaned_data['site_no']
+        overwrite = form.cleaned_data['overwrite']
         agency = AgencyLookup.objects.get(agency_cd='USGS')
 
-        resp = requests.get(settings.NWIS_SITE_SERVICE_ENDPOINT, params={
-            'format': 'rdb',
-            'siteOutput': 'expanded',
-            'sites': site_no,
-            'siteStatus': 'all'
-        })
         context = self.get_context_data()
-        site_exists = MonitoringLocation.objects.filter('site_no')
-        if resp.status_code == 200:
-            data = [datum for datum in parse_rdb(resp.iter_lines(decode_unicode=True))]
-            if len(data):
-                if MonitoringLocation.objects.filter(
-                        site_no=data['site_no'],
-                        agency=AgencyLookup.objects.get(agency_cd=data['agency_cd'])).exists():
-                    context['request_response'] = f'Site {site_no} already exists in NGWMN'
-                else:
-                    valid, message = self._validate_site(data[0])
-                    if valid:
-                        ml = self._get_monitoring_location(data[0])
 
-                        ml.save()
-                        return redirect(reverse('admin:registry_monitoringlocation_change', args=(ml.id,)))
-                    else:
-                        context['request_response'] = message
-            else:
-                context['request_response'] = f'No site exists for {site_no}'
-        elif resp.status_code == 404:
-            context['request_response'] = f'No site exists for {site_no}'
+        site_exists = MonitoringLocation.objects.filter(site_no=site_no, agency=agency).exists()
+
+        if site_exists and overwrite == None:
+            context['show_overwrite'] = True
+
+        elif site_exists and overwrite == 'No':
+            return redirect(
+                reverse('admin:registry_monitoringlocation_change',
+                        args=(MonitoringLocation.objects.get(site_no=site_no, agency=agency).id,))
+            )
         else:
-            context['request_response'] = f'Service request to NWIS failed with status {resp.status_code}'
+            resp = requests.get(settings.NWIS_SITE_SERVICE_ENDPOINT, params={
+                'format': 'rdb',
+                'siteOutput': 'expanded',
+                'sites': site_no,
+                'siteStatus': 'all'
+            })
+            if resp.status_code == 200:
+                data = [datum for datum in parse_rdb(resp.iter_lines(decode_unicode=True))]
+                if len(data):
+                    existing_ml = MonitoringLocation.objects.get(site_no=site_no, agency=agency) if (
+                                site_exists and overwrite) else None
+                    if site_exists and overwrite == 'Yes':
+                        existing_ml = MonitoringLocation.objects.get(site_no=site_no, agency=agency)
+                    else:
+                        valid, message = self._validate_site(data[0])
+                        if valid:
+                            ml = self._get_monitoring_location(data[0])
+
+                            ml.save()
+                            return redirect(reverse('admin:registry_monitoringlocation_change', args=(ml.id,)))
+                        else:
+                            context['request_response'] = message
+                else:
+                    context['request_response'] = f'No site exists for {site_no}'
+            elif resp.status_code == 404:
+                context['request_response'] = f'No site exists for {site_no}'
+            else:
+                context['request_response'] = f'Service request to NWIS failed with status {resp.status_code}'
 
         return render(self.request, self.template_name, context=context)
 
