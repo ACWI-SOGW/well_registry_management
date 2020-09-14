@@ -18,8 +18,9 @@ class TestRegistryFormAdmin(TestCase):
         self.form_data = {
             'display_flag': False,
             'agency': 'USGS',
-            'state': '26',
-            'county': '123',
+            'state': '39',
+            'country': 'US',
+            'county': '171',
             'site_no': '1234567',
             'site_name': 'My test site',
             'dec_lat_va': '98.456',
