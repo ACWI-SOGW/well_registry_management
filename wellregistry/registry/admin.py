@@ -8,12 +8,15 @@ from django import forms
 from django.conf import settings
 from django.contrib import admin
 from django.db.models.functions import Upper
-from django.forms import Form, CharField
-from django.shortcuts import render
+from django.forms import Form, CharField, BooleanField
+from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
 from django.urls import path
+from django.urls.base import reverse
 
-from .models import MonitoringLocation, AgencyLookup
+from .models import MonitoringLocation, AgencyLookup, AltitudeDatumLookup, CountyLookup, CountryLookup, \
+    HorizontalDatumLookup, NatAqfrLookup, StateLookup, UnitsLookup
+from .utils import parse_rdb
 
 # this is the Django property for the admin main page header
 admin.site.site_header = 'NGWMN Well Registry Administration'
@@ -30,7 +33,7 @@ class MonitoringLocationAdminForm(forms.ModelForm):
         """
         cleaned_data = super().clean()
         if (cleaned_data['display_flag'] and cleaned_data['wl_sn_flag']) and \
-            (not cleaned_data['wl_baseline_flag'] or cleaned_data['wl_well_type'] == '' \
+            (not cleaned_data['wl_baseline_flag'] or cleaned_data['wl_well_type'] == ''
              or cleaned_data['wl_well_purpose'] == ''):
             raise forms.ValidationError(
                 'If the well is In WL sub-network, then you must check WL Baseline \
@@ -65,15 +68,63 @@ class SelectListFilter(admin.RelatedFieldListFilter):
     """
     template = "admin/choice_list_filter.html"
 
+
 class FetchForm(Form):
     site_no = CharField(label='Enter NWIS site number to add to the well registry', max_length=16)
+    overwrite = BooleanField(label='Do you want to overwrite the site\'s meta data')
 
 class FetchFromNwisView(FormView):
     template_name = 'admin/fetch_from_nwis.html'
     form_class = FetchForm
 
+    def _validate_site(self, site_data):
+        if site_data['site_tp_cd'] not in ['GW', 'SP']:
+            return False, 'Site is not a Well or Spring (site_tp_cd is not GW or SP)'
+        if not site_data['well_depth_va']:
+            return False, 'Site is missing a well depth'
+        return True, 'Valid site'
+
+    def _get_monitoring_location(self, site_data):
+
+        AQFR_TYPE_CD_TO_NWIS = {
+            'C': 'CONFINED',
+            'M': 'CONFINED',
+            'N': 'UNCONFINED',
+            'U': 'UNCONFINED',
+            'X': 'CONFINED'
+        }
+        country = CountryLookup.objects.get(country_cd=site_data['country_cd'])
+        state = StateLookup.objects.get(state_cd=site_data['state_cd'], country_cd=country)
+
+        return MonitoringLocation(
+            agency=AgencyLookup.objects.get(agency_cd=site_data['agency_cd']),
+            site_no=site_data['site_no'],
+            site_name=site_data['station_nm'],
+            country=country,
+            state=state,
+            county=CountyLookup.objects.get(country_cd=country,
+                                            state_id=state,
+                                            county_cd=site_data['county_cd']),
+            dec_lat_va=site_data['dec_lat_va'],
+            dec_long_va=site_data['dec_long_va'],
+            horizontal_datum=HorizontalDatumLookup.objects.get(hdatum_cd=site_data['dec_coord_datum_cd']),
+            horz_method=site_data['coord_meth_cd'],
+            horz_acy=site_data['coord_acy_cd'],
+            alt_va=site_data['alt_va'],
+            altitude_datum=AltitudeDatumLookup.objects.get(adatum_cd=site_data['alt_datum_cd']),
+            alt_method=site_data['alt_meth_cd'],
+            alt_acy=site_data['alt_acy_va'],
+            well_depth=site_data['well_depth_va'],
+            nat_aqfr=NatAqfrLookup.objects.get(nat_aqfr_cd=site_data['nat_aqfr_cd']),
+            site_type='SPRING' if site_data['site_tp_cd'] == 'SP' else 'GW',
+            aqfr_type=AQFR_TYPE_CD_TO_NWIS[site_data['aqfr_type_cd']],
+        )
+
+
     def form_valid(self, form):
         site_no = form.cleaned_data['site_no']
+        agency = AgencyLookup.objects.get(agency_cd='USGS')
+
         resp = requests.get(settings.NWIS_SITE_SERVICE_ENDPOINT, params={
             'format': 'rdb',
             'siteOutput': 'expanded',
@@ -81,15 +132,37 @@ class FetchFromNwisView(FormView):
             'siteStatus': 'all'
         })
         context = self.get_context_data()
-        context['request_response'] = resp.status_code
+        site_exists = MonitoringLocation.objects.filter('site_no')
+        if resp.status_code == 200:
+            data = [datum for datum in parse_rdb(resp.iter_lines(decode_unicode=True))]
+            if len(data):
+                if MonitoringLocation.objects.filter(
+                        site_no=data['site_no'],
+                        agency=AgencyLookup.objects.get(agency_cd=data['agency_cd'])).exists():
+                    context['request_response'] = f'Site {site_no} already exists in NGWMN'
+                else:
+                    valid, message = self._validate_site(data[0])
+                    if valid:
+                        ml = self._get_monitoring_location(data[0])
+
+                        ml.save()
+                        return redirect(reverse('admin:registry_monitoringlocation_change', args=(ml.id,)))
+                    else:
+                        context['request_response'] = message
+            else:
+                context['request_response'] = f'No site exists for {site_no}'
+        elif resp.status_code == 404:
+            context['request_response'] = f'No site exists for {site_no}'
+        else:
+            context['request_response'] = f'Service request to NWIS failed with status {resp.status_code}'
+
         return render(self.request, self.template_name, context=context)
-
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(dict(admin.site.each_context(self.request)))
         return context
+
 
 class MonitoringLocationAdmin(admin.ModelAdmin):
     """
@@ -112,7 +185,6 @@ class MonitoringLocationAdmin(admin.ModelAdmin):
             path('fetch_from_nwis/', self.admin_site.admin_view(FetchFromNwisView.as_view()), name='fetch_from_nwis')
         ]
         return nwis_fetch_url + urls
-
 
     def save_model(self, request, obj, form, change):
         if not obj.insert_user:

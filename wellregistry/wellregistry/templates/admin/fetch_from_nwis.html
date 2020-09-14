@@ -5,8 +5,14 @@
     <p>Test content</p>
     <form action="{% url 'admin:fetch_from_nwis' %}" method="post">
         {%  csrf_token %}
-        {{ form }}
-        <input type="submit" value="Fetch" />
+        {{ form.non_field_errors }}
+        {{ form.site_no.errors }}
+        {{ form.site_no.label_tag }}
+        {{ form.site_no }}
+        {{ form.overwrite.errors }}
+        {{ form.overwrite }}
     </form>
-    {{ request_response }}
+    <p class="fetch-request-response">
+        {{ request_response }}
+    </p>
 {% endblock %}
