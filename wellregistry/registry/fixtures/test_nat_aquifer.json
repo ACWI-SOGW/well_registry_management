@@ -1,0 +1,17 @@
+[
+  {
+    "model": "registry.nataqfrlookup",
+    "pk": 1,
+    "fields": {
+      "nat_aqfr_cd": "N100AKUNCD",
+      "nat_aqfr_desc": "Alaska unconsolidated-deposit aquifers"
+    }
+  },{
+    "model": "registry.nataqfrlookup",
+    "pk": 6,
+    "fields": {
+      "nat_aqfr_cd": "N100GLCIAL",
+      "nat_aqfr_desc": "Sand and gravel aquifers (glaciated regions)"
+    }
+  }
+]

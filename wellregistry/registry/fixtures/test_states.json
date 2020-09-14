@@ -1,0 +1,11 @@
+[
+  {
+    "model": "registry.statelookup",
+    "pk": 39,
+    "fields": {
+      "country_cd": "US",
+      "state_cd": "26",
+      "state_nm": "Michigan"
+    }
+  }
+]

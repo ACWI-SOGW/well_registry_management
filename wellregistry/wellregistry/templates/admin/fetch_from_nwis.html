@@ -11,13 +11,11 @@
             {{ form.site_no.label_tag }}
             {{ form.site_no }}
         </div>
-        {% if show_overwrite %}
             <div class="text-bold padding-x-4">
                     {{ form.overwrite.errors }}
                     {{ form.overwrite.label_tag }}
                     {{ form.overwrite }}
             </div>
-        {% endif %}
         <input type="submit" value="Fetch NWIS site" />
     </form>
     <p class="fetch-request-response">
