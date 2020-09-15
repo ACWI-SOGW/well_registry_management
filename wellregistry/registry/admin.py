@@ -105,7 +105,9 @@ class SelectListFilter(admin.RelatedFieldListFilter):
 
 class FetchForm(Form):
     site_no = CharField(label='Enter NWIS site number to add to the well registry', max_length=16)
-    overwrite = ChoiceField(label='Do you want to overwrite the site\'s meta data', choices=(('', '------'),('y','Yes'), ('n', 'No')))
+    overwrite = ChoiceField(label='Do you want to overwrite the site\'s meta data',
+                            choices=(('', '------'),('y','Yes'), ('n', 'No')),
+                            required=False)
 
 class FetchFromNwisView(FormView):
     template_name = 'admin/fetch_from_nwis.html'
@@ -118,7 +120,7 @@ class FetchFromNwisView(FormView):
             return False, 'Site is missing a well depth'
         return True, 'Valid site'
 
-    def _get_monitoring_location_dict(self, site_data):
+    def _get_monitoring_location(self, site_data):
 
         AQFR_TYPE_CD_TO_NWIS = {
             'C': 'CONFINED',
@@ -128,32 +130,38 @@ class FetchFromNwisView(FormView):
             'X': 'CONFINED'
         }
 
+        agency = AgencyLookup.objects.get(agency_cd=site_data['agency_cd'])
         country = CountryLookup.objects.get(country_cd=site_data['country_cd'])
         state = StateLookup.objects.get(state_cd=site_data['state_cd'], country_cd=country)
 
-        return {
-            'agency': AgencyLookup.objects.get(agency_cd=site_data['agency_cd']),
-            'site_no': site_data['site_no'],
-            'site_name': site_data['station_nm'],
-            'country': country,
-            'state': state,
-            'county': CountyLookup.objects.get(country_cd=country,
+        if MonitoringLocation.objects.filter(agency=agency, site_no=site_data['site_no']).exists():
+            ml = MonitoringLocation.objects.get(agency=agency, site_no=site_data['site_no'])
+        else:
+            ml = MonitoringLocation()
+
+        ml.agency = AgencyLookup.objects.get(agency_cd=site_data['agency_cd'])
+        ml.site_no = site_data['site_no']
+        ml.site_name = site_data['station_nm']
+        ml.country = country
+        ml.state = state
+        ml.county = CountyLookup.objects.get(country_cd=country,
                                             state_id=state,
-                                            county_cd=site_data['county_cd']),
-            'dec_lat_va': site_data['dec_lat_va'],
-            'dec_long_va': site_data['dec_long_va'],
-            'horizontal_datum': HorizontalDatumLookup.objects.get(hdatum_cd=site_data['dec_coord_datum_cd']),
-            'horz_method': site_data['coord_meth_cd'],
-            'horz_acy': site_data['coord_acy_cd'],
-            'alt_va': site_data['alt_va'],
-            'altitude_datum': AltitudeDatumLookup.objects.get(adatum_cd=site_data['alt_datum_cd']),
-            'alt_method': site_data['alt_meth_cd'],
-            'alt_acy': site_data['alt_acy_va'],
-            'well_depth': site_data['well_depth_va'],
-            'nat_aqfr': NatAqfrLookup.objects.get(nat_aqfr_cd=site_data['nat_aqfr_cd']),
-            'site_type': 'SPRING' if site_data['site_tp_cd'] == 'SP' else 'GW',
-            'aqfr_type': AQFR_TYPE_CD_TO_NWIS[site_data['aqfr_type_cd']]
-        }
+                                            county_cd=site_data['county_cd'])
+        ml.dec_lat_va = site_data['dec_lat_va']
+        ml.dec_long_va = site_data['dec_long_va']
+        ml.horizontal_datum = HorizontalDatumLookup.objects.get(hdatum_cd=site_data['dec_coord_datum_cd'])
+        ml.horz_method = site_data['coord_meth_cd']
+        ml.horz_acy = site_data['coord_acy_cd']
+        ml.alt_va = site_data['alt_va']
+        ml.altitude_datum = AltitudeDatumLookup.objects.get(adatum_cd=site_data['alt_datum_cd'])
+        ml.alt_method = site_data['alt_meth_cd']
+        ml.alt_acy = site_data['alt_acy_va']
+        ml.well_depth = site_data['well_depth_va']
+        ml.nat_aqfr = NatAqfrLookup.objects.get(nat_aqfr_cd=site_data['nat_aqfr_cd'])
+        ml.site_type = 'SPRING' if site_data['site_tp_cd'] == 'SP' else 'WELL'
+        ml.aqfr_type = AQFR_TYPE_CD_TO_NWIS[site_data['aqfr_type_cd']]
+
+        return ml
 
     def form_valid(self, form):
         site_no = form.cleaned_data['site_no']
@@ -167,7 +175,7 @@ class FetchFromNwisView(FormView):
         if site_exists and not overwrite:
             context['show_overwrite'] = True
 
-        elif site_exists and overwrite == 'No':
+        elif site_exists and overwrite == 'n':
             return redirect(
                 reverse('admin:registry_monitoringlocation_change',
                         args=(MonitoringLocation.objects.get(site_no=site_no, agency=agency).id,))
@@ -184,9 +192,9 @@ class FetchFromNwisView(FormView):
                 if len(data):
                     valid, message = self._validate_site(data[0])
                     if valid:
-                        ml_dict = self._get_monitoring_location_dict(data[0])
+                        ml = self._get_monitoring_location(data[0])
 
-                        ml, _ = MonitoringLocation.objects.update_or_create(**ml_dict)
+                        ml.save()
                         return redirect(reverse('admin:registry_monitoringlocation_change', args=(ml.id,)))
                     else:
                         context['request_response'] = message
