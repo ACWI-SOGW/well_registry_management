@@ -7,7 +7,7 @@ from requests_mock import Mocker
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group, Permission, User
+from django.contrib.auth.models import Group, Permission
 from django.contrib.admin.sites import AdminSite
 from django.http import HttpRequest
 from django.test import TestCase, Client
@@ -379,7 +379,8 @@ class TestFetchFromNwisView(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.user = User.objects.create(username='testuser', password='12345', is_staff=True, is_superuser=True)
+        self.user = get_user_model().objects.create(username='testuser', password='12345', is_staff=True,
+                                                    is_superuser=True)
         self.client.force_login(self.user)
 
         self.usgs_agency = AgencyLookup.objects.get(agency_cd='USGS')
@@ -399,9 +400,9 @@ class TestFetchFromNwisView(TestCase):
             'site_no': '443053094591001'
         })
         self.assertTrue(MonitoringLocation.objects.filter(site_no='443053094591001', agency=self.usgs_agency).exists())
-        ml = MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency)
+        monitoring_location = MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency)
         self.assertEqual(resp.status_code, 302)
-        self.assertRedirects(resp, f'/registry/admin/registry/monitoringlocation/{ml.id}/change/')
+        self.assertRedirects(resp, f'/registry/admin/registry/monitoringlocation/{monitoring_location.id}/change/')
 
     @Mocker()
     def test_post_with_existing_site(self, mock_request):
@@ -410,12 +411,12 @@ class TestFetchFromNwisView(TestCase):
         mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=test_rdb,
                          headers={'Content-Type': 'text/plain;charset=UTF-8'})
         self.client.post(self.FETCH_URL, {
-           'site_no': '443053094591001'
+            'site_no': '443053094591001'
         })
 
         resp2 = self.client.post(self.FETCH_URL, {
             'site_no': '443053094591001'
-          })
+        })
         self.assertEqual(resp2.status_code, 200)
         self.assertTrue(resp2.context['show_overwrite'])
 
@@ -427,16 +428,16 @@ class TestFetchFromNwisView(TestCase):
         self.client.post(self.FETCH_URL, {
             'site_no': '443053094591001'
         })
-        ml = MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency)
-        ml.site_name = 'New Name'
-        ml.save()
+        monitoring_location = MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency)
+        monitoring_location.site_name = 'New Name'
+        monitoring_location.save()
         resp2 = self.client.post(self.FETCH_URL, {
             'site_no': '443053094591001',
             'overwrite': 'n'
         })
 
         self.assertEqual(resp2.status_code, 302)
-        self.assertRedirects(resp2, f'/registry/admin/registry/monitoringlocation/{ml.id}/change/')
+        self.assertRedirects(resp2, f'/registry/admin/registry/monitoringlocation/{monitoring_location.id}/change/')
         self.assertEqual(MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency).site_name,
                          'New Name')
 
@@ -448,9 +449,9 @@ class TestFetchFromNwisView(TestCase):
         self.client.post(self.FETCH_URL, {
             'site_no': '443053094591001'
         })
-        ml = MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency)
-        ml.site_name = 'New Name'
-        ml.save()
+        monitoring_location = MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency)
+        monitoring_location.site_name = 'New Name'
+        monitoring_location.save()
 
         test_rdb = io.BytesIO(TEST_RDB)
         mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=test_rdb,
@@ -461,7 +462,7 @@ class TestFetchFromNwisView(TestCase):
         })
 
         self.assertEqual(resp2.status_code, 302)
-        self.assertRedirects(resp2, f'/registry/admin/registry/monitoringlocation/{ml.id}/change/')
+        self.assertRedirects(resp2, f'/registry/admin/registry/monitoringlocation/{monitoring_location.id}/change/')
         self.assertNotEqual(
             MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency).site_name,
             'New Name')
@@ -498,8 +499,8 @@ class TestFetchFromNwisView(TestCase):
         })
 
         self.assertEqual(resp.status_code, 200)
-        self.assertEquals(resp.context['request_response'],
-                          'No site exists for 443053094591001')
+        self.assertEqual(resp.context['request_response'],
+                         'No site exists for 443053094591001')
 
     @Mocker()
     def test_service_failure(self, mock_request):
@@ -509,5 +510,5 @@ class TestFetchFromNwisView(TestCase):
         })
 
         self.assertEqual(resp.status_code, 200)
-        self.assertEquals(resp.context['request_response'],
-                          'Service request to NWIS failed with status 500')
+        self.assertEqual(resp.context['request_response'],
+                         'Service request to NWIS failed with status 500')

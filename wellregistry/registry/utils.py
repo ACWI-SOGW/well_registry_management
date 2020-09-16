@@ -21,7 +21,11 @@ def parse_rdb(rdb_iter_lines):
                 headers = line.split('\t')
                 found_header = True
     # skip the next line in the RDB file
-    next(rdb_iter_lines)
+    try:
+        next(rdb_iter_lines)
+    except StopIteration:
+        return
+
     for record in rdb_iter_lines:
         # Ignore empty lines
         if not record.strip():

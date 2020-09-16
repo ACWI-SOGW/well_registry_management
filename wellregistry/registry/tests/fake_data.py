@@ -1,3 +1,5 @@
+# pylint: skip-file
+
 import io
 
 TEST_RDB = b'#\n\
@@ -61,7 +63,7 @@ TEST_RDB = b'#\n\
 #\n\
 agency_cd	site_no	station_nm	site_tp_cd	lat_va	long_va	dec_lat_va	dec_long_va	coord_meth_cd	coord_acy_cd	coord_datum_cd	dec_coord_datum_cd	district_cd	state_cd	county_cd	country_cd	land_net_ds	map_nm	map_scale_fc	alt_va	alt_meth_cd	alt_acy_va	alt_datum_cd	huc_cd	basin_cd	topo_cd	instruments_cd	construction_dt	inventory_dt	drain_area_va	contrib_drain_area_va	tz_cd	local_time_fg	reliability_cd	gw_file_cd	nat_aqfr_cd	aqfr_cd	aqfr_type_cd	well_depth_va	hole_depth_va	depth_src_cd	project_no\n\
 5s	15s	50s	7s	16s	16s	16s	16s	1s	1s	10s	10s	3s	2s	3s	2s	23s	20s	7s	8s	1s	3s	10s	16s	2s	1s	30s	8s	8s	8s	8s	6s	1s	1s	30s	10s	8s	1s	8s	8s	1s	12s\n\
-USGS	443053094591001	LS-502    112N34W07CCCCBD01 LS-O01, recorder, LSIC	GW	443053.32	0945910.21	44.5148111	-94.9861694	D	H	NAD27	NAD27	26	26	123	US	SWSWSWS07 T112N R24W	MORTON, MINN.	  24000	 972.47	D	.03	NAD83	07020007		F	YNNYNNNNNNNYNYNNYNNNNNNNNNNNNN	20061206	20061206			CST	Y	C	YY Y Y	N100GLCIAL	112GBSG	C	107	120	S	MN-0022'
+USGS	443053094591001	LS-502    112N34W07CCCCBD01 LS-O01, recorder, LSIC	GW	443053.32	0945910.21	44.5148111	-94.9861694	D	H	NAD27	NAD27	26	26	123	US	SWSWSWS07 T112N R24W	MORTON, MINN.	  24000	 972.47	D	.03	NAD83	07020007		F	YNNYNNNNNNNYNYNNYNNNNNNNNNNNNN	20061206	20061206			CST	Y	C	YY Y Y	N100GLCIAL	112GBSG	C	1070	120	S	MN-0022'
 
 TEST_STREAM_RDB = b'#\n\
 #\n\

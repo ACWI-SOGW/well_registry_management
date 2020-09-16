@@ -38,11 +38,11 @@ class MonitoringLocationAdminForm(forms.ModelForm):
 
         if cleaned_data.get('well_depth') and not cleaned_data.get('well_depth_units'):
             raise forms.ValidationError(
-                 'If Well depth is populated, then you must enter a Well depth unit')
+                'If Well depth is populated, then you must enter a Well depth unit')
 
         if not cleaned_data.get('well_depth') and cleaned_data.get('well_depth_units'):
             raise forms.ValidationError(
-                 'If Well depth is not populated, then Well depth unit must be left blank')
+                'If Well depth is not populated, then Well depth unit must be left blank')
 
         if (cleaned_data.get('display_flag') and cleaned_data.get('wl_sn_flag')) and \
                 (cleaned_data.get('wl_well_type') == '' or cleaned_data.get('wl_well_purpose') == ''):
@@ -95,6 +95,10 @@ class SelectListFilter(admin.RelatedFieldListFilter):
 
 
 class FetchForm(Form):
+    """
+    Implements the form in the fetch_from_nwis view. Renders form fields
+    needed to load monitoring location data from NWIS
+    """
     site_no = CharField(label='Enter NWIS site number to add to the well registry', max_length=16)
     overwrite = ChoiceField(label='Do you want to overwrite the site\'s meta data',
                             choices=(('', '------'), ('y', 'Yes'), ('n', 'No')),
@@ -102,6 +106,11 @@ class FetchForm(Form):
 
 
 class FetchFromNwisView(FormView):
+    """
+    Implements the fetch_from_nwis view. The view renders a form that is used
+    to enter information. The site is then retrieved from NWIS and if successful
+    forward to the change page for that site.
+    """
     template_name = 'admin/fetch_from_nwis.html'
     form_class = FetchForm
 
@@ -122,12 +131,13 @@ class FetchFromNwisView(FormView):
         :param site_data: dictionary of fields retrieved from NWIS site service
         :return: MonitoringLocation
         """
-        AQFR_TYPE_CD_TO_NWIS = {
+        nwis_aqfr_type_cd_to_aqfr_type = {
             'C': 'CONFINED',
             'M': 'CONFINED',
             'N': 'UNCONFINED',
             'U': 'UNCONFINED',
-            'X': 'CONFINED'
+            'X': 'CONFINED',
+            '': ''
         }
 
         agency = AgencyLookup.objects.get(agency_cd=site_data['agency_cd'])
@@ -135,35 +145,36 @@ class FetchFromNwisView(FormView):
         state = StateLookup.objects.get(state_cd=site_data['state_cd'], country_cd=country)
 
         if MonitoringLocation.objects.filter(agency=agency, site_no=site_data['site_no']).exists():
-            ml = MonitoringLocation.objects.get(agency=agency, site_no=site_data['site_no'])
+            monitoring_location = MonitoringLocation.objects.get(agency=agency, site_no=site_data['site_no'])
         else:
-            ml = MonitoringLocation()
-            ml.agency = agency
-            ml.site_no = site_data['site_no']
+            monitoring_location = MonitoringLocation()
+            monitoring_location.agency = agency
+            monitoring_location.site_no = site_data['site_no']
 
-        ml.site_name = site_data['station_nm']
-        ml.country = country
-        ml.state = state
-        ml.county = CountyLookup.objects.get(
+        monitoring_location.site_name = site_data['station_nm']
+        monitoring_location.country = country
+        monitoring_location.state = state
+        monitoring_location.county = CountyLookup.objects.get(
             country_cd=country,
             state_id=state,
             county_cd=site_data['county_cd']
         )
-        ml.dec_lat_va = site_data['dec_lat_va']
-        ml.dec_long_va = site_data['dec_long_va']
-        ml.horizontal_datum = HorizontalDatumLookup.objects.get(hdatum_cd=site_data['dec_coord_datum_cd'])
-        ml.horz_method = site_data['coord_meth_cd']
-        ml.horz_acy = site_data['coord_acy_cd']
-        ml.alt_va = site_data['alt_va']
-        ml.altitude_datum = AltitudeDatumLookup.objects.get(adatum_cd=site_data['alt_datum_cd'])
-        ml.alt_method = site_data['alt_meth_cd']
-        ml.alt_acy = site_data['alt_acy_va']
-        ml.well_depth = site_data['well_depth_va']
-        ml.nat_aqfr = NatAqfrLookup.objects.get(nat_aqfr_cd=site_data['nat_aqfr_cd'])
-        ml.site_type = 'SPRING' if site_data['site_tp_cd'] == 'SP' else 'WELL'
-        ml.aqfr_type = AQFR_TYPE_CD_TO_NWIS[site_data['aqfr_type_cd']]
+        monitoring_location.dec_lat_va = float(site_data['dec_lat_va'])
+        monitoring_location.dec_long_va = float(site_data['dec_long_va'])
+        monitoring_location.horizontal_datum = \
+            HorizontalDatumLookup.objects.get(hdatum_cd=site_data['dec_coord_datum_cd'])
+        monitoring_location.horz_method = site_data['coord_meth_cd']
+        monitoring_location.horz_acy = site_data['coord_acy_cd']
+        monitoring_location.alt_va = float(site_data['alt_va'])
+        monitoring_location.altitude_datum = AltitudeDatumLookup.objects.get(adatum_cd=site_data['alt_datum_cd'])
+        monitoring_location.alt_method = site_data['alt_meth_cd']
+        monitoring_location.alt_acy = site_data['alt_acy_va']
+        monitoring_location.well_depth = float(site_data['well_depth_va'])
+        monitoring_location.nat_aqfr = NatAqfrLookup.objects.get(nat_aqfr_cd=site_data['nat_aqfr_cd'])
+        monitoring_location.site_type = 'SPRING' if site_data['site_tp_cd'] == 'SP' else 'WELL'
+        monitoring_location.aqfr_type = nwis_aqfr_type_cd_to_aqfr_type[site_data['aqfr_type_cd']]
 
-        return ml
+        return monitoring_location
 
     def form_valid(self, form):
         """
@@ -194,18 +205,22 @@ class FetchFromNwisView(FormView):
                 'siteStatus': 'all'
             })
             if resp.status_code == 200:
-                data = [datum for datum in parse_rdb(resp.iter_lines(decode_unicode=True))]
-                if len(data):
-                    valid, message = self._validate_site(data[0])
-                    if valid:
-                        ml = self._get_monitoring_location(data[0])
-
-                        ml.save()
-                        return redirect(reverse('admin:registry_monitoringlocation_change', args=(ml.id,)))
-                    else:
-                        context['request_response'] = message
-                else:
+                sites = parse_rdb(resp.iter_lines(decode_unicode=True))
+                try:
+                    site = next(sites)
+                except StopIteration:
                     context['request_response'] = f'No site exists for {site_no}'
+                else:
+                    valid, message = self._validate_site(site)
+                    if valid:
+                        monitoring_location = self._get_monitoring_location(site)
+
+                        monitoring_location.save()
+                        return redirect(reverse('admin:registry_monitoringlocation_change',
+                                                args=(monitoring_location.id,)))
+
+                    context['request_response'] = message
+
             elif resp.status_code == 404:
                 context['request_response'] = f'No site exists for {site_no}'
             else:
