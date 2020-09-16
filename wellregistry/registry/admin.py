@@ -292,6 +292,11 @@ class MonitoringLocationAdmin(admin.ModelAdmin):
         """Overrides default implementation"""
         return _has_permission('registry.delete_monitoringlocation', request.user, obj)
 
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['show_fetch_from_nwis_view'] = 'USGS' in _get_groups(request.user)
+        return super(MonitoringLocationAdmin, self).changelist_view(request, extra_context=extra_context)
+
 
 admin.site.site_url = None
 admin.site.enable_nav_sidebar = False

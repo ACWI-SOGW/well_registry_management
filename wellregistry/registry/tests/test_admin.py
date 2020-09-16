@@ -17,7 +17,7 @@ from ..models import AgencyLookup, MonitoringLocation
 from .fake_data import TEST_RDB, TEST_NO_WELL_DEPTH_RDB, TEST_STREAM_RDB
 
 
-class TestRegistryFormAdmin(TestCase):
+class TestMonitoringLocationFormAdmin(TestCase):
     fixtures = ['test_agencies.json', 'test_countries.json', 'test_counties.json',
                 'test_states.json', 'test_altitude_datum.json',
                 'test_horizontal_datum.json', 'test_nat_aquifer.json', 'test_units.json']
@@ -227,12 +227,14 @@ class TestRegistryFormAdmin(TestCase):
         self.assertFalse(form.is_valid())
 
 
-class TestRegistryAdmin(TestCase):
+class TestMonitoringLocationAdmin(TestCase):
     fixtures = ['test_groups.json', 'test_user.json', 'test_agencies.json', 'test_monitoring_location.json']
 
     def setUp(self):
         self.superuser = get_user_model().objects.create_superuser('my_superuser')
         self.adwr_group = Group.objects.get(name='adwr')
+        self.usgs_group = Group.objects.get(name='usgs')
+
         self.add_permission = Permission.objects.get(codename='add_monitoringlocation')
         self.view_permission = Permission.objects.get(codename='view_monitoringlocation')
         self.change_permission = Permission.objects.get(codename='change_monitoringlocation')
@@ -246,7 +248,19 @@ class TestRegistryAdmin(TestCase):
             self.change_permission,
             self.delete_permission
         ])
+        self.adwr_user.is_staff = True
         self.adwr_user.save()
+
+        self.usgs_user = get_user_model().objects.create_user('usgsuser')
+        self.usgs_user.groups.add(self.usgs_group)
+        self.usgs_user.user_permissions.set([
+            self.add_permission,
+            self.view_permission,
+            self.change_permission,
+            self.delete_permission
+        ])
+        self.usgs_user.is_staff = True
+        self.usgs_user.save()
 
         self.site = AdminSite()
         self.admin = MonitoringLocationAdmin(MonitoringLocation, self.site)
@@ -258,46 +272,46 @@ class TestRegistryAdmin(TestCase):
 
         self.assertEqual(site_id, "ADWR:44445555")
 
-    def test_save_model_new_registry_with_adwr_user(self):
+    def test_save_model_new_monitoring_location_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
-        registry = MonitoringLocation.objects.create(site_no='11111111',
+        monitoring_location = MonitoringLocation.objects.create(site_no='11111111',
                                                      agency=AgencyLookup.objects.get(agency_cd='ADWR'))
-        self.admin.save_model(request, registry, None, None)
+        self.admin.save_model(request, monitoring_location, None, None)
 
-        saved_registry = MonitoringLocation.objects.get(site_no='11111111')
-        self.assertEqual(saved_registry.insert_user, self.adwr_user)
-        self.assertEqual(saved_registry.update_user, self.adwr_user)
-        self.assertEqual(saved_registry.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
+        saved_monitoring_location = MonitoringLocation.objects.get(site_no='11111111')
+        self.assertEqual(saved_monitoring_location.insert_user, self.adwr_user)
+        self.assertEqual(saved_monitoring_location.update_user, self.adwr_user)
+        self.assertEqual(saved_monitoring_location.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
 
-    def test_save_model_new_registry_with_super_user(self):
+    def test_save_model_new_monitoring_location_with_super_user(self):
         request = HttpRequest()
         request.user = self.superuser
-        registry = MonitoringLocation.objects.create(site_no='11111111',
+        monitoring_location = MonitoringLocation.objects.create(site_no='11111111',
                                                      agency=AgencyLookup.objects.get(agency_cd='ADWR'))
-        self.admin.save_model(request, registry, None, None)
+        self.admin.save_model(request, monitoring_location, None, None)
 
-        saved_registry = MonitoringLocation.objects.get(site_no='11111111')
-        self.assertEqual(saved_registry.insert_user, self.superuser)
-        self.assertEqual(saved_registry.update_user, self.superuser)
-        self.assertEqual(saved_registry.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
+        saved_monitoring_location = MonitoringLocation.objects.get(site_no='11111111')
+        self.assertEqual(saved_monitoring_location.insert_user, self.superuser)
+        self.assertEqual(saved_monitoring_location.update_user, self.superuser)
+        self.assertEqual(saved_monitoring_location.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
 
-    def test_save_model_existing_registry_with_adwr_user(self):
+    def test_save_model_existing_monitoring_location_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.superuser
-        registry = MonitoringLocation.objects.create(site_no='11111111',
+        monitoring_location = MonitoringLocation.objects.create(site_no='11111111',
                                                      agency=AgencyLookup.objects.get(agency_cd='ADWR'))
-        self.admin.save_model(request, registry, None, None)
+        self.admin.save_model(request, monitoring_location, None, None)
 
-        saved_registry = MonitoringLocation.objects.get(site_no='11111111')
-        saved_registry.site_name = 'A site'
+        saved_monitoring_location = MonitoringLocation.objects.get(site_no='11111111')
+        saved_monitoring_location.site_name = 'A site'
         request.user = self.adwr_user
-        self.admin.save_model(request, saved_registry, None, None)
-        saved_registry = MonitoringLocation.objects.get(site_no='11111111')
+        self.admin.save_model(request, saved_monitoring_location, None, None)
+        saved_monitoring_location = MonitoringLocation.objects.get(site_no='11111111')
 
-        self.assertEqual(saved_registry.insert_user, self.superuser)
-        self.assertEqual(saved_registry.update_user, self.adwr_user)
-        self.assertEqual(saved_registry.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
+        self.assertEqual(saved_monitoring_location.insert_user, self.superuser)
+        self.assertEqual(saved_monitoring_location.update_user, self.adwr_user)
+        self.assertEqual(saved_monitoring_location.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
 
     def test_get_queryset_with_superuser(self):
         request = HttpRequest()
@@ -371,6 +385,17 @@ class TestRegistryAdmin(TestCase):
         self.assertTrue(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='44445555')))
         self.assertFalse(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
 
+    def test_changelist_view_with_usgs_user(self):
+        client = Client()
+        client.force_login(self.usgs_user)
+        resp = client.get('/registry/admin/registry/monitoringlocation/')
+        self.assertTrue(resp.context['show_fetch_from_nwis_view'])
+
+    def test_changelist_view_with_adwr_user(self):
+        client = Client()
+        client.force_login(self.adwr_user)
+        resp = client.get('/registry/admin/registry/monitoringlocation/')
+        self.assertFalse(resp.context['show_fetch_from_nwis_view'])
 
 class TestFetchFromNwisView(TestCase):
     FETCH_URL = '/registry/admin/registry/monitoringlocation/fetch_from_nwis/'
