@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block content %}
-    <p>Test content</p>
     <form action="{% url 'admin:fetch_from_nwis' %}" method="post">
         {%  csrf_token %}
         {{ form.non_field_errors }}

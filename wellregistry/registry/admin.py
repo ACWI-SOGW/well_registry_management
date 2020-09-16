@@ -120,8 +120,15 @@ class FetchFromNwisView(FormView):
             return False, 'Site is missing a well depth'
         return True, 'Valid site'
 
-    def _get_monitoring_location(self, site_data):
-
+    @staticmethod
+    def _get_monitoring_location(site_data):
+        """
+        Returns a MonitoringLocation. If the site_no and agency_cd from site_data already
+        exist, then update the MonitoringLocation instance. Otherwise create a new instance
+        :param self:
+        :param site_data: dictionary of fields retrieved from NWIS site service
+        :return: MonitoringLocation
+        """
         AQFR_TYPE_CD_TO_NWIS = {
             'C': 'CONFINED',
             'M': 'CONFINED',
@@ -138,15 +145,17 @@ class FetchFromNwisView(FormView):
             ml = MonitoringLocation.objects.get(agency=agency, site_no=site_data['site_no'])
         else:
             ml = MonitoringLocation()
+            ml.agency = agency
+            ml.site_no = site_data['site_no']
 
-        ml.agency = AgencyLookup.objects.get(agency_cd=site_data['agency_cd'])
-        ml.site_no = site_data['site_no']
         ml.site_name = site_data['station_nm']
         ml.country = country
         ml.state = state
-        ml.county = CountyLookup.objects.get(country_cd=country,
-                                            state_id=state,
-                                            county_cd=site_data['county_cd'])
+        ml.county = CountyLookup.objects.get(
+            country_cd=country,
+            state_id=state,
+            county_cd=site_data['county_cd']
+        )
         ml.dec_lat_va = site_data['dec_lat_va']
         ml.dec_long_va = site_data['dec_long_va']
         ml.horizontal_datum = HorizontalDatumLookup.objects.get(hdatum_cd=site_data['dec_coord_datum_cd'])
@@ -164,6 +173,11 @@ class FetchFromNwisView(FormView):
         return ml
 
     def form_valid(self, form):
+        """
+        Overrides the ModelAdmin form_valid method
+        :param form: FetchForm
+        :return: HttpResponse
+        """
         site_no = form.cleaned_data['site_no']
         overwrite = form.cleaned_data['overwrite']
         agency = AgencyLookup.objects.get(agency_cd='USGS')
@@ -171,7 +185,6 @@ class FetchFromNwisView(FormView):
         context = self.get_context_data()
 
         site_exists = MonitoringLocation.objects.filter(site_no=site_no, agency=agency).exists()
-
         if site_exists and not overwrite:
             context['show_overwrite'] = True
 
@@ -209,6 +222,7 @@ class FetchFromNwisView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # This adds admin specific context
         context.update(dict(admin.site.each_context(self.request)))
         return context
 
