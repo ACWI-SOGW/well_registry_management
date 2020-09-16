@@ -251,7 +251,7 @@ class MonitoringLocationAdmin(admin.ModelAdmin):
         return f"{obj.agency.agency_cd}:{obj.site_no}"
 
     def get_urls(self):
-        urls = super(MonitoringLocationAdmin, self).get_urls()
+        urls = super().get_urls()
         nwis_fetch_url = [
             path('fetch_from_nwis/', self.admin_site.admin_view(FetchFromNwisView.as_view()), name='fetch_from_nwis')
         ]
@@ -295,7 +295,7 @@ class MonitoringLocationAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
         extra_context['show_fetch_from_nwis_view'] = 'USGS' in _get_groups(request.user)
-        return super(MonitoringLocationAdmin, self).changelist_view(request, extra_context=extra_context)
+        return super().changelist_view(request, extra_context=extra_context)
 
 
 admin.site.site_url = None
