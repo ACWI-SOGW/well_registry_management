@@ -14,7 +14,7 @@ from django.test import TestCase, Client
 
 from ..admin import MonitoringLocationAdmin, MonitoringLocationAdminForm
 from ..models import AgencyLookup, MonitoringLocation
-from .fake_data import TEST_RDB
+from .fake_data import TEST_RDB, TEST_NO_WELL_DEPTH_RDB, TEST_STREAM_RDB
 
 
 class TestRegistryFormAdmin(TestCase):
@@ -371,6 +371,7 @@ class TestRegistryAdmin(TestCase):
         self.assertTrue(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='44445555')))
         self.assertFalse(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
 
+
 class TestFetchFromNwisView(TestCase):
     FETCH_URL = '/registry/admin/registry/monitoringlocation/fetch_from_nwis/'
     fixtures = ['test_agencies', 'test_countries.json', 'test_states.json', 'test_counties.json',
@@ -382,7 +383,6 @@ class TestFetchFromNwisView(TestCase):
         self.client.force_login(self.user)
 
         self.usgs_agency = AgencyLookup.objects.get(agency_cd='USGS')
-        self.test_rdb = io.BytesIO(TEST_RDB)
 
     def test_get_view(self):
         resp = self.client.get(self.FETCH_URL)
@@ -392,7 +392,8 @@ class TestFetchFromNwisView(TestCase):
 
     @Mocker()
     def test_post_with_new_site_no(self, mock_request):
-        mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=self.test_rdb,
+        test_rdb = io.BytesIO(TEST_RDB)
+        mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=test_rdb,
                          headers={'Content-Type': 'text/plain;charset=UTF-8'})
         resp = self.client.post(self.FETCH_URL, {
             'site_no': '443053094591001'
@@ -404,9 +405,11 @@ class TestFetchFromNwisView(TestCase):
 
     @Mocker()
     def test_post_with_existing_site(self, mock_request):
-        mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=self.test_rdb,
+        test_rdb = io.BytesIO(TEST_RDB)
+
+        mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=test_rdb,
                          headers={'Content-Type': 'text/plain;charset=UTF-8'})
-        resp1 = self.client.post(self.FETCH_URL, {
+        self.client.post(self.FETCH_URL, {
            'site_no': '443053094591001'
         })
 
@@ -418,13 +421,14 @@ class TestFetchFromNwisView(TestCase):
 
     @Mocker()
     def test_post_with_no_overwrite(self, mock_request):
-        mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=self.test_rdb,
+        test_rdb = io.BytesIO(TEST_RDB)
+        mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=test_rdb,
                          headers={'Content-Type': 'text/plain;charset=UTF-8'})
-        resp1 = self.client.post(self.FETCH_URL, {
+        self.client.post(self.FETCH_URL, {
             'site_no': '443053094591001'
         })
         ml = MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency)
-        ml.site_name='New Name'
+        ml.site_name = 'New Name'
         ml.save()
         resp2 = self.client.post(self.FETCH_URL, {
             'site_no': '443053094591001',
@@ -438,16 +442,18 @@ class TestFetchFromNwisView(TestCase):
 
     @Mocker()
     def test_post_with_overwrite(self, mock_request):
-        mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=self.test_rdb,
+        test_rdb = io.BytesIO(TEST_RDB)
+        mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=test_rdb,
                          headers={'Content-Type': 'text/plain;charset=UTF-8'})
-        resp1 = self.client.post(self.FETCH_URL, {
+        self.client.post(self.FETCH_URL, {
             'site_no': '443053094591001'
         })
         ml = MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency)
-        ml.site_name='New Name'
+        ml.site_name = 'New Name'
         ml.save()
 
-        mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=io.BytesIO(TEST_RDB),
+        test_rdb = io.BytesIO(TEST_RDB)
+        mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=test_rdb,
                          headers={'Content-Type': 'text/plain;charset=UTF-8'})
         resp2 = self.client.post(self.FETCH_URL, {
             'site_no': '443053094591001',
@@ -456,8 +462,33 @@ class TestFetchFromNwisView(TestCase):
 
         self.assertEqual(resp2.status_code, 302)
         self.assertRedirects(resp2, f'/registry/admin/registry/monitoringlocation/{ml.id}/change/')
-        self.assertNotEqual(MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency).site_name,
-                         'New Name')
+        self.assertNotEqual(
+            MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency).site_name,
+            'New Name')
+
+    @Mocker()
+    def test_post_with_stream_site(self, mock_request):
+        test_stream_site_rdb = io.BytesIO(TEST_STREAM_RDB)
+        mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=test_stream_site_rdb,
+                         headers={'Content-Type': 'text/plain;charset=UTF-8'})
+        resp = self.client.post(self.FETCH_URL, {
+            'site_no': '543053094591001'
+        })
+        self.assertFalse(MonitoringLocation.objects.filter(site_no='543053094591001', agency=self.usgs_agency).exists())
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn('Site is not a Well or Spring', resp.context['request_response'])
+
+    @Mocker()
+    def test_post_with_site_with_no_well_depth(self, mock_request):
+        test_stream_site_rdb = io.BytesIO(TEST_NO_WELL_DEPTH_RDB)
+        mock_request.get(settings.NWIS_SITE_SERVICE_ENDPOINT, body=test_stream_site_rdb,
+                         headers={'Content-Type': 'text/plain;charset=UTF-8'})
+        resp = self.client.post(self.FETCH_URL, {
+            'site_no': '643053094591001'
+        })
+        self.assertFalse(MonitoringLocation.objects.filter(site_no='643053094591001', agency=self.usgs_agency).exists())
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn('Site is missing a well depth', resp.context['request_response'])
 
     @Mocker()
     def test_site_not_found(self, mock_request):

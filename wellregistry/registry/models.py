@@ -9,7 +9,6 @@ from django.db import models
 from smart_selects.db_fields import ChainedForeignKey
 
 
-
 class AgencyLookup(models.Model):
     """Model definition for the agency table, lookup only"""
     agency_cd = models.CharField(max_length=50, unique=True)
@@ -132,11 +131,10 @@ non_blank_validator = RegexValidator(
     r'\S[\s\S]*',
     message='Field must not be blank')
 
+
 class MonitoringLocation(models.Model):
     """
     Django Registry Model.
-
-    # python manage.py makemigrations and migrate
     """
     display_flag = models.BooleanField(default=False, verbose_name='Display Site?')
 

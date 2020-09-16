@@ -15,7 +15,7 @@ from django.urls import path
 from django.urls.base import reverse
 
 from .models import MonitoringLocation, AgencyLookup, AltitudeDatumLookup, CountyLookup, CountryLookup, \
-    HorizontalDatumLookup, NatAqfrLookup, StateLookup, UnitsLookup
+    HorizontalDatumLookup, NatAqfrLookup, StateLookup
 from .utils import parse_rdb
 
 # this is the Django property for the admin main page header
@@ -45,33 +45,24 @@ class MonitoringLocationAdminForm(forms.ModelForm):
                  'If Well depth is not populated, then Well depth unit must be left blank')
 
         if (cleaned_data.get('display_flag') and cleaned_data.get('wl_sn_flag')) and \
-            (cleaned_data.get('wl_well_type') == '' \
-             or cleaned_data.get('wl_well_purpose') == ''):
+                (cleaned_data.get('wl_well_type') == '' or cleaned_data.get('wl_well_purpose') == ''):
             raise forms.ValidationError(
-                'If the well is In WL sub-network, then you must \
-                enter a WL well type and WL well purpose')
+                'If the well is In WL sub-network, then you must enter a WL well type and WL well purpose')
 
-        if (cleaned_data.get('display_flag') and cleaned_data.get('wl_sn_flag') and \
-                cleaned_data.get('wl_baseline_flag') and \
-                cleaned_data.get('wl_well_chars') == '' ):
+        if (cleaned_data.get('display_flag') and cleaned_data.get('wl_sn_flag') and
+                cleaned_data.get('wl_baseline_flag') and cleaned_data.get('wl_well_chars') == ''):
             raise forms.ValidationError(
-                'If the well is in WL sub-network and in WL Baseline, \
-                then you must enter WL Well Characteristics')
+                'If the well is in WL sub-network and in WL Baseline, then you must enter WL Well Characteristics')
 
         if (cleaned_data['display_flag'] and cleaned_data['qw_sn_flag']) and \
-            (cleaned_data['qw_well_type'] == '' \
-             or cleaned_data['qw_well_purpose'] == ''):
+                (cleaned_data['qw_well_type'] == '' or cleaned_data['qw_well_purpose'] == ''):
             raise forms.ValidationError(
-                'If the well is In QW sub-network, then you must \
-                enter a QW well type and QW well purpose')
+                'If the well is In QW sub-network, then you must enter a QW well type and QW well purpose')
 
-        if (cleaned_data.get('display_flag') and cleaned_data.get('qw_sn_flag') and \
-                cleaned_data.get('qw_baseline_flag') and \
-                cleaned_data.get('qw_well_chars') == '' ):
+        if (cleaned_data.get('display_flag') and cleaned_data.get('qw_sn_flag') and
+                cleaned_data.get('qw_baseline_flag') and cleaned_data.get('qw_well_chars') == ''):
             raise forms.ValidationError(
-                'If the well is in QW sub-network and in WL Baseline, \
-                then you must enter QW Well Characteristics')
-
+                'If the well is in QW sub-network and in WL Baseline, then you must enter QW Well Characteristics')
 
     class Meta:
         model = MonitoringLocation
@@ -106,14 +97,16 @@ class SelectListFilter(admin.RelatedFieldListFilter):
 class FetchForm(Form):
     site_no = CharField(label='Enter NWIS site number to add to the well registry', max_length=16)
     overwrite = ChoiceField(label='Do you want to overwrite the site\'s meta data',
-                            choices=(('', '------'),('y','Yes'), ('n', 'No')),
+                            choices=(('', '------'), ('y', 'Yes'), ('n', 'No')),
                             required=False)
+
 
 class FetchFromNwisView(FormView):
     template_name = 'admin/fetch_from_nwis.html'
     form_class = FetchForm
 
-    def _validate_site(self, site_data):
+    @staticmethod
+    def _validate_site(site_data):
         if site_data['site_tp_cd'] not in ['GW', 'SP']:
             return False, 'Site is not a Well or Spring (site_tp_cd is not GW or SP)'
         if not site_data['well_depth_va']:
@@ -124,8 +117,8 @@ class FetchFromNwisView(FormView):
     def _get_monitoring_location(site_data):
         """
         Returns a MonitoringLocation. If the site_no and agency_cd from site_data already
-        exist, then update the MonitoringLocation instance. Otherwise create a new instance
-        :param self:
+        exists, then update the MonitoringLocation instance. Otherwise create a new instance.
+
         :param site_data: dictionary of fields retrieved from NWIS site service
         :return: MonitoringLocation
         """
