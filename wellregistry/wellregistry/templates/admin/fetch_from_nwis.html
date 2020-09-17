@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+    <form action="{% url 'admin:fetch_from_nwis' %}" method="post">
+        {%  csrf_token %}
+        {{ form.non_field_errors }}
+        <div>
+            {{ form.site_no.errors }}
+            {{ form.site_no.label_tag }}
+            {{ form.site_no }}
+        </div>
+        {% if show_overwrite %}
+            <div class="text-bold margin-x-4">
+                    {{ form.overwrite.errors }}
+                    {{ form.overwrite.label_tag }}
+                    {{ form.overwrite }}
+            </div>
+        {% endif %}
+        <input type="submit" value="Edit NWIS site" />
+    </form>
+    <p class="fetch-request-response">
+        {{ request_response }}
+    </p>
+{% endblock %}

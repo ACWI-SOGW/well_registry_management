@@ -9,7 +9,6 @@ from django.db import models
 from smart_selects.db_fields import ChainedForeignKey
 
 
-
 class AgencyLookup(models.Model):
     """Model definition for the agency table, lookup only"""
     agency_cd = models.CharField(max_length=50, unique=True)
@@ -132,11 +131,10 @@ non_blank_validator = RegexValidator(
     r'\S[\s\S]*',
     message='Field must not be blank')
 
+
 class MonitoringLocation(models.Model):
     """
     Django Registry Model.
-
-    # python manage.py makemigrations and migrate
     """
     display_flag = models.BooleanField(default=False, verbose_name='Display Site?')
 
@@ -183,7 +181,7 @@ class MonitoringLocation(models.Model):
     alt_method = models.CharField(max_length=300, blank=True, verbose_name='Altitude method')
     alt_acy = models.CharField(max_length=300, blank=True, verbose_name='Altitude accuracy')
 
-    well_depth = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True)
+    well_depth = models.DecimalField(max_digits=11, decimal_places=7, null=True)
     well_depth_units = models.ForeignKey(UnitsLookup, related_name='+', db_column='well_depth_units',
                                          on_delete=models.PROTECT, to_field='unit_id', null=True, blank=True)
 

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added initial data for lookup fields.
 -   Added USWDS and added NGWMN visual identification to all pages.
 -   Added validations to fields in monitoring location form
+-   Added a fetch_from_nwis view to the admin to allow site meta data to be fetched from NWIS.
 
 ### Changed
 -   Modified the Registry model to more closely resemble the editable fields in the Apex Well Registry application. Also added choices to some of the fields to match the Apex well registry.
