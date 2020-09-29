@@ -1,0 +1,15 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+    <ul>
+    {% for key, message in errors %}
+        <li>{{ key }}:{{ message }}</li>
+    {% endfor %}
+    </ul>
+    <form action="{% url 'admin:bulk_upload' %}" method="post" enctype="multipart/form-data">
+        {%  csrf_token %}
+        {{ form }}
+        <input type="submit" value="Upload Monitoring Locations" />
+    </form>
+{% endblock %}
