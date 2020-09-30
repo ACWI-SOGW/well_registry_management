@@ -44,7 +44,7 @@ class FetchFromNwisView(FormView):
         return True, 'Valid site'
 
     @staticmethod
-    def _get_monitoring_location(site_data):
+    def _get_monitoring_location(site_data, user):
         """
         Returns a MonitoringLocation. If the site_no and agency_cd from site_data already
         exists, then update the MonitoringLocation instance. Otherwise create a new instance.
@@ -71,6 +71,7 @@ class FetchFromNwisView(FormView):
             monitoring_location = MonitoringLocation()
             monitoring_location.agency = agency
             monitoring_location.site_no = site_data['site_no']
+            monitoring_location.insert_user = user
 
         monitoring_location.site_name = site_data['station_nm']
         monitoring_location.country = country
@@ -94,6 +95,7 @@ class FetchFromNwisView(FormView):
         monitoring_location.nat_aqfr = NatAqfrLookup.objects.get(nat_aqfr_cd=site_data['nat_aqfr_cd'])
         monitoring_location.site_type = 'SPRING' if site_data['site_tp_cd'] == 'SP' else 'WELL'
         monitoring_location.aqfr_type = nwis_aqfr_type_cd_to_aqfr_type[site_data['aqfr_type_cd']]
+        monitoring_location.update_user = user
 
         return monitoring_location
 
@@ -134,7 +136,7 @@ class FetchFromNwisView(FormView):
                 else:
                     valid, message = self._validate_site(site)
                     if valid:
-                        monitoring_location = self._get_monitoring_location(site)
+                        monitoring_location = self._get_monitoring_location(site, self.request.user)
 
                         monitoring_location.save()
                         return redirect(reverse('admin:registry_monitoringlocation_change',

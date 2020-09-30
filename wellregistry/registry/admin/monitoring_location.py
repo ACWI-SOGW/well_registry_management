@@ -106,5 +106,5 @@ class MonitoringLocationAdmin(ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
-        extra_context['show_fetch_from_nwis_view'] = 'USGS' in _get_groups(request.user)
+        extra_context['show_fetch_from_nwis_view'] = request.user.is_superuser or 'USGS' in _get_groups(request.user)
         return super().changelist_view(request, extra_context=extra_context)

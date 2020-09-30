@@ -1,6 +1,15 @@
 {% extends "admin/base_site.html" %}
 {% load static %}
 
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+      <a href="{% url 'admin:index' %}">Home</a>
+        &rsaquo; <a href="{% url 'admin:registry_monitoringlocation_changelist' %}">Monitoring Location</a>
+        &rsaquo; Bulk Upload
+    </div>
+{% endblock %}
+
+
 {% block content %}
     {% if errors %}
         <ul class="errorlist">

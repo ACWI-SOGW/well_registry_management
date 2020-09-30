@@ -8,9 +8,12 @@
           {% blocktranslate with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktranslate %}
         </a>
       </li>
+      <li>
+          <a href="{%  url 'admin:bulk_upload' %}">Bulk Upload</a>
+      </li>
       {% if show_fetch_from_nwis_view %}
           <li>
-              <a href="{%  url 'admin:fetch_from_nwis' %}">Fetch ML from NWIS</a></ul>
+              <a href="{%  url 'admin:fetch_from_nwis' %}">Fetch ML from NWIS</a>
           </li>
       {% endif %}
   {% endif %}
