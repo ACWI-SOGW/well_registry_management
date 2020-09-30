@@ -2,20 +2,27 @@
 {% load static %}
 
 {% block content %}
-    <ul>
-    {% for row_index, error in errors %}
-        <li>In row {{row_index}}
-            <ul>
-                {% for key, value in error.items %}
-                    <li>{{ key }}: {{ value }}</li>
-                {% endfor %}
-            </ul>
-        </li>
-    {% endfor %}
-    </ul>
+    {% if errors %}
+        <ul class="errorlist">
+        {% for row_index, error in errors %}
+            <li>In row {{row_index}}
+                <ol>
+                    {% for key, value in error.items %}
+                        <li>{{ key }}: {{ value }}</li>
+                    {% endfor %}
+                </ol>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
     <form action="{% url 'admin:bulk_upload' %}" method="post" enctype="multipart/form-data">
         {%  csrf_token %}
-        {{ form }}
-        <input type="submit" value="Upload Monitoring Locations" />
+        <div class="usa-form-group">
+            {{ form.file.errors }}
+            <label class="usa-label font-body-sm" for="{{ form.file.id_for_label}}">Choose csv file containing monitoring locations</label>
+            <input id="{{ form.file.id_for_label }}" class="usa-file-input" type="file"
+                   name="{{ form.file.html_name }}" />
+        </div>
+        <input class="margin-top-2" type="submit" value="Upload Monitoring Locations" />
     </form>
 {% endblock %}

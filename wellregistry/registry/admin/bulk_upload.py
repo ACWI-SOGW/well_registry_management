@@ -60,12 +60,12 @@ def _get_monitoring_location(row, user):
         agency=_get_lookup(AgencyLookup, 'agency_cd', row[0]),
         site_no=row[1],
         site_name=row[2],
-        dec_lat_va=Decimal(row[3]),
-        dec_long_va=Decimal(row[4]),
+        dec_lat_va=Decimal(row[3]) if row[3] else None,
+        dec_long_va=Decimal(row[4]) if row[4] else None,
         horizontal_datum=_get_lookup(HorizontalDatumLookup, 'hdatum_cd',row[5]),
         horz_method=row[6],
         horz_acy=row[7],
-        alt_va=Decimal(row[8]),
+        alt_va=Decimal(row[8]) if row[8] else None,
         altitude_units=_get_lookup(UnitsLookup, 'unit_desc', row[9]),
         altitude_datum=_get_lookup(AltitudeDatumLookup, 'adatum_cd', row[10]),
         alt_method=row[11],
@@ -75,7 +75,7 @@ def _get_monitoring_location(row, user):
         country=country,
         state=state,
         county=_get_county_lookup(country, state, row[18]),
-        well_depth=Decimal(row[19]),
+        well_depth=Decimal(row[19]) if row[19] else None,
         well_depth_units=_get_lookup(UnitsLookup, 'unit_desc', row[20]),
         site_type=row[21],
         aqfr_type=row[22],
@@ -103,7 +103,7 @@ def _get_monitoring_location(row, user):
 
 
 class BulkUploadForm(Form):
-    file = FileField(label='Upload monitoring locations from csv')
+    file = FileField()
 
 
 class BulkUploadView(View):
