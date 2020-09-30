@@ -235,7 +235,7 @@ class MonitoringLocation(models.Model):
 
     def clean(self):
         """
-        Override form clean to do multi field validation
+        Override model clean to do multi field validation
         """
         if self.site_type == 'WELL' and self.aqfr_type == '':
             raise ValidationError(

@@ -3,8 +3,14 @@
 
 {% block content %}
     <ul>
-    {% for key, message in errors %}
-        <li>{{ key }}:{{ message }}</li>
+    {% for row_index, error in errors %}
+        <li>In row {{row_index}}
+            <ul>
+                {% for key, value in error.items %}
+                    <li>{{ key }}: {{ value }}</li>
+                {% endfor %}
+            </ul>
+        </li>
     {% endfor %}
     </ul>
     <form action="{% url 'admin:bulk_upload' %}" method="post" enctype="multipart/form-data">
