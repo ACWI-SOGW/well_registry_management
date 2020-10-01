@@ -1,0 +1,176 @@
+--- used for to insert data into registry_monitoringlocation table.  The "from" table is a temporary table with data exported from the GW_DATA_PORTAL.well_registry_stg Oracle table https://internal.cida.usgs.gov/jira/browse/NGWMN-1760
+--- ajmccart 10/1/2020
+/*
+For this process,
+1)	Export the current data from the table WELL_REGISTRY_STG on the GW_DATA_PORTA@DBTRANS Oracle schema. Save this as a .csv with a name such as ‘legacy_well_reg_stg_oct1.csv’.
+a.	When exporting, make sure that the “String Quoting” and “Number Quoting” selections are ‘Single Quote Strings’ and the delimiter = comma
+b.	Do not open this file in Excel – that can easily cut off leading zeros.
+2)	On the postgres side, go to the correct schema and “import data” .
+a.	Choose the .csv file you saved, make sure the “Quote char” option is a single quote
+b.	You should have the option to create a new table as you go through the import wizard
+3)	Copy the script below and paste into a SQL Editor window in that same database schema (on the postgres side).   Update the script so that the “from” table is now the name of your new table.  For example, change “registry.legacy_well_reg_stg_oct1” to new table name.
+4)	Run the script and verify that the correct number of rows have been inserted.
+*/
+
+insert into registry.registry_monitoringlocation (
+agency_cd,
+alt_acy,
+altitude_datum_cd,
+alt_method,
+altitude_units,
+alt_va,
+aqfr_char,
+country_cd,
+county_id,
+dec_lat_va,
+dec_long_va,
+display_flag,
+horz_acy,
+horizontal_datum_cd,
+horz_method,
+insert_date,
+insert_user_id,
+--id,
+link,
+local_aquifer_name,
+nat_aqfr_cd,
+qw_baseline_flag,
+qw_sn_flag,
+qw_sys_name,
+qw_well_chars,
+qw_well_purpose,
+qw_well_purpose_notes,
+qw_well_type,
+site_name,
+site_no,
+site_type,
+state_id,
+update_date,
+update_user_id,
+well_depth,
+well_depth_units,
+wl_baseline_flag,
+wl_sn_flag,
+wl_sys_name,
+wl_well_chars,
+wl_well_purpose,
+wl_well_purpose_notes,
+wl_well_type)
+select
+	agency_cd,
+	alt_acy,
+	case when alt_datum_cd = '' then null
+	     else alt_datum_cd
+	end,
+	alt_method,
+	cast(alt_units as integer),
+	case
+		when alt_va = '' then null
+		else cast(alt_va as decimal)
+	end,
+	aqfr_char,
+	case when country_cd = '' then null
+	     else country_cd
+	end,
+	sc.county_id,
+	cast(dec_lat_va as decimal),
+	cast(dec_long_va as decimal),
+	case
+		when display_flag = '1' then 'true'::boolean
+		when display_flag = '0' then 'false'::boolean
+		else 'false'::boolean
+	end as display_flag_decode,
+	horz_acy,
+	horz_datum,
+	horz_method,
+	to_timestamp(insert_date, 'MM/DD/YYYY HH12:MI:SS PM'),
+	null,
+	--cast(pk_siteid as integer),
+	link,
+	local_aquifer_name,
+	nat_aquifer_cd,
+	case
+		when qw_baseline_flag = '1' then 'true'::boolean
+		when qw_baseline_flag = '0' then 'false'::boolean
+		else 'false'::boolean
+	end as qw_baseline_flag_decode,
+	case
+		when qw_sn_flag = '1' then 'true'::boolean
+		when qw_sn_flag = '0' then 'false'::boolean
+		else 'false'::boolean
+	end as qw_sn_flag_decode,
+	qw_sys_name,
+	case
+		when qw_well_chars = '1' then 'Background'
+		when qw_well_chars = '2' then 'Suspected/Anticipated Changes'
+		when qw_well_chars = '3' then 'Known Changes'
+		else qw_well_chars
+	end as qw_well_chars_decode,
+	case
+		when regexp_replace(qw_well_purpose, '\r|\n', '', 'g') = '1' then 'Dedicated Monitoring/Observation'
+		when regexp_replace(qw_well_purpose, '\r|\n', '', 'g') = '2' then 'Other'
+		else qw_well_purpose
+	end as qw_well_purpose_decode,
+	qw_well_purpose_notes,
+	case
+		when qw_well_type = '1' then 'Surveillance'
+		when qw_well_type = '2' then 'Trend'
+		when qw_well_type = '3' then 'Special'
+		else qw_well_type
+	end as qw_well_type_decode,
+	site_name,
+	site_no,
+	site_type,
+	sc.state_id,
+	case when update_date = '' then to_timestamp(insert_date, 'MM/DD/YYYY HH12:MI:SS PM')
+	     else to_timestamp(update_date, 'MM/DD/YYYY HH12:MI:SS PM')
+	end,
+	null,
+	case
+		when well_depth = '' then null
+		else cast(well_depth as decimal)
+	end,
+	case
+		when well_depth_units = '' then null
+		else cast(well_depth_units as integer)
+	end,
+	case
+		when wl_baseline_flag = '1' then 'true'::boolean
+		when wl_baseline_flag = '0' then 'false'::boolean
+		else 'false'::boolean
+	end as wl_baseline_flag_decode,
+	case
+		when wl_sn_flag = '1' then 'true'::boolean
+		when wl_sn_flag = '0' then 'false'::boolean
+		else 'false'::boolean
+	end as wl_sn_flag_decode,
+	wl_sys_name,
+	case
+		when wl_well_chars = '1' then 'Background'
+		when wl_well_chars = '2' then 'Suspected/Anticipated Changes'
+		when wl_well_chars = '3' then 'Known Changes'
+		else wl_well_chars
+	end,
+	case
+		when wl_well_purpose = '1' then 'Dedicated Monitoring/Observation'
+		when wl_well_purpose = '2' then 'Other'
+		else wl_well_purpose
+	end,
+	wl_well_purpose_notes,
+	case
+		when wl_well_type = '1' then 'Surveillance'
+		when wl_well_type = '2' then 'Trend'
+		when wl_well_type = '3' then 'Special'
+		else wl_well_type
+	end
+from
+registry.legacy_well_reg_stg_oct1 lr
+left outer join (
+    select state.id as state_id,
+	       state.state_cd,
+	       county.id as county_id,
+		   county.county_cd
+	from registry.state, registry.county
+	where state.id = county.state_id) sc
+on lr.state_cd = sc.state_cd
+and lr.county_cd = sc.county_cd;
