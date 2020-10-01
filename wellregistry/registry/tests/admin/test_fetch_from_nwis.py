@@ -28,7 +28,7 @@ class TestFetchFromNwisView(TestCase):
 
     def test_get_view(self):
         resp = self.client.get(self.FETCH_URL)
-        content = resp.content.decode("utf-8")
+        content = resp.content.decode('utf-8')
         self.assertIn('id_site_no', content)
         self.assertNotIn('id_overwrite', content)
 

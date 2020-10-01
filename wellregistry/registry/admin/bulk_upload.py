@@ -16,11 +16,13 @@ from django.views.generic import View
 from ..models import MonitoringLocation, AgencyLookup, AltitudeDatumLookup, HorizontalDatumLookup, NatAqfrLookup, \
     UnitsLookup, CountyLookup, StateLookup, CountryLookup
 
+
 def _get_lookup(model, field_name, value):
     qs = model.objects.filter(**({field_name: value}))
     if len(qs) == 0:
         return None
     return qs[0]
+
 
 def _get_state_lookup(country, state_name):
     if not country:
@@ -30,6 +32,7 @@ def _get_state_lookup(country, state_name):
         if len(qs) == 0:
             return None
         return qs[0]
+
 
 def _get_county_lookup(country, state, county_name):
     if not country or not state:
@@ -50,7 +53,7 @@ def _get_monitoring_location(row, user):
     :return: MonitoringLocation
     """
     if len(row) < 39:
-        raise ValidationError('Does not contain the correct number of columns', code='invalid file')
+        raise ValidationError({'file_error': 'Does not contain the correct number of columns'}, code='invalid file')
 
     local_aquifer_code = f' ({row[15]})' if row[15] else ''
     country = _get_lookup(CountryLookup, 'country_nm', row[16])
@@ -62,7 +65,7 @@ def _get_monitoring_location(row, user):
         site_name=row[2],
         dec_lat_va=Decimal(row[3]) if row[3] else None,
         dec_long_va=Decimal(row[4]) if row[4] else None,
-        horizontal_datum=_get_lookup(HorizontalDatumLookup, 'hdatum_cd',row[5]),
+        horizontal_datum=_get_lookup(HorizontalDatumLookup, 'hdatum_cd', row[5]),
         horz_method=row[6],
         horz_acy=row[7],
         alt_va=Decimal(row[8]) if row[8] else None,
@@ -133,12 +136,8 @@ class BulkUploadView(View):
             except ValidationError as error:
                 error_messages.append((row_index, error.message_dict))
         if len(error_messages) == 0:
-            try:
-                MonitoringLocation.objects.bulk_create(monitoring_locations)
-            except BaseException as error:
-                error_messages.append('Error when creating objects')
-            else:
-                return redirect(reverse('admin:registry_monitoringlocation_changelist'))
+            MonitoringLocation.objects.bulk_create(monitoring_locations)
+            return redirect(reverse('admin:registry_monitoringlocation_changelist'))
         context = {
             'form': self.form_class(),
             'errors': error_messages
