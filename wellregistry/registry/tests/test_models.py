@@ -4,8 +4,9 @@ from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from ..models import MonitoringLocation, AgencyLookup, CountyLookup, CountryLookup, HorizontalDatumLookup, StateLookup, \
-    UnitsLookup, AltitudeDatumLookup, NatAqfrLookup
+from ..models import MonitoringLocation, AgencyLookup, CountyLookup, CountryLookup, HorizontalDatumLookup, \
+    StateLookup, UnitsLookup, AltitudeDatumLookup, NatAqfrLookup
+
 
 class TestMonitoringLocationFullClean(TestCase):
     fixtures = ['test_agencies.json', 'test_countries.json', 'test_counties.json',
@@ -174,7 +175,6 @@ class TestMonitoringLocationFullClean(TestCase):
         with self.assertRaises(ValidationError):
             self.monitoring_location.full_clean()
 
-
     def test_valid_when_display_flag_true_and_qw_sn_flags_true(self):
         self.monitoring_location.display_flag = True
         self.monitoring_location.qw_sn_flag = True
@@ -184,7 +184,6 @@ class TestMonitoringLocationFullClean(TestCase):
             self.monitoring_location.full_clean()
         except ValidationError as errors:
             self.fail(f'monitoring_location should be valid. Found {errors.message_dict}')
-
 
     def test_invalid_when_display_flag_true_and_qw_sn_flag_true(self):
         self.monitoring_location.display_flag = True
@@ -201,7 +200,6 @@ class TestMonitoringLocationFullClean(TestCase):
 
         with self.assertRaises(ValidationError):
             self.monitoring_location.full_clean()
-
 
     def test_invalid_when_display_flag_true_and_qw_sn_flag_true_and_qw_baseline_true(self):
         self.monitoring_location.display_flag = True

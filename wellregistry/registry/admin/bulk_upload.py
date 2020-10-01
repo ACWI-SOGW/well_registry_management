@@ -27,21 +27,19 @@ def _get_lookup(model, field_name, value):
 def _get_state_lookup(country, state_name):
     if not country:
         return None
-    else:
-        qs = StateLookup.objects.filter(country_cd=country, state_nm=state_name)
-        if len(qs) == 0:
-            return None
-        return qs[0]
+    qs = StateLookup.objects.filter(country_cd=country, state_nm=state_name)
+    if len(qs) == 0:
+        return None
+    return qs[0]
 
 
 def _get_county_lookup(country, state, county_name):
     if not country or not state:
         return None
-    else:
-        qs = CountyLookup.objects.filter(county_nm=county_name, state_id=state, country_cd=country)
-        if len(qs) == 0:
-            return None
-        return qs[0]
+    qs = CountyLookup.objects.filter(county_nm=county_name, state_id=state, country_cd=country)
+    if len(qs) == 0:
+        return None
+    return qs[0]
 
 
 def _get_monitoring_location(row, user):
@@ -82,16 +80,16 @@ def _get_monitoring_location(row, user):
         well_depth_units=_get_lookup(UnitsLookup, 'unit_desc', row[20]),
         site_type=row[21],
         aqfr_type=row[22],
-        display_flag=True if row[23] == 'Yes' else False,
-        qw_sn_flag=True if row[24] == 'Yes' else False,
-        qw_baseline_flag=True if row[25] == 'Yes' else False,
+        display_flag=row[23] == 'Yes',
+        qw_sn_flag=row[24] == 'Yes',
+        qw_baseline_flag=row[25] == 'Yes',
         qw_well_chars=row[26],
         qw_well_type=row[27],
         qw_well_purpose=row[28],
         qw_well_purpose_notes=row[29],
         qw_network_name=row[30],
-        wl_sn_flag=True if row[31] == 'Yes' else False,
-        wl_baseline_flag=True if row[32] == 'Yes' else False,
+        wl_sn_flag=row[31] == 'Yes',
+        wl_baseline_flag=row[32] == 'Yes',
         wl_well_chars=row[33],
         wl_well_type=row[34],
         wl_well_purpose=row[35],
@@ -106,41 +104,58 @@ def _get_monitoring_location(row, user):
 
 
 class BulkUploadForm(Form):
+    """
+    Form containing a single file field
+    """
     file = FileField()
 
 
 class BulkUploadView(View):
+    """
+    Bulk upload view containing a single file field.
+    """
     form_class = BulkUploadForm
     template_name = 'admin/bulk_upload.html'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
+        """
+        Overrides View's get method, adding the form
+        """
         context = {
             'form': self.form_class()
         }
         context.update(dict(admin.site.each_context(self.request)))
         return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
-        csv_file = request.FILES['file']
-        data_set = csv_file.read().decode('UTF-8')
-        data_stream = io.StringIO(data_set)
-        # Skip header
-        next(data_stream)
-        monitoring_locations = []
-        error_messages = []
-        row_index = 1
-        for row in csv.reader(data_stream):
-            row_index = row_index + 1
-            try:
-                monitoring_locations.append(_get_monitoring_location(row, request.user))
-            except ValidationError as error:
-                error_messages.append((row_index, error.message_dict))
-        if len(error_messages) == 0:
-            MonitoringLocation.objects.bulk_create(monitoring_locations)
-            return redirect(reverse('admin:registry_monitoringlocation_changelist'))
+    def post(self, request):
+        """
+        Overrides View''s post method, processing the file and displaying the errrors
+        if any. Successful validation redirect back to the monitoring location
+        """
         context = {
-            'form': self.form_class(),
-            'errors': error_messages
+            'form': self.form_class()
         }
+        if 'file' in request.FILES:
+            csv_file = request.FILES['file']
+            data_set = csv_file.read().decode('UTF-8')
+            data_stream = io.StringIO(data_set)
+            # Skip header
+            next(data_stream)
+            monitoring_locations = []
+            error_messages = []
+            row_index = 1
+            for row in csv.reader(data_stream):
+                row_index = row_index + 1
+                try:
+                    monitoring_locations.append(_get_monitoring_location(row, request.user))
+                except ValidationError as error:
+                    error_messages.append((row_index, error.message_dict))
+            if len(error_messages) == 0:
+                MonitoringLocation.objects.bulk_create(monitoring_locations)
+                return redirect(reverse('admin:registry_monitoringlocation_changelist'))
+            context['errors'] = error_messages
+        else:
+            context['file_error'] = 'Please select a file to upload'
+
         context.update(dict(admin.site.each_context(self.request)))
         return render(request, self.template_name, context)
