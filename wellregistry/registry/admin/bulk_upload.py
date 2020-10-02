@@ -145,7 +145,7 @@ class BulkUploadView(View):
             error_messages = []
             row_index = 1
             for row in csv.reader(data_stream):
-                row_index = row_index + 1
+                row_index += 1
                 try:
                     monitoring_locations.append(_get_monitoring_location(row, request.user))
                 except ValidationError as error:
