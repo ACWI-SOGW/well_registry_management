@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added USWDS and added NGWMN visual identification to all pages.
 -   Added validations to fields in monitoring location form
 -   Added a fetch_from_nwis view to the admin to allow site meta data to be fetched from NWIS.
+-   Added bulk upload view to the admin to allow multiple sites data to be initialized from a csv file.
 -   Added the insert_user and update_user to the monitoring location rest endpoint
 
 ### Changed
