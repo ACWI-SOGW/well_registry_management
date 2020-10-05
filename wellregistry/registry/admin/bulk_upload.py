@@ -164,8 +164,14 @@ class BulkUploadView(View):
 
 
 class BulkUploadTemplateView(View):
+    """
+    View to serve the bulk upload template
+    """
 
     def get(self, request):
+        """
+        Overides View's get procedure
+        """
         with open(settings.BULK_UPLOAD_TEMPLATE_PATH, 'rb') as excel:
             data = excel.read()
         response = HttpResponse(data, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
