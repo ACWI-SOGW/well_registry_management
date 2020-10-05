@@ -8,7 +8,7 @@ from django.urls import path
 
 
 from ..models import MonitoringLocation, AgencyLookup
-from .bulk_upload import BulkUploadView
+from .bulk_upload import BulkUploadView, BulkUploadTemplateView
 from .fetch_from_nwis import FetchFromNwisView
 
 
@@ -63,11 +63,13 @@ class MonitoringLocationAdmin(ModelAdmin):
 
     def get_urls(self):
         urls = super().get_urls()
-        nwis_fetch_url = [
+        custom_urls = [
             path('bulk_upload/', self.admin_site.admin_view(BulkUploadView.as_view()), name='bulk_upload'),
+            path('bulk_upload_template/', self.admin_site.admin_view(BulkUploadTemplateView.as_view()),
+                 name='bulk_upload_template'),
             path('fetch_from_nwis/', self.admin_site.admin_view(FetchFromNwisView.as_view()), name='fetch_from_nwis')
         ]
-        return nwis_fetch_url + urls
+        return custom_urls + urls
 
     def save_model(self, request, obj, form, change):
         if not obj.insert_user:
