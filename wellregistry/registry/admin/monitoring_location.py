@@ -29,6 +29,8 @@ class MonitoringLocationAdminForm(ModelForm):
     """
     Registry admin form.
     """
+
+    # pylint: disable=E1101
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.user.is_superuser:
@@ -83,8 +85,8 @@ class MonitoringLocationAdmin(ModelAdmin):
         ]
         return custom_urls + urls
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, change, **kwargs)
         form.user = request.user
         return form
 
