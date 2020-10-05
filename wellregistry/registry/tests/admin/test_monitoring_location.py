@@ -8,7 +8,7 @@ from django.http import HttpRequest
 from django.test import Client, TestCase
 
 from ...admin.monitoring_location import MonitoringLocationAdmin
-from ...models import MonitoringLocation, AgencyLookup
+from ...models import MonitoringLocation
 
 
 class TestMonitoringLocationAdmin(TestCase):
@@ -56,46 +56,20 @@ class TestMonitoringLocationAdmin(TestCase):
 
         self.assertEqual(site_id, "ADWR:44445555")
 
-    def test_save_model_new_monitoring_location_with_adwr_user(self):
-        request = HttpRequest()
-        request.user = self.adwr_user
-        monitoring_location = MonitoringLocation.objects.create(site_no='11111111',
-                                                                agency=AgencyLookup.objects.get(agency_cd='ADWR'))
-        self.admin.save_model(request, monitoring_location, None, None)
+    def test_add_monitoring_location_with_adwr_user(self):
+        client = Client()
+        client.force_login(self.adwr_user)
+        resp = client.get('/registry/admin/registry/monitoringlocation/add/')
 
-        saved_monitoring_location = MonitoringLocation.objects.get(site_no='11111111')
-        self.assertEqual(saved_monitoring_location.insert_user, self.adwr_user)
-        self.assertEqual(saved_monitoring_location.update_user, self.adwr_user)
-        self.assertEqual(saved_monitoring_location.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
+        self.assertIn('<input type="hidden" name="agency" value="4" id="id_agency">', resp.content.decode())
 
-    def test_save_model_new_monitoring_location_with_super_user(self):
-        request = HttpRequest()
-        request.user = self.superuser
-        monitoring_location = MonitoringLocation.objects.create(site_no='11111111',
-                                                                agency=AgencyLookup.objects.get(agency_cd='ADWR'))
-        self.admin.save_model(request, monitoring_location, None, None)
+    def test_add_monitoring_location_with_superuser(self):
+        client = Client()
 
-        saved_monitoring_location = MonitoringLocation.objects.get(site_no='11111111')
-        self.assertEqual(saved_monitoring_location.insert_user, self.superuser)
-        self.assertEqual(saved_monitoring_location.update_user, self.superuser)
-        self.assertEqual(saved_monitoring_location.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
+        client.force_login(self.superuser)
+        resp = client.get('/registry/admin/registry/monitoringlocation/add/')
 
-    def test_save_model_existing_monitoring_location_with_adwr_user(self):
-        request = HttpRequest()
-        request.user = self.superuser
-        monitoring_location = MonitoringLocation.objects.create(site_no='11111111',
-                                                                agency=AgencyLookup.objects.get(agency_cd='ADWR'))
-        self.admin.save_model(request, monitoring_location, None, None)
-
-        saved_monitoring_location = MonitoringLocation.objects.get(site_no='11111111')
-        saved_monitoring_location.site_name = 'A site'
-        request.user = self.adwr_user
-        self.admin.save_model(request, saved_monitoring_location, None, None)
-        saved_monitoring_location = MonitoringLocation.objects.get(site_no='11111111')
-
-        self.assertEqual(saved_monitoring_location.insert_user, self.superuser)
-        self.assertEqual(saved_monitoring_location.update_user, self.adwr_user)
-        self.assertEqual(saved_monitoring_location.agency, AgencyLookup.objects.get(agency_cd='ADWR'))
+        self.assertIn('<select name="agency" required id="id_agency">', resp.content.decode())
 
     def test_get_queryset_with_superuser(self):
         request = HttpRequest()

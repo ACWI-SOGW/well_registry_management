@@ -3,7 +3,7 @@ MonitoringLocation Admin
 """
 from django.contrib.admin import ModelAdmin, RelatedFieldListFilter
 from django.db.models.functions import Upper
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, Textarea, ModelChoiceField, HiddenInput
 from django.urls import path
 
 
@@ -29,6 +29,18 @@ class MonitoringLocationAdminForm(ModelForm):
     """
     Registry admin form.
     """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.user.is_superuser:
+            super().__init__(*args, **kwargs)
+        else:
+            super().__init__(*args, **kwargs)
+            agency_field = ModelChoiceField(queryset=AgencyLookup.objects.all(),
+                                            widget=HiddenInput,
+                                            initial=AgencyLookup.objects.get(agency_cd=_get_groups(self.user)[0]))
+            self.fields['agency'] = agency_field
+
+
     class Meta:
         model = MonitoringLocation
         widgets = {
@@ -69,19 +81,24 @@ class MonitoringLocationAdmin(ModelAdmin):
         ]
         return nwis_fetch_url + urls
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.user = request.user
+        return form
+
     def save_model(self, request, obj, form, change):
         if not obj.insert_user:
             obj.insert_user = request.user
         obj.update_user = request.user
 
-        if not obj.agency and not request.user.is_superuser:
-            obj.agency = AgencyLookup.objects.get(agency_cd=_get_groups(request.user)[0])
+#        if not obj.agency and not request.user.is_superuser:
+#            obj.agency = AgencyLookup.objects.get(agency_cd=_get_groups(request.user)[0])
 
         super().save_model(request, obj, form, change)
 
-    def get_readonly_fields(self, request, obj=None):
-        """Overrides default implementation"""
-        return ('agency',) if not request.user.is_superuser else ()
+    #def get_readonly_fields(self, request, obj=None):
+    #    """Overrides default implementation"""
+    #    return ('agency',) if not request.user.is_superuser else ()
 
     def get_queryset(self, request):
         """Overrides default implementation"""
