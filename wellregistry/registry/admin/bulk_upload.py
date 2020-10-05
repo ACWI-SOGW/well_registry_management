@@ -6,9 +6,11 @@ import csv
 from decimal import Decimal
 import io
 
+from django.conf import settings
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.forms import Form, FileField
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import View
@@ -159,3 +161,19 @@ class BulkUploadView(View):
 
         context.update(dict(admin.site.each_context(self.request)))
         return render(request, self.template_name, context)
+
+
+class BulkUploadTemplateView(View):
+    """
+    View to serve the bulk upload template
+    """
+
+    def get(self, request):
+        """
+        Overides View's get procedure
+        """
+        with open(settings.BULK_UPLOAD_TEMPLATE_PATH, 'rb') as excel:
+            data = excel.read()
+        response = HttpResponse(data, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=well_registry_bulk_update_template.xlsx'
+        return response

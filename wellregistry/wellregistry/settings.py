@@ -250,6 +250,8 @@ STATICFILES_DIRS = [
     ('uswds', os.path.join(BASE_DIR, 'node_modules/uswds/dist'))
 ]
 STATIC_URL = '/registry/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "wellregistry/staticfiles")
+STATIC_ROOT = os.path.join(BASE_DIR, 'wellregistry/staticfiles')
 
 NWIS_SITE_SERVICE_ENDPOINT = 'https://waterservices.usgs.gov/nwis/site'
+
+BULK_UPLOAD_TEMPLATE_PATH = os.path.join(BASE_DIR, 'registry/data/Well_Registry_Bulk_Upload_Template.xlsx')
