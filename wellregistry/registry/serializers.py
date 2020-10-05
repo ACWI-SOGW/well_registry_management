@@ -64,7 +64,9 @@ class MonitoringLocationSerializer(ModelSerializer):
     altitude_units = StringRelatedField()
     well_depth_units = StringRelatedField()
     nat_aqfr = NatAqfrLookupSerializer()
+    insert_user = StringRelatedField()
+    update_user = StringRelatedField()
 
     class Meta:
         model = MonitoringLocation
-        exclude = ['insert_user', 'update_user']
+        fields = '__all__'
