@@ -90,3 +90,15 @@ Michigan Groundwater Network,http://www.dgs.udel.edu/data'
 
         self.assertEqual(resp.status_code, 200)
         self.assertIn('class="errorlist"', resp.content.decode())
+
+
+class TestBulkUploadTemplateView(TestCase):
+
+    def test_get_template(self):
+        client = Client()
+        user = get_user_model().objects.create(username='testuser', password='12345', is_staff=True, is_superuser=True)
+        client.force_login(user)
+        response = client.get('/registry/admin/registry/monitoringlocation/bulk_upload_template/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
