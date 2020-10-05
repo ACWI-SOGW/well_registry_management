@@ -139,7 +139,7 @@ This connection will allow maintenance of all registry entries in support of use
 APP_ADMIN_USERNAME: user name for the connection used by the registry administration
 APP_ADMIN_PASSWORD: administration login password
 ```
-This connecton is the standard or default application user connection. It has limited table CRUD roles.
+This connection is the standard or default application user connection. It has limited table CRUD roles.
 ```bash
 APP_CLIENT_USERNAME: user name for the connection used by the registry users
 APP_CLIENT_PASSWORD: user level login password
