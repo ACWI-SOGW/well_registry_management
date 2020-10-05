@@ -42,7 +42,6 @@ class MonitoringLocationAdminForm(ModelForm):
                                             initial=AgencyLookup.objects.get(agency_cd=_get_groups(self.user)[0]))
             self.fields['agency'] = agency_field
 
-
     class Meta:
         model = MonitoringLocation
         widgets = {
@@ -94,15 +93,7 @@ class MonitoringLocationAdmin(ModelAdmin):
         if not obj.insert_user:
             obj.insert_user = request.user
         obj.update_user = request.user
-
-#        if not obj.agency and not request.user.is_superuser:
-#            obj.agency = AgencyLookup.objects.get(agency_cd=_get_groups(request.user)[0])
-
         super().save_model(request, obj, form, change)
-
-    #def get_readonly_fields(self, request, obj=None):
-    #    """Overrides default implementation"""
-    #    return ('agency',) if not request.user.is_superuser else ()
 
     def get_queryset(self, request):
         """Overrides default implementation"""
