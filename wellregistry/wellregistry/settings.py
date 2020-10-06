@@ -252,6 +252,12 @@ STATICFILES_DIRS = [
 STATIC_URL = '/registry/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'wellregistry/staticfiles')
 
+# Rest framework configuration
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 1024
+}
+
 NWIS_SITE_SERVICE_ENDPOINT = 'https://waterservices.usgs.gov/nwis/site'
 
 BULK_UPLOAD_TEMPLATE_PATH = os.path.join(BASE_DIR, 'registry/data/Well_Registry_Bulk_Upload_Template.xlsx')
