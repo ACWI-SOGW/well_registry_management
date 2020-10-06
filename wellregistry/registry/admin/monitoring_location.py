@@ -33,10 +33,7 @@ class MonitoringLocationAdminForm(ModelForm):
     # pylint: disable=E1101
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.user.is_superuser:
-            super().__init__(*args, **kwargs)
-        else:
-            super().__init__(*args, **kwargs)
+        if not self.user.is_superuser:
             agency_field = ModelChoiceField(queryset=AgencyLookup.objects.all(),
                                             widget=HiddenInput,
                                             initial=AgencyLookup.objects.get(agency_cd=_get_groups(self.user)[0]))
