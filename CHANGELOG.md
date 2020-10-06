@@ -31,3 +31,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 -   Using whitenoise to serve out the staticfiles when using gunicorn to run the server. Added collectstaticfiles to the Dockerfile.
+-   Rather than assigning agency code when saving a monitoring location in the admin, create a custom form which assigns the agency code if the user is a not a superuser.
