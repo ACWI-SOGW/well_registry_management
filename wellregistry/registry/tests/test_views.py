@@ -29,24 +29,24 @@ class TestMonitoringLocationsListView(TestCase):
         resp = MonitoringLocationsListView.as_view()(req)
 
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(len(resp.data), 3)
+        self.assertEqual(len(resp.data['results']), 3)
 
     def test_display_flag_true_monitoring_locations(self):
         req = self.factory.get('/registry/monitoring-locations/?format=json&display_flag=true')
         resp = MonitoringLocationsListView.as_view()(req)
 
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(len(resp.data), 1)
-        self.assertEqual(resp.data[0]['site_no'], '11112222')
+        self.assertEqual(len(resp.data['results']), 1)
+        self.assertEqual(resp.data['results'][0]['site_no'], '11112222')
 
     def test_display_flag_false_monitoring_locations(self):
         req = self.factory.get('/registry/monitoring-locations/?format=json&display_flag=false')
         resp = MonitoringLocationsListView.as_view()(req)
 
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(len(resp.data), 2)
-        self.assertIn(resp.data[0]['site_no'], ['12345678', '44445555'])
-        self.assertIn(resp.data[1]['site_no'], ['12345678', '44445555'])
+        self.assertEqual(len(resp.data['results']), 2)
+        self.assertIn(resp.data['results'][0]['site_no'], ['12345678', '44445555'])
+        self.assertIn(resp.data['results'][1]['site_no'], ['12345678', '44445555'])
 
 
 class TestStatusCheck(TestCase):
