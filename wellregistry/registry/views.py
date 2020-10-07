@@ -36,6 +36,9 @@ class MonitoringLocationsListView(ListAPIView):  # pylint: disable=too-few-publi
     REST API for monitoring locations
     """
     serializer_class = MonitoringLocationSerializer
-    queryset = MonitoringLocation.objects.all()
+    queryset = MonitoringLocation.objects.all().select_related('agency', 'country', 'state', 'county',
+                                                                 'horizontal_datum', 'altitude_units',
+                                                                 'altitude_datum', 'well_depth_units',
+                                                                 'nat_aqfr', 'insert_user', 'update_user')
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['display_flag']
