@@ -252,6 +252,8 @@ STATICFILES_DIRS = [
 STATIC_URL = '/registry/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'wellregistry/staticfiles')
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Rest framework configuration
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
