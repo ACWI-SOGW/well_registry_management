@@ -10,7 +10,7 @@ from django.forms import ModelForm, Textarea, ModelChoiceField, HiddenInput
 from django.http import HttpResponse
 from django.urls import path
 
-from ..models import MonitoringLocation, AgencyLookup, CountryLookup, CountyLookup, StateLookup
+from ..models import MonitoringLocation, AgencyLookup
 from .bulk_upload import BulkUploadView, BulkUploadTemplateView
 from .fetch_from_nwis import FetchFromNwisView
 
@@ -103,10 +103,18 @@ CSV_HEADERS = [
 
 
 def to_yes_no(flag):
+    """
+    Return true if yes, otherwise no
+    """
     return 'Yes' if flag else 'No'
 
 
 def get_row(monitoring_location):
+    """
+    Return a list of field values suitable for creating a download csv row.
+    :param monitoring_location:
+    :return: list
+    """
     return [
         monitoring_location.agency,
         monitoring_location.site_no,
@@ -205,8 +213,8 @@ class MonitoringLocationAdmin(ModelAdmin):
 
         writer = csv.writer(response)
         writer.writerow(CSV_HEADERS)
-        for ml in queryset.iterator():
-            writer.writerow(get_row(ml))
+        for monitoring_location in queryset.iterator():
+            writer.writerow(get_row(monitoring_location))
 
         self.message_user(request, f'Downloaded {queryset.count()} monitoring locations', messages.SUCCESS)
         return response
