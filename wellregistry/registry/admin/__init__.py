@@ -3,8 +3,8 @@ Django Registry Administration.
 """
 from django.contrib import admin
 
-from .monitoring_location import MonitoringLocationAdmin
 from ..models import MonitoringLocation
+from .monitoring_location import MonitoringLocationAdmin
 
 admin.site.site_header = 'NGWMN Well Registry Administration'
 admin.site.login_template = 'registration/login.html'
