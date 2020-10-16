@@ -4,6 +4,7 @@ Tests for admin.monitoring_location module
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
+from django.contrib.messages.storage.fallback import FallbackStorage
 from django.http import HttpRequest
 from django.test import Client, TestCase
 
@@ -12,7 +13,10 @@ from ...models import MonitoringLocation
 
 
 class TestMonitoringLocationAdmin(TestCase):
-    fixtures = ['test_groups.json', 'test_user.json', 'test_agencies.json', 'test_monitoring_location.json']
+    fixtures = ['test_groups.json', 'test_altitude_datum.json', 'test_counties.json',
+                'test_countries.json', 'test_horizontal_datum.json', 'test_nat_aquifer.json',
+                'test_states.json', 'test_units.json','test_user.json', 'test_agencies.json',
+                'test_monitoring_location.json']
 
     def setUp(self):
         self.superuser = get_user_model().objects.create_superuser('my_superuser')
@@ -70,6 +74,16 @@ class TestMonitoringLocationAdmin(TestCase):
         resp = client.get('/registry/admin/registry/monitoringlocation/add/')
 
         self.assertIn('<select name="agency" required id="id_agency">', resp.content.decode())
+
+    def test_download_monitoring_locations(self):
+        request = HttpRequest()
+        setattr(request, 'session', 'session')
+        setattr(request, '_messages', FallbackStorage(request))
+        response = self.admin.download_monitoring_locations(request, MonitoringLocation.objects.all())
+
+        self.assertEqual(response.status_code, 200)
+        resp_lines = response.content.split(b'\n')
+        self.assertEqual(len(resp_lines), 5)
 
     def test_get_queryset_with_superuser(self):
         request = HttpRequest()

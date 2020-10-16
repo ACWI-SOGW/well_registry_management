@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added bulk upload view to the admin to allow multiple sites data to be initialized from a csv file.
 -   Added the insert_user and update_user to the monitoring location rest endpoint
 -   Added pagination to the rest endpoint.
+-   Added the ability to download selected monitoring locations.
 
 ### Changed
 -   Modified the Registry model to more closely resemble the editable fields in the Apex Well Registry application. Also added choices to some of the fields to match the Apex well registry.

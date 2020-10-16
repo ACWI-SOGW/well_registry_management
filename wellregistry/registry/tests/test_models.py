@@ -1,4 +1,6 @@
-
+"""
+Tests for registry.models
+"""
 from decimal import Decimal
 
 from django.core.exceptions import ValidationError
