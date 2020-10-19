@@ -5,7 +5,8 @@ Serializers for the REST API
 
 from rest_framework.serializers import ModelSerializer, StringRelatedField
 
-from .models import AgencyLookup, CountryLookup, CountyLookup, NatAqfrLookup, MonitoringLocation, StateLookup
+from .models import AgencyLookup, CountryLookup, CountyLookup, NatAqfrLookup, MonitoringLocation, StateLookup, \
+    UnitsLookup
 
 
 class AgencyLookupSerializer(ModelSerializer):
@@ -24,6 +25,15 @@ class NatAqfrLookupSerializer(ModelSerializer):
     class Meta:
         model = NatAqfrLookup
         exclude = ['id']
+
+
+class UnitsLookupSerializer(ModelSerializer):
+    """
+    Serializer for UnitsLookup
+    """
+    class Meta:
+        model = UnitsLookup
+        fields = ['unit_id', 'unit_desc']
 
 
 class CountryLookupSerializer(ModelSerializer):
@@ -61,8 +71,8 @@ class MonitoringLocationSerializer(ModelSerializer):
     country = CountryLookupSerializer()
     state = StateLookupSerializer()
     county = CountyLookupSerializer()
-    altitude_units = StringRelatedField()
-    well_depth_units = StringRelatedField()
+    altitude_units = UnitsLookupSerializer()
+    well_depth_units = UnitsLookupSerializer()
     nat_aqfr = NatAqfrLookupSerializer()
     insert_user = StringRelatedField()
     update_user = StringRelatedField()
