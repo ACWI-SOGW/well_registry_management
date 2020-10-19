@@ -6,7 +6,7 @@ import csv
 from django.contrib import messages
 from django.contrib.admin import ModelAdmin, RelatedFieldListFilter
 from django.db.models.functions import Upper
-from django.forms import ModelForm, Textarea, ModelChoiceField, HiddenInput
+from django.forms import ModelForm, Textarea, ModelChoiceField, HiddenInput, TextInput, Select
 from django.http import HttpResponse
 from django.urls import path
 
@@ -36,7 +36,7 @@ class MonitoringLocationAdminForm(ModelForm):
     # pylint: disable=E1101
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not self.user.is_superuser:
+        if not self.user.is_superuser and not self.instance.agency:
             agency_field = ModelChoiceField(queryset=AgencyLookup.objects.all(),
                                             widget=HiddenInput,
                                             initial=AgencyLookup.objects.get(agency_cd=_get_groups(self.user)[0]))
@@ -189,6 +189,12 @@ class MonitoringLocationAdmin(ModelAdmin):
         form = super().get_form(request, obj, change, **kwargs)
         form.user = request.user
         return form
+
+    #def get_readonly_fields(self, request, obj=None):
+    #    fields = []
+    #    if not request.user.is_superuser:
+    #        fields.append('agency')
+    #    return fields
 
     def save_model(self, request, obj, form, change):
         if not obj.insert_user:
