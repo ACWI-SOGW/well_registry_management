@@ -14,6 +14,7 @@ from ..models import MonitoringLocation, AgencyLookup
 from .bulk_upload import BulkUploadView, BulkUploadTemplateView
 from .fetch_from_nwis import FetchFromNwisView
 
+USGS_AGENCY_CD = 'USGS'
 
 def _get_groups(user):
     """Return a list of upper case groups that this user belongs to"""
@@ -36,10 +37,10 @@ class MonitoringLocationAdminForm(ModelForm):
     # pylint: disable=E1101
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not self.user.is_superuser and not self.instance.agency:
-            agency_field = ModelChoiceField(queryset=AgencyLookup.objects.all(),
-                                            widget=HiddenInput,
-                                            initial=AgencyLookup.objects.get(agency_cd=_get_groups(self.user)[0]))
+        if not self.user.is_superuser:
+            user_group = _get_groups(self.user)[0]
+            agency_field = ModelChoiceField(queryset=AgencyLookup.objects.filter(agency_cd=user_group),
+                                            initial=user_group)
             self.fields['agency'] = agency_field
 
     class Meta:
@@ -169,11 +170,21 @@ class MonitoringLocationAdmin(ModelAdmin):
 
     actions = ['download_monitoring_locations']
 
+    fields = ['display_flag', 'agency', 'site_no', 'site_name', 'country', 'state', 'county', 'dec_lat_va',
+              'dec_long_va', 'horizontal_datum', 'horz_method', 'horz_acy', 'alt_va', 'altitude_units',
+              'altitude_datum', 'alt_method', 'alt_acy', 'well_depth', 'well_depth_units', 'nat_aqfr',
+              'local_aquifer_name', 'site_type', 'aqfr_type', 'wl_sn_flag', 'wl_network_name', 'wl_baseline_flag',
+              'wl_well_type', 'wl_well_chars', 'wl_well_purpose', 'wl_well_purpose_notes', 'qw_sn_flag',
+              'qw_network_name', 'qw_baseline_flag', 'qw_well_type', 'qw_well_chars', 'qw_well_purpose',
+              'qw_well_purpose_notes', 'link'
+              ]
+
     @staticmethod
     def site_id(obj):
         """Constructs a site id from agency code and site number."""
         # The obj field agency_cd is the AgencyLovLookup model, retrieve agency_cd from the model
         return f"{obj.agency.agency_cd}:{obj.site_no}"
+
 
     def get_urls(self):
         urls = super().get_urls()
@@ -190,11 +201,14 @@ class MonitoringLocationAdmin(ModelAdmin):
         form.user = request.user
         return form
 
-    #def get_readonly_fields(self, request, obj=None):
-    #    fields = []
-    #    if not request.user.is_superuser:
-    #        fields.append('agency')
-    #    return fields
+    def get_readonly_fields(self, request, obj=None):
+        fields = []
+        if obj and obj.agency.agency_cd == USGS_AGENCY_CD:
+            fields = ['site_no', 'site_name', 'country', 'state', 'county', 'dec_lat_va', 'dec_long_va',
+                      'horizontal_datum', 'horz_method', 'horz_acy', 'alt_va', 'altitude_units',
+                      'altitude_datum', 'alt_method', 'alt_acy', 'well_depth', 'well_depth_units', 'nat_aqfr',
+                      'local_aquifer_name', 'site_type', 'aqfr_type']
+        return fields
 
     def save_model(self, request, obj, form, change):
         if not obj.insert_user:
@@ -242,8 +256,3 @@ class MonitoringLocationAdmin(ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         """Overrides default implementation"""
         return _has_permission('registry.delete_monitoringlocation', request.user, obj)
-
-    def changelist_view(self, request, extra_context=None):
-        extra_context = extra_context or {}
-        extra_context['show_fetch_from_nwis_view'] = request.user.is_superuser or 'USGS' in _get_groups(request.user)
-        return super().changelist_view(request, extra_context=extra_context)
