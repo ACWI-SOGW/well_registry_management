@@ -2,7 +2,7 @@
 
 {% block object-tools-items %}
     {% if has_add_permission %}
-        {% if not request.user|is_in_group:'usgs' %}
+        {% if not request.user|is_in_group:'usgs' or request.user.is_superuser %}
             <li class="margin-bottom-2">
                 {% url cl.opts|admin_urlname:'add' as add_url %}
                 <a href="{% add_preserved_filters add_url is_popup to_field %}" class="addlink">
@@ -12,7 +12,8 @@
             <li>
                 <a href="{% url 'admin:bulk_upload' %}">Bulk Upload</a>
             </li>
-        {% else %}
+        {% endif %}
+        {% if request.user|is_in_group:'usgs' or request.user.is_superuser %}
             <li>
                 <a href="{% url 'admin:fetch_from_nwis' %}">Fetch ML from NWIS</a>
             </li>
