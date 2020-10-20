@@ -6,7 +6,7 @@ import csv
 from django.contrib import messages
 from django.contrib.admin import ModelAdmin, RelatedFieldListFilter
 from django.db.models.functions import Upper
-from django.forms import ModelForm, Textarea, ModelChoiceField, HiddenInput, TextInput, Select
+from django.forms import ModelForm, Textarea, ModelChoiceField
 from django.http import HttpResponse
 from django.urls import path
 
@@ -15,6 +15,7 @@ from .bulk_upload import BulkUploadView, BulkUploadTemplateView
 from .fetch_from_nwis import FetchFromNwisView
 
 USGS_AGENCY_CD = 'USGS'
+
 
 def _get_groups(user):
     """Return a list of upper case groups that this user belongs to"""
@@ -184,7 +185,6 @@ class MonitoringLocationAdmin(ModelAdmin):
         """Constructs a site id from agency code and site number."""
         # The obj field agency_cd is the AgencyLovLookup model, retrieve agency_cd from the model
         return f"{obj.agency.agency_cd}:{obj.site_no}"
-
 
     def get_urls(self):
         urls = super().get_urls()

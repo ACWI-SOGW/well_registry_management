@@ -8,6 +8,7 @@ from django.test import TestCase
 
 from ..templatetags.group_filters import is_in_group
 
+
 class TestIsInGroup(TestCase):
     fixtures = ['test_groups.json', 'test_user.json']
 
@@ -25,10 +26,10 @@ class TestIsInGroup(TestCase):
         self.usgs_user.is_staff = True
         self.usgs_user.save()
 
-    def testUserInGroup(self):
+    def test_user_in_group(self):
         self.assertTrue(is_in_group(self.usgs_user, 'usgs'))
         self.assertTrue(is_in_group(self.adwr_user, 'adwr'))
 
-    def testUserNotInGroup(self):
+    def test_user_not_in_group(self):
         self.assertFalse(is_in_group(self.usgs_user, 'adwr'))
         self.assertFalse(is_in_group(self.adwr_user, 'usgs'))

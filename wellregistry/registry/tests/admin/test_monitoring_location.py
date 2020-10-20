@@ -15,7 +15,7 @@ from ...models import MonitoringLocation
 class TestMonitoringLocationAdmin(TestCase):
     fixtures = ['test_groups.json', 'test_altitude_datum.json', 'test_counties.json',
                 'test_countries.json', 'test_horizontal_datum.json', 'test_nat_aquifer.json',
-                'test_states.json', 'test_units.json','test_user.json', 'test_agencies.json',
+                'test_states.json', 'test_units.json', 'test_user.json', 'test_agencies.json',
                 'test_monitoring_location.json']
 
     def setUp(self):
@@ -149,7 +149,6 @@ class TestMonitoringLocationAdmin(TestCase):
         self.assertIn(b'Fetch ML from NWIS', resp.content)
         self.assertNotIn(b'Add monitoring location', resp.content)
         self.assertNotIn(b'Bulk Upload', resp.content)
-
 
     def test_changelist_view_with_adwr_user(self):
         client = Client()
