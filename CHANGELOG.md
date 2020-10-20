@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Using django-smart-selects to have chaining selects for state and county pick lists.
 -   Removed initialization of lookups from migrations and instead added a command to do this. This command will be run following migrations and will update any information that exists. This is also where the agency groups are created.
 -   Added a model serializer for UnitsLookup and send both id and description.
+-   Line in sand for Django migrations, put all registry table changes into one migration.
 
 ### Fixed
 -   Using whitenoise to serve out the staticfiles when using gunicorn to run the server. Added collectstaticfiles to the Dockerfile.
