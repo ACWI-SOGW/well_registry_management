@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Removed initialization of lookups from migrations and instead added a command to do this. This command will be run following migrations and will update any information that exists. This is also where the agency groups are created.
 -   Added a model serializer for UnitsLookup and send both id and description.
 -   Line in sand for Django migrations, put all registry table changes into one migration.
+-   For USGS users, only allow changes to be made to fields not filled in by NWIS metadata
+-   Only allow Bulk Upload and Add Monitoring Location for non USGS users.
 
 ### Fixed
 -   Using whitenoise to serve out the staticfiles when using gunicorn to run the server. Added collectstaticfiles to the Dockerfile.

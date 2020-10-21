@@ -15,7 +15,7 @@ from ...models import MonitoringLocation
 class TestMonitoringLocationAdmin(TestCase):
     fixtures = ['test_groups.json', 'test_altitude_datum.json', 'test_counties.json',
                 'test_countries.json', 'test_horizontal_datum.json', 'test_nat_aquifer.json',
-                'test_states.json', 'test_units.json','test_user.json', 'test_agencies.json',
+                'test_states.json', 'test_units.json', 'test_user.json', 'test_agencies.json',
                 'test_monitoring_location.json']
 
     def setUp(self):
@@ -59,21 +59,6 @@ class TestMonitoringLocationAdmin(TestCase):
         site_id = MonitoringLocationAdmin.site_id(reg_entry)
 
         self.assertEqual(site_id, "ADWR:44445555")
-
-    def test_add_monitoring_location_with_adwr_user(self):
-        client = Client()
-        client.force_login(self.adwr_user)
-        resp = client.get('/registry/admin/registry/monitoringlocation/add/')
-
-        self.assertIn('<input type="hidden" name="agency" value="4" id="id_agency">', resp.content.decode())
-
-    def test_add_monitoring_location_with_superuser(self):
-        client = Client()
-
-        client.force_login(self.superuser)
-        resp = client.get('/registry/admin/registry/monitoringlocation/add/')
-
-        self.assertIn('<select name="agency" required id="id_agency">', resp.content.decode())
 
     def test_download_monitoring_locations(self):
         request = HttpRequest()
@@ -161,10 +146,14 @@ class TestMonitoringLocationAdmin(TestCase):
         client = Client()
         client.force_login(self.usgs_user)
         resp = client.get('/registry/admin/registry/monitoringlocation/')
-        self.assertTrue(resp.context['show_fetch_from_nwis_view'])
+        self.assertIn(b'Fetch ML from NWIS', resp.content)
+        self.assertNotIn(b'Add monitoring location', resp.content)
+        self.assertNotIn(b'Bulk Upload', resp.content)
 
     def test_changelist_view_with_adwr_user(self):
         client = Client()
         client.force_login(self.adwr_user)
         resp = client.get('/registry/admin/registry/monitoringlocation/')
-        self.assertFalse(resp.context['show_fetch_from_nwis_view'])
+        self.assertNotIn(b'Fetch ML from NWIS', resp.content)
+        self.assertIn(b'Add monitoring location', resp.content)
+        self.assertIn(b'Bulk Upload', resp.content)
