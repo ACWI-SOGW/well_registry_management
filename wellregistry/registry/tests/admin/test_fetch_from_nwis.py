@@ -16,7 +16,7 @@ from ..fake_data import TEST_RDB, TEST_NO_WELL_DEPTH_RDB, TEST_STREAM_RDB
 class TestFetchFromNwisView(TestCase):
     FETCH_URL = '/registry/admin/registry/monitoringlocation/fetch_from_nwis/'
     fixtures = ['test_agencies', 'test_countries.json', 'test_states.json', 'test_counties.json',
-                'test_horizontal_datum.json', 'test_altitude_datum.json', 'test_nat_aquifer.json']
+                'test_horizontal_datum.json', 'test_altitude_datum.json', 'test_nat_aquifer.json', 'test_units.json']
 
     def setUp(self):
         self.client = Client()

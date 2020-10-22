@@ -1,6 +1,7 @@
 """
 Custom fetch from nwis form and view for the Django admin
 """
+from wellregistry import lcl_aqfr_dict
 import requests
 
 from django.conf import settings
@@ -10,7 +11,7 @@ from django.shortcuts import render, redirect
 from django.urls.base import reverse
 from django.views.generic.edit import FormView
 
-from ..models import MonitoringLocation, AgencyLookup, AltitudeDatumLookup, HorizontalDatumLookup, \
+from ..models import MonitoringLocation, AgencyLookup, AltitudeDatumLookup, UnitsLookup, HorizontalDatumLookup, \
     NatAqfrLookup, CountryLookup, StateLookup, CountyLookup
 from ..utils import parse_rdb
 
@@ -44,7 +45,15 @@ class FetchFromNwisView(FormView):
         return True, 'Valid site'
 
     @staticmethod
-    def _get_monitoring_location(site_data, user):
+    def _get_lcl_aqfr_name(dictnry, aqfr_cd, state_cd):
+        for item in list(dictnry):
+            if item['Aqfr_Cd'] == aqfr_cd and item['State_Cd'] == state_cd:
+                print(item['Aqfr_Nm'] + " for " +  aqfr_cd)
+                return item['Aqfr_Nm']
+        return {'status' : "key not found"}
+
+    @staticmethod
+    def _get_monitoring_location(self, site_data, user):
         """
         Returns a MonitoringLocation. If the site_no and agency_cd from site_data already
         exists, then update the MonitoringLocation instance. Otherwise create a new instance.
@@ -89,10 +98,13 @@ class FetchFromNwisView(FormView):
         monitoring_location.horz_acy = site_data['coord_acy_cd']
         monitoring_location.alt_va = float(site_data['alt_va'])
         monitoring_location.altitude_datum = AltitudeDatumLookup.objects.get(adatum_cd=site_data['alt_datum_cd'])
+        monitoring_location.altitude_units=UnitsLookup.objects.get(unit_id=1)
         monitoring_location.alt_method = site_data['alt_meth_cd']
         monitoring_location.alt_acy = site_data['alt_acy_va']
         monitoring_location.well_depth = float(site_data['well_depth_va'])
+        monitoring_location.well_depth_units = UnitsLookup.objects.get(unit_id=1)
         monitoring_location.nat_aqfr = NatAqfrLookup.objects.get(nat_aqfr_cd=site_data['nat_aqfr_cd'])
+        monitoring_location.local_aquifer_name = self._get_lcl_aqfr_name(lcl_aqfr_dict, site_data['aqfr_cd'], site_data['state_cd'])
         monitoring_location.site_type = 'SPRING' if site_data['site_tp_cd'] == 'SP' else 'WELL'
         monitoring_location.aqfr_type = nwis_aqfr_type_cd_to_aqfr_type[site_data['aqfr_type_cd']]
         monitoring_location.update_user = user
@@ -136,7 +148,7 @@ class FetchFromNwisView(FormView):
                 else:
                     valid, message = self._validate_site(site)
                     if valid:
-                        monitoring_location = self._get_monitoring_location(site, self.request.user)
+                        monitoring_location = self._get_monitoring_location(self, site, self.request.user)
 
                         monitoring_location.save()
                         return redirect(reverse('admin:registry_monitoringlocation_change',
