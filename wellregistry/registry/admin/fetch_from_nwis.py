@@ -39,8 +39,8 @@ class FetchFromNwisView(FormView):
     def _validate_site(site_data):
         if site_data['site_tp_cd'] not in ['GW', 'SP']:
             return False, 'Site is not a Well or Spring (site_tp_cd is not GW or SP)'
-        # if not site_data['well_depth_va']:
-        #     return False, 'Site is missing a well depth'
+        if not site_data['well_depth_va']:
+            return False, 'Site is missing a well depth'
         return True, 'Valid site'
 
     @staticmethod
