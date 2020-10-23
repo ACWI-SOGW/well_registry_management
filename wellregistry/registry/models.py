@@ -182,7 +182,7 @@ class MonitoringLocation(models.Model):
     alt_method = models.CharField(max_length=300, blank=True, verbose_name='Altitude method')
     alt_acy = models.CharField(max_length=300, blank=True, verbose_name='Altitude accuracy')
 
-    well_depth = models.DecimalField(max_digits=11, decimal_places=7, null=True, blank=True)
+    well_depth = models.DecimalField(max_digits=11, decimal_places=7, null=True, blank=False)
     well_depth_units = models.ForeignKey(UnitsLookup, related_name='+', db_column='well_depth_units',
                                          on_delete=models.PROTECT, to_field='unit_id', null=True, blank=True)
 
