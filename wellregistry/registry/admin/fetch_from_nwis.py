@@ -11,10 +11,12 @@ from django.shortcuts import render, redirect
 from django.urls.base import reverse
 from django.views.generic.edit import FormView
 
+from wellregistry import nwis_aquifer_lookups
+
 from ..models import MonitoringLocation, AgencyLookup, AltitudeDatumLookup, UnitsLookup, HorizontalDatumLookup, \
     NatAqfrLookup, CountryLookup, StateLookup, CountyLookup
 from ..utils import parse_rdb
-from wellregistry import nwis_aquifer_lookups
+
 
 class FetchForm(Form):
     """
@@ -50,10 +52,10 @@ class FetchFromNwisView(FormView):
             for item in list_aqr_lookups:
                 if item['Aqfr_Cd'] == aqfr_cd and item['State_Cd'] == state_cd:
                     return item['Aqfr_Nm']
+            return
         except KeyError:
             print("key not found in dictionary")
-        return 
-
+        
     @staticmethod
     def _get_monitoring_location(self, site_data, user):
         """
