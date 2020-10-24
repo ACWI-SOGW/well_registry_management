@@ -51,7 +51,7 @@ class FetchFromNwisView(FormView):
         try:
             for item in list_aqr_lookups:
                 if item['Aqfr_Cd'] == aqfr_cd and item['State_Cd'] == state_cd:
-                    Aqfr_Nm =  item['Aqfr_Nm']
+                    aqfr_nm =  item['Aqfr_Nm']
 
         except KeyError:
             print("key not found in dictionary")
