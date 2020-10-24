@@ -228,7 +228,7 @@ class MonitoringLocation(models.Model):
                                     related_name='+')
 
     insert_date = models.DateTimeField(auto_now_add=True, editable=False)
-    update_date = m  if self.well_depth and not self.well_depth_units:
+    update_date = models.DateTimeField(auto_now=True, editable=False)
             raise ValidationError(
                 'If Well depth is populated, then you must enter a Well depth unit')
 
