@@ -142,7 +142,7 @@ class FetchFromNwisView(FormView):
             resp = requests.get(settings.NWIS_SITE_SERVICE_ENDPOINT, params={
                 'format': 'rdb',
                 'siteOutput': 'expanded',
-                'site        print(self._get_lcl_aqfr_name(nwis_aquifer_lookups, site_data['aqfr_cd'], site_data['state_cd']))s': site_no,
+                'sites': site_no,
                 'siteStatus': 'all'
             })
             if resp.status_code == 200:
