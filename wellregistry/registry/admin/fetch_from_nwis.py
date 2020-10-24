@@ -47,7 +47,7 @@ class FetchFromNwisView(FormView):
         return True, 'Valid site'
 
     @staticmethod
-    def _get_lcl_aqfr_name(list_aqr_lookups, aqfr_cd, state_cd):
+    def _get_local_aquifer_name(list_aqr_lookups, aqfr_cd, state_cd):
         try:
             for item in list_aqr_lookups:
                 if item['Aqfr_Cd'] == aqfr_cd and item['State_Cd'] == state_cd:
@@ -110,7 +110,7 @@ class FetchFromNwisView(FormView):
         monitoring_location.well_depth_units = UnitsLookup.objects.get(unit_id=1)
         monitoring_location.nat_aqfr = NatAqfrLookup.objects.get(nat_aqfr_cd=site_data['nat_aqfr_cd'])
         monitoring_location.local_aquifer_name = \
-            self._get_lcl_aqfr_name(nwis_aquifer_lookups, site_data['aqfr_cd'], site_data['state_cd'])
+            self._get_local_aquifer_name(nwis_aquifer_lookups, site_data['aqfr_cd'], site_data['state_cd'])
         monitoring_location.site_type = 'SPRING' if site_data['site_tp_cd'] == 'SP' else 'WELL'
         monitoring_location.aqfr_type = nwis_aqfr_type_cd_to_aqfr_type[site_data['aqfr_type_cd']]
         monitoring_location.update_user = user
