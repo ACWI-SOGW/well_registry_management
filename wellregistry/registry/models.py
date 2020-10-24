@@ -229,12 +229,6 @@ class MonitoringLocation(models.Model):
 
     insert_date = models.DateTimeField(auto_now_add=True, editable=False)
     update_date = models.DateTimeField(auto_now=True, editable=False)
-            raise ValidationError(
-                'If Well depth is populated, then you must enter a Well depth unit')
-
-        if not self.well_depth and self.well_depth_units:
-            raise ValidationError(
-                'If Well depth is not populated, then Well depth unit must be left blank')odels.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         unique_together = (('site_no', 'agency'),)
