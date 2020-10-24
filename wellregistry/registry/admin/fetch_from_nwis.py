@@ -105,7 +105,8 @@ class FetchFromNwisView(FormView):
         monitoring_location.well_depth = float(site_data['well_depth_va'])
         monitoring_location.well_depth_units = UnitsLookup.objects.get(unit_id=1)
         monitoring_location.nat_aqfr = NatAqfrLookup.objects.get(nat_aqfr_cd=site_data['nat_aqfr_cd'])
-        monitoring_location.local_aquifer_name = self._get_lcl_aqfr_name(nwis_aquifer_lookups, site_data['aqfr_cd'], site_data['state_cd'])
+        monitoring_location.local_aquifer_name = \
+            self._get_lcl_aqfr_name(nwis_aquifer_lookups, site_data['aqfr_cd'], site_data['state_cd'])
         monitoring_location.site_type = 'SPRING' if site_data['site_tp_cd'] == 'SP' else 'WELL'
         monitoring_location.aqfr_type = nwis_aqfr_type_cd_to_aqfr_type[site_data['aqfr_type_cd']]
         monitoring_location.update_user = user

@@ -13,4 +13,4 @@ nwis_aquifer_lookups=[]
 data_src = os.path.join(INITIAL_DATA_DIR, 'lcl_aqfr.csv')
 reader = csv.DictReader(open(data_src, 'r'))
 for row in reader:
-     nwis_aquifer_lookups.append(row)
+    nwis_aquifer_lookups.append(row)
