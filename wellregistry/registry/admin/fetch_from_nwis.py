@@ -1,7 +1,7 @@
 """
 Custom fetch from nwis form and view for the Django admin
 """
-from wellregistry import nwis_aquifer_lookups
+
 import requests
 
 from django.conf import settings
@@ -14,7 +14,7 @@ from django.views.generic.edit import FormView
 from ..models import MonitoringLocation, AgencyLookup, AltitudeDatumLookup, UnitsLookup, HorizontalDatumLookup, \
     NatAqfrLookup, CountryLookup, StateLookup, CountyLookup
 from ..utils import parse_rdb
-
+from wellregistry import nwis_aquifer_lookups
 
 class FetchForm(Form):
     """
@@ -52,6 +52,7 @@ class FetchFromNwisView(FormView):
                     return item['Aqfr_Nm']
         except KeyError:
             print("key not found in dictionary")
+        return 
 
     @staticmethod
     def _get_monitoring_location(self, site_data, user):
