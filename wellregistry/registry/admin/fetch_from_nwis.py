@@ -52,7 +52,6 @@ class FetchFromNwisView(FormView):
             if item['Aqfr_Cd'] == aqfr_cd and item['State_Cd'] == state_cd:
                 return item['Aqfr_Nm']
         raise KeyError
-            
 
     @staticmethod
     def _get_monitoring_location(site_data, user):
