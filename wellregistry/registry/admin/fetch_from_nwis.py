@@ -48,14 +48,11 @@ class FetchFromNwisView(FormView):
 
     @staticmethod
     def _get_local_aquifer_name(list_aqr_lookups, aqfr_cd, state_cd):
-        try:
-            for item in list_aqr_lookups:
-                if item['Aqfr_Cd'] == aqfr_cd and item['State_Cd'] == state_cd:
-                    aqfr_nm =  item['Aqfr_Nm']
-
-        except KeyError:
-            print("key not found in dictionary")
-        return aqfr_nm
+        for item in list_aqr_lookups:
+            if item['Aqfr_Cd'] == aqfr_cd and item['State_Cd'] == state_cd:
+                return item['Aqfr_Nm']
+        raise KeyError
+            
 
     @staticmethod
     def _get_monitoring_location(site_data, user):
