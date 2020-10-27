@@ -182,9 +182,9 @@ class MonitoringLocation(models.Model):
     alt_method = models.CharField(max_length=300, blank=True, verbose_name='Altitude method')
     alt_acy = models.CharField(max_length=300, blank=True, verbose_name='Altitude accuracy')
 
-    well_depth = models.DecimalField(max_digits=11, decimal_places=7, null=True, blank=True)
+    well_depth = models.DecimalField(max_digits=11, decimal_places=7, null=True, blank=False)
     well_depth_units = models.ForeignKey(UnitsLookup, related_name='+', db_column='well_depth_units',
-                                         on_delete=models.PROTECT, to_field='unit_id', null=True, blank=True)
+                                         on_delete=models.PROTECT, to_field='unit_id', null=True, blank=False)
 
     nat_aqfr = models.ForeignKey(NatAqfrLookup, on_delete=models.PROTECT, db_column='nat_aqfr_cd',
                                  to_field='nat_aqfr_cd', null=True, verbose_name='National aquifer')
@@ -240,14 +240,6 @@ class MonitoringLocation(models.Model):
         if self.site_type == 'WELL' and self.aqfr_type == '':
             raise ValidationError(
                 'If the site is of type "WELL", then you must enter an Aquifer type')
-
-        if self.well_depth and not self.well_depth_units:
-            raise ValidationError(
-                'If Well depth is populated, then you must enter a Well depth unit')
-
-        if not self.well_depth and self.well_depth_units:
-            raise ValidationError(
-                'If Well depth is not populated, then Well depth unit must be left blank')
 
         if (self.display_flag and self.wl_sn_flag) and \
                 (self.wl_well_type == '' or self.wl_well_purpose == ''):
