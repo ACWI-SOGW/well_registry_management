@@ -1,3 +1,6 @@
+"""
+Initializes the registry application
+"""
 import csv
 import os
 from django.conf import settings
