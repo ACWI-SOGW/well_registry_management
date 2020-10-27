@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Line in sand for Django migrations, put all registry table changes into one migration.
 -   For USGS users, only allow changes to be made to fields not filled in by NWIS metadata
 -   Only allow Bulk Upload and Add Monitoring Location for non USGS users.
+-   Populated Altitude Units, Well Depth Units and Local Aquifer name
 
 ### Fixed
 -   Using whitenoise to serve out the staticfiles when using gunicorn to run the server. Added collectstaticfiles to the Dockerfile.
