@@ -68,6 +68,19 @@ Another means to run local is the manage.py from within the wellregistry path:
 Use `localhost` instead of `127.0.0.1` for local development, otherwise a KeyCloak bug
 regarding an invalid `redirect_uri` will be encountered when authenticating.
 
+## Running in a docker container locally
+To build the container:
+```bash
+% docker build ./ -t well_registry_app
+```
+
+To run the container:
+```bash
+docker run --env-file wellregistry/.env -p 8000:8000 well_registry_app
+```
+
+If you are running the docker ci database locally, your .env file DATABASE_HOST will need to change in order for the application within a docker container can talk to another container. On Macs, you can set DATABASE_HOST to host.docker.internal 
+
 ## Using Docker ci database
 The docker ci database can be started with the start_ci_db.bash script. Keep in mind that any existing instance will be removed first.
 To manually start, run the following command:
