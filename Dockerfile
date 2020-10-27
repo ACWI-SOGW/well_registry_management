@@ -8,7 +8,7 @@ COPY . $HOME/application
 RUN apt-get update \
 	&& apt-get install -y curl gnupg \
 	&& curl --silent --location https://deb.nodesource.com/setup_12.x | bash - \
-	&& apt-get install -y nodejs npm
+	&& apt-get install -y nodejs
 
 WORKDIR $HOME/application/wellregistry
 RUN npm install
