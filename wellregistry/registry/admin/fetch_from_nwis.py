@@ -11,8 +11,7 @@ from django.shortcuts import render, redirect
 from django.urls.base import reverse
 from django.views.generic.edit import FormView
 
-from wellregistry import nwis_aquifer_lookups
-
+from .. import nwis_aquifer_lookups
 from ..models import MonitoringLocation, AgencyLookup, AltitudeDatumLookup, UnitsLookup, HorizontalDatumLookup, \
     NatAqfrLookup, CountryLookup, StateLookup, CountyLookup
 from ..utils import parse_rdb
@@ -99,7 +98,7 @@ class FetchFromNwisView(FormView):
         monitoring_location.horz_acy = site_data['coord_acy_cd']
         monitoring_location.alt_va = float(site_data['alt_va'])
         monitoring_location.altitude_datum = AltitudeDatumLookup.objects.get(adatum_cd=site_data['alt_datum_cd'])
-        monitoring_location.altitude_units=UnitsLookup.objects.get(unit_id=1)
+        monitoring_location.altitude_units = UnitsLookup.objects.get(unit_id=1)
         monitoring_location.alt_method = site_data['alt_meth_cd']
         monitoring_location.alt_acy = site_data['alt_acy_va']
         monitoring_location.well_depth = float(site_data['well_depth_va'])
