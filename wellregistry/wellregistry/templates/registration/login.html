@@ -20,7 +20,7 @@
         <button class="usa-button" type="submit">Login</button>
     </form>
     <br>
-    <p><strong>-- OR --</strong></p>
+    <p class="font-body-xl">-- OR --</p>
     <h2>USGS Users</h2>
     <a class="usa-link" href="{% url 'social:begin' 'keycloak' %}?next={{ request.path }}">Login with Bison Connect</a>
 {% endblock %}
