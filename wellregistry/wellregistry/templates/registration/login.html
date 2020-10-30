@@ -2,5 +2,25 @@
 
 {% block base_content %}
     <h1>Well Registry Admin Login</h1>
-    <a class="usa-link" href="{% url 'social:begin' 'keycloak' %}?next={{ request.path }}">Login with Keycloak</a>
+    <h2>Non-USGS users</h2>
+    <form class="usa-form" method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <label class="usa-label" for="{{ form.username.id_for_label }}">Username</label>
+        <input class="usa-input" id="{{ form.username.id_for_label }}"
+               name="{{ form.username.html_name }}" type="text" />
+        <label class="usa-label" for="{{ form.password.id_for_label }}">Password</label>
+        <input class="usa-input" id="{{ form.password.id_for_label }}"
+               name="{{ form.password.html_name }}" type="password" />
+        <p class="usa-form__note">
+            <a title="Show password" href="javascript:void(0);"
+                class="usa-show-password"
+                aria-controls="{{ form.password.id_for_label }}">Show password</a>
+    </p>
+        <button class="usa-button" type="submit">Login</button>
+    </form>
+    <br>
+    <p class="font-body-xl">-- OR --</p>
+    <h2>USGS Users</h2>
+    <a class="usa-link" href="{% url 'social:begin' 'keycloak' %}?next={{ request.path }}">Login with Bison Connect</a>
 {% endblock %}

@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added the insert_user and update_user to the monitoring location rest endpoint
 -   Added pagination to the rest endpoint.
 -   Added the ability to download selected monitoring locations.
+-   Added ability for non-USGS users to login using the standard Django authentication backend.
 
 ### Changed
 -   Modified the Registry model to more closely resemble the editable fields in the Apex Well Registry application. Also added choices to some of the fields to match the Apex well registry.
@@ -34,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Line in sand for Django migrations, put all registry table changes into one migration.
 -   For USGS users, only allow changes to be made to fields not filled in by NWIS metadata
 -   Only allow Bulk Upload and Add Monitoring Location for non USGS users.
--   Populated Altitude Units, Well Depth Units and Local Aquifer name
+-   Populated altitude units, well depth units and local aquifer name when fetching a monitoring location from NWIS.
 
 ### Fixed
 -   Using whitenoise to serve out the staticfiles when using gunicorn to run the server. Added collectstaticfiles to the Dockerfile.
