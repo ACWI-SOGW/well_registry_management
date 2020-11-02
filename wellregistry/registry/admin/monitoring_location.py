@@ -23,7 +23,7 @@ tooltips = [{
 	{
 		'form_field': 'agency',
 		'tooltip': 'The name of the agency or organization that collects, owns andor manages the data. \
- If you don\'t see your agency or organization in the list contact Jessica Lucido(lucido @usgs.gov).'
+ If you don\'t see your agency or organization in the list contact Candice Hopkins (chopkins@usgs.gov).'
 	},
 	{
 		'form_field': 'site_no',
@@ -59,7 +59,7 @@ tooltips = [{
 	{
 		'form_field': 'horizontal_datum',
 		'tooltip': 'Horizontal reference datum for the latitude and longitude of a well (NAD83,NAD27, WGS84, etc.) \
- If you don\'t see the datum you are looking for in the list contact Candice Hopkinds (chopkins@usgs.gov)'
+ If you don\'t see the datum you are looking for in the list contact Candice Hopkins (chopkins@usgs.gov)'
 	},
 	{
 		'form_field': 'horz_method',
