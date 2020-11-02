@@ -133,7 +133,9 @@ tooltips = [{
 		'form_field': 'wl_well_type',
 		'tooltip': 'Three choices are possible: (a) \'Trend\', (b) \'Surveillance\',\
  or (c) \'Special Studies\'. \'Trend\' wells have a monitoring frequency appropriate\
- to determine long-trends and seasonal variability (quarterly), \'Surveillance\' wells are \'synoptic\' snapshots of data used to tied together the \'Trend\' wells. \'Special Studies\' wells are likely to be local areas of depletion or impairment. (See the NGWMN Monitoring Categories Tip Sheet for additional guidance)'
+ to determine long-trends and seasonal variability (quarterly), \'Surveillance\' wells are \'synoptic\' snapshots\
+ of data used to tied together the \'Trend\' wells. \'Special Studies\' wells are likely to be local areas of depletion\
+ or impairment. (See the NGWMN Monitoring Categories Tip Sheet for additional guidance)'
 	},
 	{
 		'form_field': 'wl_well_chars',
@@ -179,7 +181,8 @@ tooltips = [{
 		'form_field': 'qw_well_chars',
 		'tooltip': 'The characteristics of the aquifer that the well represents. There are 3 options:\
     (a) \'Background\', (b) \'Suspected/Anticipated Changes\', or (c) \'Known Changes\'.\
- This column is blank if the site is still in the baseline period. (See the NGWMN Subnetwork Tip Sheet for additional guidance)'
+ This column is blank if the site is still in the baseline period. (See the NGWMN Subnetwork Tip Sheet for additional\
+ guidance)' 
 	},
 	{
 		'form_field': 'qw_baseline_flag',
