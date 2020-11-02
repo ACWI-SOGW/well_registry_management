@@ -182,7 +182,7 @@ tooltips = [{
 		'tooltip': 'The characteristics of the aquifer that the well represents. There are 3 options:\
     (a) \'Background\', (b) \'Suspected/Anticipated Changes\', or (c) \'Known Changes\'.\
  This column is blank if the site is still in the baseline period. (See the NGWMN Subnetwork Tip Sheet for additional\
- guidance)' 
+ guidance)'
 	},
 	{
 		'form_field': 'qw_baseline_flag',
