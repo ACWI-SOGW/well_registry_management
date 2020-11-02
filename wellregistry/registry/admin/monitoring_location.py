@@ -225,17 +225,19 @@ class MonitoringLocationAdminForm(ModelForm):
             agency_field = ModelChoiceField(queryset=AgencyLookup.objects.filter(agency_cd=user_group),
                                             initial=user_group)
             self.fields['agency'] = agency_field
-            for item in tooltips:
-                form_field = item['form_field']
-                self.fields[form_field].widget.attrs.update({
+        # With some linked fields, .widget.widget will exist
+        # This check will hec for attrs .widget.widget first
+        # and then .widget if sub widget does not exist
+        for item in tooltips:
+            form_field = item['form_field']
+            widget_exists_level_2 = hasattr(self.fields[form_field].widget, 'widget')
+            if widget_exists_level_2:
+                self.fields[form_field].widget.widget.attrs.update({
                     'title': item['tooltip']
-                 })
-                widget_exists_level_2 = hasattr(self.fields[form_field].widget, 'widget')
-                if widget_exists_level_2:
-                    self.fields[form_field].widget.widget.attrs.update({
-                        'title': item['tooltip']
-                    })
-                else:
+                })
+            else:
+                widget_exists_level_1 = hasattr(self.fields[form_field], 'widget')
+                if widget_exists_level_1:
                     self.fields[form_field].widget.attrs.update({
                         'title': item['tooltip']
                     })
