@@ -9,6 +9,7 @@ from django.db.models.functions import Upper
 from django.forms import ModelForm, Textarea, ModelChoiceField
 from django.http import HttpResponse
 from django.urls import path
+from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 
 from ..models import MonitoringLocation, AgencyLookup
 from .bulk_upload import BulkUploadView, BulkUploadTemplateView
@@ -226,21 +227,18 @@ class MonitoringLocationAdminForm(ModelForm):
                                             initial=user_group)
             self.fields['agency'] = agency_field
         # With some linked fields, .widget.widget will exist
-        # This check will hec for attrs .widget.widget first
+        # This check will check RelatedFieldWidgetWrapper for attrs .widget.widget first
         # and then .widget if sub widget does not exist
         for item in tooltips:
-            form_field = item['form_field']
-            widget_exists_level_2 = hasattr(self.fields[form_field].widget, 'widget')
-            if widget_exists_level_2:
-                self.fields[form_field].widget.widget.attrs.update({
+            form_field = self.fields.get(item['form_field'], None)
+            if form_field:
+                if isinstance(form_field.widget, RelatedFieldWidgetWrapper):
+                    widget = form_field.widget.widget
+                else:
+                    widget = form_field.widget
+                widget.attrs.update({
                     'title': item['tooltip']
                 })
-            else:
-                widget_exists_level_1 = hasattr(self.fields[form_field], 'widget')
-                if widget_exists_level_1:
-                    self.fields[form_field].widget.attrs.update({
-                        'title': item['tooltip']
-                    })
 
     class Meta:
         model = MonitoringLocation
