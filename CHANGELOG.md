@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   For USGS users, only allow changes to be made to fields not filled in by NWIS metadata
 -   Only allow Bulk Upload and Add Monitoring Location for non USGS users.
 -   Populated altitude units, well depth units and local aquifer name when fetching a monitoring location from NWIS.
+-   Changed fields that used DecimalField to use the custom ArbitraryDecimalField which preserves precision.
 
 ### Fixed
 -   Using whitenoise to serve out the staticfiles when using gunicorn to run the server. Added collectstaticfiles to the Dockerfile.
