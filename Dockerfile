@@ -25,4 +25,4 @@ USER $USER
 
 EXPOSE 8000
 
-CMD gunicorn --chdir wellregistry --config wellregistry/gunicorn.conf.py wellregistry.wsgi
+CMD gunicorn --log-level debug --chdir wellregistry --config wellregistry/gunicorn.conf.py wellregistry.wsgi
