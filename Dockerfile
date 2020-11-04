@@ -25,4 +25,4 @@ USER $USER
 
 EXPOSE 8000
 
-CMD gunicorn --log-level debug --timeout 120 --chdir wellregistry --config wellregistry/gunicorn.conf.py wellregistry.wsgi
+CMD gunicorn --chdir wellregistry --config wellregistry/gunicorn.conf.py wellregistry.wsgi
