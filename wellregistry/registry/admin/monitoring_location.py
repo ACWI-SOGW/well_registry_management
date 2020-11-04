@@ -4,7 +4,7 @@ MonitoringLocation Admin
 import csv
 
 from django.contrib import messages
-from django.contrib.admin import ModelAdmin, RelatedFieldListFilter
+from django.contrib.admin import ModelAdmin, RelatedFieldListFilter, ChoicesFieldListFilter
 from django.db.models.functions import Upper
 from django.forms import ModelForm, Textarea, ModelChoiceField
 from django.http import HttpResponse
@@ -256,6 +256,12 @@ class SelectListFilter(RelatedFieldListFilter):
     """
     template = "admin/choice_list_filter.html"
 
+class SelectListFilterChoices(ChoicesFieldListFilter):
+    """
+    Django admin select list filter to implement a picker for the filter.
+    """
+    template = "admin/choice_list_filter.html"
+
 
 CSV_HEADERS = [
     'Agency',
@@ -363,7 +369,8 @@ class MonitoringLocationAdmin(ModelAdmin):
     form = MonitoringLocationAdminForm
     list_display = ('site_id', 'agency', 'site_no', 'display_flag', 'wl_sn_flag', 'qw_sn_flag',
                     'insert_date', 'update_date')
-    list_filter = (('agency', SelectListFilter), 'site_no', 'update_date')
+    list_filter = (('agency', SelectListFilter), ('country', SelectListFilter), ('state', SelectListFilter), ('county', SelectListFilter), ('nat_aqfr', SelectListFilter),
+                    'display_flag', 'site_no', 'update_date')
 
     actions = ['download_monitoring_locations']
 
