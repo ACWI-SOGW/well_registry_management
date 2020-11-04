@@ -10,6 +10,26 @@ from django.db import models
 from smart_selects.db_fields import ChainedForeignKey
 
 
+class ArbitraryDecimalFields(models.DecimalField):
+    """
+    Subclass to implement arbitrary precision decimal field in Postgres
+    See https://steve.dignam.xyz/2019/10/24/arbitrary-precision-decimal-fields/
+    """
+    def _check_decimal_places(self):
+        return []
+
+    def _check_max_digits(self):
+        return []
+
+    def _check_decimal_places_and_max_digits(self, **kwargs):
+        return []
+
+    def db_type(self, connection):
+        # pg or bust
+        assert connection.settings_dict["ENGINE"] == "django.db.backends.postgresql"
+        return "numeric"
+
+
 class AgencyLookup(models.Model):
     """Model definition for the agency table, lookup only"""
     agency_cd = models.CharField(max_length=50, unique=True)
@@ -162,18 +182,15 @@ class MonitoringLocation(models.Model):
                                on_delete=models.PROTECT,
                                db_column='county_id', null=True)
 
-    dec_lat_va = models.DecimalField(max_digits=11, decimal_places=8, null=True,
-                                     verbose_name='Latitude(decimal degrees)')
-    dec_long_va = models.DecimalField(max_digits=11, decimal_places=8, null=True,
-                                      verbose_name='Longitude(decimal degrees)')
+    dec_lat_va = ArbitraryDecimalFields(null=True, verbose_name='Latitude(decimal degrees)')
+    dec_long_va = ArbitraryDecimalFields(null=True, verbose_name='Longitude(decimal degrees)')
     horizontal_datum = models.ForeignKey(HorizontalDatumLookup, on_delete=models.PROTECT,
                                          db_column='horizontal_datum_cd', null=True,
                                          to_field='hdatum_cd')
     horz_method = models.CharField(max_length=300, blank=True, verbose_name='Lat/Long method')
     horz_acy = models.CharField(max_length=300, blank=True, verbose_name='Lat/Long accuracy')
 
-    alt_va = models.DecimalField(max_digits=10, decimal_places=6, null=True,
-                                 verbose_name='Altitude')
+    alt_va = ArbitraryDecimalFields(null=True, verbose_name='Altitude')
     altitude_units = models.ForeignKey(UnitsLookup, on_delete=models.PROTECT, db_column='altitude_units',
                                        to_field='unit_id', null=True)
     altitude_datum = models.ForeignKey(AltitudeDatumLookup, on_delete=models.PROTECT,
@@ -182,7 +199,7 @@ class MonitoringLocation(models.Model):
     alt_method = models.CharField(max_length=300, blank=True, verbose_name='Altitude method')
     alt_acy = models.CharField(max_length=300, blank=True, verbose_name='Altitude accuracy')
 
-    well_depth = models.DecimalField(max_digits=11, decimal_places=7, null=True, blank=False)
+    well_depth = ArbitraryDecimalFields(null=True, blank=False)
     well_depth_units = models.ForeignKey(UnitsLookup, related_name='+', db_column='well_depth_units',
                                          on_delete=models.PROTECT, to_field='unit_id', null=True, blank=False)
 

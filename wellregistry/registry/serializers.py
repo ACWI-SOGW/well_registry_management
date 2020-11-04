@@ -3,7 +3,7 @@ Serializers for the REST API
 """
 # pylint: disable=too-few-public-methods
 
-from rest_framework.serializers import ModelSerializer, StringRelatedField
+from rest_framework.serializers import ModelSerializer, StringRelatedField, DecimalField
 
 from .models import AgencyLookup, CountryLookup, CountyLookup, NatAqfrLookup, MonitoringLocation, StateLookup, \
     UnitsLookup
@@ -71,7 +71,11 @@ class MonitoringLocationSerializer(ModelSerializer):
     country = CountryLookupSerializer()
     state = StateLookupSerializer()
     county = CountyLookupSerializer()
+    dec_lat_va = DecimalField(None, None)
+    dec_long_va = DecimalField(None, None)
+    alt_va = DecimalField(None, None)
     altitude_units = UnitsLookupSerializer()
+    well_depth = DecimalField(None, None)
     well_depth_units = UnitsLookupSerializer()
     nat_aqfr = NatAqfrLookupSerializer()
     insert_user = StringRelatedField()
