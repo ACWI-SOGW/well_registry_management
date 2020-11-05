@@ -2,4 +2,4 @@
 Well Registry project
 
 """
-__version__ = '0.1.0dev'
+__version__ = '"version": "0.1.0"'
