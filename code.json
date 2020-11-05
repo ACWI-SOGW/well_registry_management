@@ -3,7 +3,7 @@
     "name": "Well Registry Management",
     "organization": "U.S. Geological Survey",
     "description": "Application for management of well metadata",
-    "version": "0.1.0",
+    "version": "0.1.0dev",
     "status": "Development",
 
     "permissions": {
