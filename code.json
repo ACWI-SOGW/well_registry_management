@@ -3,7 +3,7 @@
     "name": "Well Registry Management",
     "organization": "U.S. Geological Survey",
     "description": "Application for management of well metadata",
-    "version": "0.0.1",
+    "version": "0.1.0dev",
     "status": "Development",
 
     "permissions": {
@@ -28,7 +28,8 @@
       "water data",
       "U.S. Geological Survey",
       "USGS",
-      "wma"
+      "wma",
+      "ngwmn"
     ],
 
     "languages": [
@@ -41,7 +42,7 @@
     },
 
     "date": {
-      "metadataLastUpdated": "2020-04-16"
+      "metadataLastUpdated": "2020-11-05"
     }
   }
 ]
