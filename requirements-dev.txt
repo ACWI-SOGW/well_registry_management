@@ -1,2 +1,1 @@
 psycopg2-binary==2.8.6
-django-admin-autocomplete-filter==0.6.1

@@ -12,7 +12,7 @@ from django.urls import path, reverse
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 from admin_auto_filters.filters import AutocompleteFilter
 
-from ..models import MonitoringLocation, AgencyLookup, SiteNo
+from ..models import MonitoringLocation, AgencyLookup
 from .bulk_upload import BulkUploadView, BulkUploadTemplateView
 from .fetch_from_nwis import FetchFromNwisView
 from .auto_complete import SiteNoAutoCompleteView
@@ -253,11 +253,14 @@ class MonitoringLocationAdminForm(ModelForm):
 
 
 class CountyLookupFilter(AutocompleteFilter):
+    """
+    '''AutoComplete Filter for State/County Filter Filter'''
+    """
     title = 'County' # display title
     field_name = 'county' # name of the foreign key field
     rel_model = MonitoringLocation
 
-    def get_autocomplete_url(self, request, model_admin):
+    def get_autocomplete_url(self, request, model_admin):    
         rel = self.rel_model._meta.get_field(self.field_name).remote_field
         model = rel.model
         admin_site = model_admin.admin_site
@@ -268,6 +271,9 @@ class CountyLookupFilter(AutocompleteFilter):
 
 
 class SiteNoFilter(AutocompleteFilter):
+    """
+    '''AutoComplete Filter for Site_No'''
+    """
     title = 'Site no'
     field_name = 'site_no'
     use_pk_exact = False
@@ -280,8 +286,7 @@ class SiteNoFilter(AutocompleteFilter):
 
     def get_autocomplete_url(self, request, model_admin):
         return model_admin.custom_urls['siteno_autocomplete']
-                                                                                                                                                                                
-
+                                                                                                                                                                              
 class SelectListFilter(RelatedFieldListFilter):
     """
     Django admin select list filter to implement a picker for the filter.
