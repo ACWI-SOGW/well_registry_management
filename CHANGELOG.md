@@ -4,7 +4,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ##[Unreleased](https://github.com/ACWI-SOGW/well_registry_management/tree/master)
 ### Added
 -   Added Registry model and admin prototype interface.
@@ -25,20 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added ability for non-USGS users to login using the standard Django authentication backend.
 -   Added Tootips on all fields 
 -   Added Filters for SiteNo (site number) – it could be a partial match, Display flag, National aquifer, state, and county
-
-### Changed
--   Modified the Registry model to more closely resemble the editable fields in the Apex Well Registry application. Also added choices to some of the fields to match the Apex well registry.
--   Flag fields are not BooleanFields rather than IntegerFields.
--   Changed the Registry model to MonitoringLocation to better reflect that a registry (the app name) contains monitoring location instances.
--   Set an order for lookups so that pick lists are in alphabetically order
--   Using django-smart-selects to have chaining selects for state and county pick lists.
--   Removed initialization of lookups from migrations and instead added a command to do this. This command will be run following migrations and will update any information that exists. This is also where the agency groups are created.
--   Added a model serializer for UnitsLookup and send both id and description.
--   Line in sand for Django migrations, put all registry table changes into one migration.
--   For USGS users, only allow changes to be made to fields not filled in by NWIS metadata
--   Only allow Bulk Upload and Add Monitoring Location for non USGS users.
--   Populated altitude units, well depth units and local aquifer name when fetching a monitoring location from NWIS.
+-   Added Django Admin which allows adding/changing of monitoring locations. This part of the application requires login either through BisonConnect or through a login provided by the well registry administrators.
+-   Added a REST API which returns all monitoring locations. The monitoring locations can be filtered by display_flag
 
 ### Fixed
--   Using whitenoise to serve out the staticfiles when using gunicorn to run the server. Added collectstaticfiles to the Dockerfile.
--   Rather than assigning agency code when saving a monitoring location in the admin, create a custom form which assigns the agency code if the user is a not a superuser.
+-   Fixed the Delete button styling so button is full height.

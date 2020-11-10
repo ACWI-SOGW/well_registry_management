@@ -120,7 +120,7 @@ tooltips = [{
 	{
 		'form_field': 'wl_sn_flag',
 		'tooltip': 'Is the well part of the WL network (default is \'Yes\')? All wells, marked as \'Yes\' will be\
- included\ in the NGWMN WL network. (Yes/No)'
+ included in the NGWMN WL network. (Yes/No)'
 	},
 	{
 		'form_field': 'wl_network_name',
