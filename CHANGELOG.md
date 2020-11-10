@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added the ability to download selected monitoring locations.
 -   Added ability for non-USGS users to login using the standard Django authentication backend.
 -   Added Tootips on all fields 
+-   Added Filters for SiteNo (site number) – it could be a partial match, Display flag, National aquifer, state, and county
 
 ### Changed
 -   Modified the Registry model to more closely resemble the editable fields in the Apex Well Registry application. Also added choices to some of the fields to match the Apex well registry.
