@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased](https://github.com/ACWI-SOGW/well_registry_management/compare/wellregistry-0.1.0...master)
+### Fixed
+-   Fixed the Delete button styling so button is full height.
 
 ## [0.1.0](https://github.com/ACWI-SOGW/well_registry_management/tree/wellregistry-0.1.0) - 2020-11-05
 

@@ -13,3 +13,7 @@
 #changelist-filter select {
   width: 210px;
 }
+
+#content-main .submit-row a.deletelink {
+  height: inherit;
+}
