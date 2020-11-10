@@ -260,7 +260,10 @@ class CountyLookupFilter(AutocompleteFilter):
     field_name = 'county' # name of the foreign key field
     rel_model = MonitoringLocation
 
-    def get_autocomplete_url(self, request, model_admin):    
+    def get_autocomplete_url(self, request, model_admin):
+        """
+        '''Get Autocomplete URL''
+        """
         rel = self.rel_model._meta.get_field(self.field_name).remote_field
         model = rel.model
         admin_site = model_admin.admin_site
@@ -282,11 +285,14 @@ class SiteNoFilter(AutocompleteFilter):
 
     @staticmethod
     def get_queryset_for_field(model, name):
+        """
+        '''Get Current Queryset for field''
+        """
         return model.objects.get_queryset()
 
     def get_autocomplete_url(self, request, model_admin):
-        return model_admin.custom_urls['siteno_autocomplete']
-                                                                                                                                                                              
+        return model_admin.custom_urls['siteno_autocomplete']                                                                                                                                                                       
+
 class SelectListFilter(RelatedFieldListFilter):
     """
     Django admin select list filter to implement a picker for the filter.

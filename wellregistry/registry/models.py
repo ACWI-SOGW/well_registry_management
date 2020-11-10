@@ -284,9 +284,11 @@ class MonitoringLocation(models.Model):
         str_rep = f'{self.agency}:{self.site_no}'
         return str_rep
 
-
 class SiteNoManager(models.Manager):
     def get_queryset(self):
+        """
+        return site_no queryset
+        """
         return super().get_queryset().values(pk=F('site_no')).distinct()
 
 class SiteNo(MonitoringLocation):
