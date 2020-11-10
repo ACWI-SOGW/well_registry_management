@@ -1,0 +1,29 @@
+{% load i18n %}
+{% if not spec.is_placeholder_title %}
+    <h3>{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}</h3>
+{% endif %}
+    <ul>
+        <li>{{ spec.rendered_widget }}</li>
+        <li>{{ spec.field }}</li>
+    </ul>
+    <script type="text/javascript">
+        django.jQuery(document).ready(function(){
+
+            var url_string = window.location.href
+            var url = new URL(url_string);
+            var c = url.searchParams.get("site_no__exact");
+            if (c) {
+                var opt = document.createElement('option');
+                opt.appendChild( document.createTextNode(c) );
+    
+                // set value property of opt
+                opt.value = c; 
+                opt.selected = true;
+    
+                // add opt to end of select box (sel)
+                var sel = document.getElementById('id-site_no__exact-dal-filter')
+                sel.appendChild(opt); 
+                console.log(sel);
+            }
+        })
+    </script>

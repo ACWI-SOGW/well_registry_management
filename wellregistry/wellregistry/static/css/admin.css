@@ -13,3 +13,15 @@
 #changelist-filter select {
   width: 210px;
 }
+
+.model-countylookup {
+  display: none;
+}
+
+.select2-results__options {
+  width: 100%;                                      
+}
+
+.select2-container--admin-autocomplete .select2-selection--single {
+  background: rgb(221,221,221) !important;
+}

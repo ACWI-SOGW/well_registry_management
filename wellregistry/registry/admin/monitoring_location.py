@@ -8,12 +8,14 @@ from django.contrib.admin import ModelAdmin, RelatedFieldListFilter, ChoicesFiel
 from django.db.models.functions import Upper
 from django.forms import ModelForm, Textarea, ModelChoiceField
 from django.http import HttpResponse
-from django.urls import path
+from django.urls import path, reverse
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
+from admin_auto_filters.filters import AutocompleteFilter
 
-from ..models import MonitoringLocation, AgencyLookup
+from ..models import MonitoringLocation, AgencyLookup, SiteNo
 from .bulk_upload import BulkUploadView, BulkUploadTemplateView
 from .fetch_from_nwis import FetchFromNwisView
+from .auto_complete import SiteNoAutoCompleteView
 
 USGS_AGENCY_CD = 'USGS'
 tooltips = [{
@@ -250,6 +252,36 @@ class MonitoringLocationAdminForm(ModelForm):
         fields = '__all__'
 
 
+class CountyLookupFilter(AutocompleteFilter):
+    title = 'County' # display title
+    field_name = 'county' # name of the foreign key field
+    rel_model = MonitoringLocation
+
+    def get_autocomplete_url(self, request, model_admin):
+        rel = self.rel_model._meta.get_field(self.field_name).remote_field
+        model = rel.model
+        admin_site = model_admin.admin_site
+        url_name = '%s:%s_%s_autocomplete'
+        state_id = request.GET.get('state__id__exact')
+        url = reverse(url_name % (admin_site.name, model._meta.app_label, model._meta.model_name))
+        return '%s?state_id=%s' % (url, state_id)
+
+
+class SiteNoFilter(AutocompleteFilter):
+    title = 'Site no'
+    field_name = 'site_no'
+    use_pk_exact = False
+    parameter_name = 'site_no__exact'
+    template="admin/site_no-filter.html"
+
+    @staticmethod
+    def get_queryset_for_field(model, name):
+        return model.objects.get_queryset()
+
+    def get_autocomplete_url(self, request, model_admin):
+        return model_admin.custom_urls['siteno_autocomplete']
+                                                                                                                                                                                
+
 class SelectListFilter(RelatedFieldListFilter):
     """
     Django admin select list filter to implement a picker for the filter.
@@ -362,6 +394,21 @@ def get_row(monitoring_location):
     ]
 
 
+class CountyLookupAdmin(ModelAdmin):
+    """
+    Django admin model for county lookup
+    """
+    search_fields = ('county_nm',)
+
+    def get_search_results(self, request, queryset, search_term):
+        if 'state_id' in request.GET:
+            queryset = queryset.filter(state_id=request.GET['state_id'])
+        return super().get_search_results(request, queryset, search_term)
+
+    def has_view_permission(self, request, obj=None):
+        """Overrides default implementation"""
+        return True
+
 class MonitoringLocationAdmin(ModelAdmin):
     """
     Django admin model for the monitoring location
@@ -369,8 +416,15 @@ class MonitoringLocationAdmin(ModelAdmin):
     form = MonitoringLocationAdminForm
     list_display = ('site_id', 'agency', 'site_no', 'display_flag', 'wl_sn_flag', 'qw_sn_flag',
                     'insert_date', 'update_date')
-    list_filter = (('agency', SelectListFilter), ('country', SelectListFilter), ('state', SelectListFilter), ('county', SelectListFilter), ('nat_aqfr', SelectListFilter),
-                    'display_flag', 'site_no', 'update_date')
+    list_filter = (
+        ('agency', SelectListFilter),
+        ('state', SelectListFilter),
+        CountyLookupFilter,
+        SiteNoFilter,
+        ('nat_aqfr', SelectListFilter),
+        'display_flag',
+        'update_date'
+    )
 
     actions = ['download_monitoring_locations']
 
@@ -383,6 +437,10 @@ class MonitoringLocationAdmin(ModelAdmin):
               'qw_well_purpose_notes', 'link'
               ]
 
+    custom_urls = {
+        'siteno_autocomplete': 'siteno/autocomplete/'
+    }
+
 
     @staticmethod
     def site_id(obj):
@@ -393,12 +451,24 @@ class MonitoringLocationAdmin(ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path('bulk_upload/', self.admin_site.admin_view(BulkUploadView.as_view()), name='bulk_upload'),
-            path('bulk_upload_template/', self.admin_site.admin_view(BulkUploadTemplateView.as_view()),
-                 name='bulk_upload_template'),
-            path('fetch_from_nwis/', self.admin_site.admin_view(FetchFromNwisView.as_view()), name='fetch_from_nwis')
+            path('bulk_upload/',
+                self.admin_site.admin_view(BulkUploadView.as_view()),
+                name='bulk_upload'),
+            path('bulk_upload_template/',
+                self.admin_site.admin_view(BulkUploadTemplateView.as_view()),
+                name='bulk_upload_template'),
+            path('fetch_from_nwis/',
+                self.admin_site.admin_view(FetchFromNwisView.as_view()),
+                name='fetch_from_nwis'),
+            path(self.custom_urls['siteno_autocomplete'],
+                self.admin_site.admin_view(SiteNoAutoCompleteView.as_view(model_admin=self)),
+                name='siteno_autocomplete')
         ]
         return custom_urls + urls
+
+    def get_site_no_search_results(self, request, queryset, search_term):
+        return queryset.filter(site_no__icontains=search_term).values('site_no'), True
+
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)

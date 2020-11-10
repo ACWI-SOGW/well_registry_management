@@ -4,6 +4,7 @@ Well Registry ORM object.
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.db.models import F
 from django.core.validators import RegexValidator
 from django.db import models
 
@@ -265,3 +266,14 @@ class MonitoringLocation(models.Model):
         """Default string."""
         str_rep = f'{self.agency}:{self.site_no}'
         return str_rep
+
+
+class SiteNoManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().values(pk=F('site_no')).distinct()
+
+class SiteNo(MonitoringLocation):
+    objects = SiteNoManager()
+
+    class Meta:
+        proxy = True
