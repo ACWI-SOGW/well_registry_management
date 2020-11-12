@@ -26,8 +26,4 @@ class SiteNoAutoCompleteView(AutocompleteJsonView):
     def get_queryset(self):
         """Return queryset based on ModelAdmin.get_site_no_search_results()."""
 
-        qs = self.model_admin.get_queryset(self.request)
-        qs, search_use_distinct = self.model_admin.get_site_no_search_results(self.request, qs, self.term)
-        if search_use_distinct:
-            qs = qs.distinct()
-        return qs
+        return self.model_admin.get_queryset(self.request).filter(site_no__icontains=self.term).values('site_no')

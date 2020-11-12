@@ -480,12 +480,6 @@ class MonitoringLocationAdmin(ModelAdmin):
         ]
         return custom_urls + urls
 
-    def get_site_no_search_results(self, request, queryset, search_term):
-        """
-        '''Get Current Search Results for site_no''
-        """
-        return queryset.filter(site_no__icontains=search_term).values('site_no'), True
-
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
