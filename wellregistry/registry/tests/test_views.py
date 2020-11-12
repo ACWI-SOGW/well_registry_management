@@ -50,7 +50,7 @@ class TestMonitoringLocationsListView(TestCase):
         self.assertEqual(len(resp.data['results']), 2)
         self.assertIn(resp.data['results'][0]['site_no'], ['12345678', '44445555'])
         self.assertIn(resp.data['results'][1]['site_no'], ['12345678', '44445555'])
-        
+
     def test_site_no_autocomplete_monitoring_locations(self):
         req = self.factory.get('/registry/monitoring-locations/?format=json&site_no=443053094591001')
         resp = MonitoringLocationsListView.as_view()(req)

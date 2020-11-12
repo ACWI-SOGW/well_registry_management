@@ -252,7 +252,7 @@ class MonitoringLocationAdminForm(ModelForm):
         fields = '__all__'
 
 
-class CountyLookupFilter(AutocompleteFilter):
+class CountyLookupFilter(AutocompleteFilter): # pylint: disable=too-few-public-methods
     """
     '''AutoComplete Filter for State/County Filter Filter'''
     """
@@ -285,16 +285,18 @@ class SiteNoFilter(AutocompleteFilter):
 
     @staticmethod
     def get_queryset_for_field(model, name):
+        #pylint: disable=unused-argument
         """
         '''Get Current Queryset for field''
         """
         return model.objects.get_queryset()
 
     def get_autocomplete_url(self, request, model_admin):
+        # pylint: disable=R0201
         """
         '''Get AutoComplete URL for site_no'''
         """
-        return model_admin.custom_urls['siteno_autocomplete']                                                                                                                                                                   
+        return model_admin.custom_urls['siteno_autocomplete']
 
 class SelectListFilter(RelatedFieldListFilter):
     """

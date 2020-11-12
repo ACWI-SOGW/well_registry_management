@@ -4,7 +4,6 @@ Well Registry ORM object.
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.db.models import F
 from django.core.validators import RegexValidator
 from django.db import models
 
