@@ -291,7 +291,10 @@ class SiteNoFilter(AutocompleteFilter):
         return model.objects.get_queryset()
 
     def get_autocomplete_url(self, request, model_admin):
-        return model_admin.custom_urls['siteno_autocomplete']                                                                                                                                                                       
+        """
+        '''Get AutoComplete URL for site_no'''
+        """
+        return model_admin.custom_urls['siteno_autocomplete']                                                                                                                                                                   
 
 class SelectListFilter(RelatedFieldListFilter):
     """
@@ -478,6 +481,9 @@ class MonitoringLocationAdmin(ModelAdmin):
         return custom_urls + urls
 
     def get_site_no_search_results(self, request, queryset, search_term):
+        """
+        '''Get Current Search Results for site_no''
+        """
         return queryset.filter(site_no__icontains=search_term).values('site_no'), True
 
 

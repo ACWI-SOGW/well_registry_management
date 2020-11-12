@@ -292,6 +292,9 @@ class SiteNoManager(models.Manager):
         return super().get_queryset().values(pk=F('site_no')).distinct()
 
 class SiteNo(MonitoringLocation):
+    """
+    return SiteNoManager
+    """
     objects = SiteNoManager()
 
     class Meta:
