@@ -11,5 +11,6 @@ env/
 .idea/
 wellregistry/.env
 wellregistry/staticfiles
+wellregistry/wellregistry/staticfiles
 .DS_Store
 wellregistry/node_modules/
