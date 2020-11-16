@@ -1,12 +1,11 @@
 """
 Tests for admin.monitoring_location for Autocomplete module
 """
-from django.contrib.admin.sites import AdminSite
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.test import Client, TestCase
-from ...admin.monitoring_location import MonitoringLocationAdmin
-from ...models import MonitoringLocation
+
 class TestAutoCompleteView(TestCase):
     # pylint: disable=too-many-instance-attributes
     fixtures = ['test_groups.json', 'test_altitude_datum.json', 'test_counties.json',
@@ -44,4 +43,4 @@ class TestAutoCompleteView(TestCase):
         client.force_login(self.usgs_user)
         resp = client.get('/registry/admin/registry/monitoringlocation/siteno/autocomplete/?term=123456709')
         self.assertIn(b'"results": []', resp.content)
-    
+
