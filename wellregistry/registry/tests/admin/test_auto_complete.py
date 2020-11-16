@@ -15,7 +15,7 @@ from ...models import MonitoringLocation
 from ...admin.auto_complete import SiteNoAutoCompleteView
 
 
-class TestMonitoringLocationAdmin(TestCase):
+class TestAutoCompleteView(TestCase):
     fixtures = ['test_groups.json', 'test_altitude_datum.json', 'test_counties.json',
                 'test_countries.json', 'test_horizontal_datum.json', 'test_nat_aquifer.json',
                 'test_states.json', 'test_units.json', 'test_user.json', 'test_agencies.json',
