@@ -7,12 +7,8 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.http import HttpRequest
 from django.test import Client, TestCase
-from django.contrib.admin.views.autocomplete import AutocompleteJsonView
-from django.http import JsonResponse
-
 from ...admin.monitoring_location import MonitoringLocationAdmin
 from ...models import MonitoringLocation
-from ...admin.auto_complete import SiteNoAutoCompleteView
 
 
 class TestMonitoringLocationAdmin(TestCase):

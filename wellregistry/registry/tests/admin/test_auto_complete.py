@@ -4,17 +4,9 @@ Tests for admin.monitoring_location module
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
-from django.contrib.messages.storage.fallback import FallbackStorage
-from django.http import HttpRequest
 from django.test import Client, TestCase
-from django.contrib.admin.views.autocomplete import AutocompleteJsonView
-from django.http import JsonResponse
-
 from ...admin.monitoring_location import MonitoringLocationAdmin
 from ...models import MonitoringLocation
-from ...admin.auto_complete import SiteNoAutoCompleteView
-
-
 class TestAutoCompleteView(TestCase):
     fixtures = ['test_groups.json', 'test_altitude_datum.json', 'test_counties.json',
                 'test_countries.json', 'test_horizontal_datum.json', 'test_nat_aquifer.json',
@@ -60,14 +52,10 @@ class TestAutoCompleteView(TestCase):
         client = Client()
         client.force_login(self.usgs_user)
         resp = client.get('/registry/admin/registry/monitoringlocation/siteno/autocomplete/?site_no__exact=12345678')
-
         self.assertIn(b'12345678', resp.content)
 
     def test_site_no_not_exists_auto_complete_view(self):
         client = Client()
         client.force_login(self.usgs_user)
         resp = client.get('/registry/admin/registry/monitoringlocation/siteno/autocomplete/?site_no__exact=12345679')
-
         self.assertNotIn(b'12345679', resp.content)
-
-
