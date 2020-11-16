@@ -50,8 +50,6 @@ class TestMonitoringLocationsListView(TestCase):
         self.assertEqual(len(resp.data['results']), 2)
         self.assertIn(resp.data['results'][0]['site_no'], ['12345678', '44445555'])
         self.assertIn(resp.data['results'][1]['site_no'], ['12345678', '44445555'])
-
-
 class TestStatusCheck(TestCase):
 
     def setUp(self):
