@@ -156,7 +156,8 @@ class TestMonitoringLocationAdmin(TestCase):
     def test_site_no_auto_complete_View(self):
         client = Client()
         client.force_login(self.usgs_user)
-        resp = client.get('/registry/admin/registry/monitoringlocation/?site_no__exact=12345678')
+        resp = client.get('/registry/admin/registry/monitoringlocation/siteno/autocomplete/?site_no__exact=12345678')
+
         self.assertIn(b'12345678', resp.content)
 
     def test_changelist_view_with_adwr_user(self):
