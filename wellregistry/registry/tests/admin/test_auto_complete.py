@@ -8,6 +8,7 @@ from django.test import Client, TestCase
 from ...admin.monitoring_location import MonitoringLocationAdmin
 from ...models import MonitoringLocation
 class TestAutoCompleteView(TestCase):
+    # pylint: disable=too-many-instance-attributes
     fixtures = ['test_groups.json', 'test_altitude_datum.json', 'test_counties.json',
                 'test_countries.json', 'test_horizontal_datum.json', 'test_nat_aquifer.json',
                 'test_states.json', 'test_units.json', 'test_user.json', 'test_agencies.json',
