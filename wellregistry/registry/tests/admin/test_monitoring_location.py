@@ -7,9 +7,12 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.http import HttpRequest
 from django.test import Client, TestCase
+from django.contrib.admin.views.autocomplete import AutocompleteJsonView
+from django.http import JsonResponse
 
 from ...admin.monitoring_location import MonitoringLocationAdmin
 from ...models import MonitoringLocation
+from ...admin.auto_complete import SiteNoAutoCompleteView
 
 
 class TestMonitoringLocationAdmin(TestCase):
@@ -149,6 +152,12 @@ class TestMonitoringLocationAdmin(TestCase):
         self.assertIn(b'Fetch ML from NWIS', resp.content)
         self.assertNotIn(b'Add monitoring location', resp.content)
         self.assertNotIn(b'Bulk Upload', resp.content)
+
+    def test_site_no_auto_complete_View(self):
+        client = Client()
+        client.force_login(self.usgs_user)
+        resp = client.get('/registry/admin/registry/monitoringlocation/?site_no__exact=12345678')
+        self.assertIn(b'12345678', resp.content)
 
     def test_changelist_view_with_adwr_user(self):
         client = Client()
