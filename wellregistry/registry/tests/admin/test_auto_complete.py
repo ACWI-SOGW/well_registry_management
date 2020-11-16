@@ -1,5 +1,5 @@
 """
-Tests for admin.monitoring_location module
+Tests for admin.monitoring_location for Autocomplete module
 """
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
