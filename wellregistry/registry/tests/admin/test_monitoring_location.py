@@ -153,13 +153,6 @@ class TestMonitoringLocationAdmin(TestCase):
         self.assertNotIn(b'Add monitoring location', resp.content)
         self.assertNotIn(b'Bulk Upload', resp.content)
 
-    def test_site_no_auto_complete_View(self):
-        client = Client()
-        client.force_login(self.usgs_user)
-        resp = client.get('/registry/admin/registry/monitoringlocation/siteno/autocomplete/?site_no__exact=12345678')
-
-        self.assertIn(b'12345678', resp.content)
-
     def test_changelist_view_with_adwr_user(self):
         client = Client()
         client.force_login(self.adwr_user)
