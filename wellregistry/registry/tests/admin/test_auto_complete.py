@@ -15,25 +15,12 @@ class TestAutoCompleteView(TestCase):
                 'test_monitoring_location.json']
 
     def setUp(self):
-        self.superuser = get_user_model().objects.create_superuser('my_superuser')
-        self.adwr_group = Group.objects.get(name='adwr')
         self.usgs_group = Group.objects.get(name='usgs')
 
         self.add_permission = Permission.objects.get(codename='add_monitoringlocation')
         self.view_permission = Permission.objects.get(codename='view_monitoringlocation')
         self.change_permission = Permission.objects.get(codename='change_monitoringlocation')
         self.delete_permission = Permission.objects.get(codename='delete_monitoringlocation')
-
-        self.adwr_user = get_user_model().objects.create_user('adwruser')
-        self.adwr_user.groups.add(self.adwr_group)
-        self.adwr_user.user_permissions.set([
-            self.add_permission,
-            self.view_permission,
-            self.change_permission,
-            self.delete_permission
-        ])
-        self.adwr_user.is_staff = True
-        self.adwr_user.save()
 
         self.usgs_user = get_user_model().objects.create_user('usgsuser')
         self.usgs_user.groups.add(self.usgs_group)
@@ -46,17 +33,15 @@ class TestAutoCompleteView(TestCase):
         self.usgs_user.is_staff = True
         self.usgs_user.save()
 
-        self.site = AdminSite()
-        self.admin = MonitoringLocationAdmin(MonitoringLocation, self.site)
-
     def test_site_no_auto_complete_view(self):
         client = Client()
         client.force_login(self.usgs_user)
-        resp = client.get('/registry/admin/registry/monitoringlocation/siteno/autocomplete/?site_no__exact=12345678')
+        resp = client.get('/registry/admin/registry/monitoringlocation/siteno/autocomplete/?term=12345678')
         self.assertIn(b'12345678', resp.content)
 
     def test_site_no_not_exists_auto_complete_view(self):
         client = Client()
         client.force_login(self.usgs_user)
-        resp = client.get('/registry/admin/registry/monitoringlocation/siteno/autocomplete/?site_no__exact=12345679')
-        self.assertNotIn(b'12345679', resp.content)
+        resp = client.get('/registry/admin/registry/monitoringlocation/siteno/autocomplete/?term=123456709')
+        self.assertIn(b'"results": []', resp.content)
+    
