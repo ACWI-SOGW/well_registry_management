@@ -43,4 +43,3 @@ class TestAutoCompleteView(TestCase):
         client.force_login(self.usgs_user)
         resp = client.get('/registry/admin/registry/monitoringlocation/siteno/autocomplete/?term=123456709')
         self.assertIn(b'"results": []', resp.content)
-
