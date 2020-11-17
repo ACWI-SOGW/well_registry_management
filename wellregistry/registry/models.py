@@ -212,30 +212,30 @@ class MonitoringLocation(models.Model):
                                  choices=[('CONFINED', 'Confined'), ('UNCONFINED', 'Unconfined')],
                                  verbose_name='Aquifer type')
 
-    wl_sn_flag = models.BooleanField(default=False, verbose_name='In WL sub-network?')
+    wl_sn_flag = models.BooleanField(default=False, verbose_name='In water-level sub-network?')
     wl_network_name = models.CharField(max_length=50, blank=True, db_column='wl_sys_name',
-                                       verbose_name='WL network name')
-    wl_baseline_flag = models.BooleanField(default=False, verbose_name='WL baseline?')
+                                       verbose_name='Water-level network name')
+    wl_baseline_flag = models.BooleanField(default=False, verbose_name='Water-level baseline?')
     wl_well_type = models.CharField(max_length=32, blank=True, choices=WELL_TYPES,
-                                    verbose_name='WL well type')
+                                    verbose_name='Water-level well type')
     wl_well_chars = models.CharField(max_length=32, blank=True, choices=WELL_CHARACTERISTICS,
-                                     verbose_name='WL well characteristics')
+                                     verbose_name='Water-level well characteristics')
     wl_well_purpose = models.CharField(max_length=32, blank=True, choices=WELL_PURPOSES,
-                                       verbose_name='WL well purpose')
-    wl_well_purpose_notes = models.CharField(max_length=4000, blank=True, verbose_name='WL well purpose notes')
+                                       verbose_name='Water-level well purpose')
+    wl_well_purpose_notes = models.CharField(max_length=4000, blank=True, verbose_name='Water-level well purpose notes')
 
-    qw_sn_flag = models.BooleanField(default=False, verbose_name='In QW sub-network?')
+    qw_sn_flag = models.BooleanField(default=False, verbose_name='In water quality sub-network?')
     qw_network_name = models.CharField(max_length=50, blank=True, db_column='qw_sys_name',
-                                       verbose_name='QW network name')
-    qw_baseline_flag = models.BooleanField(default=False, verbose_name='QW baseline?')
+                                       verbose_name='Water quality network name')
+    qw_baseline_flag = models.BooleanField(default=False, verbose_name='Water quality baseline?')
     qw_well_type = models.CharField(max_length=32, blank=True, choices=WELL_TYPES,
-                                    verbose_name='QW well type')
+                                    verbose_name='Water quality well type')
     qw_well_chars = models.CharField(max_length=32, blank=True, choices=WELL_CHARACTERISTICS,
-                                     verbose_name='QW well characteristics')
+                                     verbose_name='Water quality well characteristics')
     qw_well_purpose = models.CharField(max_length=32, blank=True, choices=WELL_PURPOSES,
-                                       verbose_name='QW well purpose')
+                                       verbose_name='Water quality well purpose')
     qw_well_purpose_notes = models.CharField(max_length=4000, blank=True,
-                                             verbose_name='QW well purpose notes')
+                                             verbose_name='Water quality well purpose notes')
 
     link = models.CharField(max_length=500, blank=True)
 
