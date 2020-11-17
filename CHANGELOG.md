@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 -   Added Tooltips for all monitoring location input fields
 -   Added Filtering for site_no, state, county, dislplay_flag, and national aquifer 
+-   Added Cancel button on edit screens
 ### Fixed
 -   Fixed the Delete button styling so button is full height.
 ## [0.1.0](https://github.com/ACWI-SOGW/well_registry_management/tree/wellregistry-0.1.0) - 2020-11-05
