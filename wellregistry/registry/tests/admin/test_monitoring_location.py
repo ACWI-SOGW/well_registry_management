@@ -186,7 +186,7 @@ class TestMonitoringLocationAdmin(TestCase):
         client.force_login(self.adwr_user)
         resp = client.get('/registry/admin/registry/monitoringlocation/5/change/')
         self.assertEqual(resp.status_code, 200)
-   
+
     def test_change_monitoring_location_with_with_superuser(self):
         client = Client()
         client.force_login(self.superuser)
