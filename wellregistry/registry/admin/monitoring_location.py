@@ -431,7 +431,7 @@ class MonitoringLocationAdmin(ModelAdmin):
     """
     form = MonitoringLocationAdminForm
     list_display = ('site_id', 'agency', 'site_no', 'display_flag', 'wl_sn_flag', 'qw_sn_flag',
-                    'insert_date', 'update_date')
+                    'state', 'nat_aqfr', 'site_name')
     list_filter = (
         ('agency', SelectListFilter),
         ('state', SelectListFilter),
