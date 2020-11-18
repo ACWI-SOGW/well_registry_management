@@ -180,7 +180,7 @@ class TestMonitoringLocationAdmin(TestCase):
         client.force_login(self.usgs_user)
         resp = client.get('/registry/admin/registry/monitoringlocation/3/change/')
         self.assertEqual(resp.status_code, 200)
-            
+
     def test_change_monitoring_location_with_adwr_user(self):
         client = Client()
         client.force_login(self.adwr_user)
@@ -192,6 +192,3 @@ class TestMonitoringLocationAdmin(TestCase):
         client.force_login(self.superuser)
         resp = client.get('/registry/admin/registry/monitoringlocation/3/change/')
         self.assertEqual(resp.status_code, 200)
-
-		
-
