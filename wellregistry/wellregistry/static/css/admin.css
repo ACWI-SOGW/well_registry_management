@@ -29,3 +29,15 @@
 #content-main .submit-row a.deletelink {
   height: inherit;
 }
+
+#content-main .submit-row a.cancellink {
+  float: left;
+  background: #bbb;
+  border-radius: 4px;
+  padding: 10px 15px;
+  height: 35px;
+  line-height: 15px;
+  margin: 0 0 0 5px;
+  color: #fff;
+}
+
