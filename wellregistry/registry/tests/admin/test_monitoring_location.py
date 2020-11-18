@@ -156,3 +156,42 @@ class TestMonitoringLocationAdmin(TestCase):
         self.assertNotIn(b'Fetch ML from NWIS', resp.content)
         self.assertIn(b'Add monitoring location', resp.content)
         self.assertIn(b'Bulk Upload', resp.content)
+
+    def test_add_monitoring_location_with_usgs_user(self):
+        client = Client()
+        client.force_login(self.usgs_user)
+        resp = client.get('/registry/admin/registry/monitoringlocation/add/')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_add_monitoring_location_with_adwr_user(self):
+        client = Client()
+        client.force_login(self.adwr_user)
+        resp = client.get('/registry/admin/registry/monitoringlocation/add/')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_add_monitoring_location_with_with_superuser(self):
+        client = Client()
+        client.force_login(self.superuser)
+        resp = client.get('/registry/admin/registry/monitoringlocation/add/')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_change_monitoring_location_with_usgs_user(self):
+        client = Client()
+        client.force_login(self.usgs_user)
+        resp = client.get('/registry/admin/registry/monitoringlocation/3/change/')
+        self.assertEqual(resp.status_code, 200)
+            
+    def test_change_monitoring_location_with_adwr_user(self):
+        client = Client()
+        client.force_login(self.adwr_user)
+        resp = client.get('/registry/admin/registry/monitoringlocation/5/change/')
+        self.assertEqual(resp.status_code, 200)
+            
+    def test_change_monitoring_location_with_with_superuser(self):
+        client = Client()
+        client.force_login(self.superuser)
+        resp = client.get('/registry/admin/registry/monitoringlocation/3/change/')
+        self.assertEqual(resp.status_code, 200)
+
+		
+

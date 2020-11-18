@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added Tooltips for all monitoring location input fields
 -   Added Filtering for site_no, state, county, dislplay_flag, and national aquifer 
 -   Added Cancel button on edit screens
+-   Added tests for /registry/admin/registry/monitoringlocation/add/ and change
 ### Fixed
 -   Fixed the Delete button styling so button is full height.
 ### Changed 
