@@ -12,6 +12,7 @@
 
 {% block content %}
     <p>To get the bulk upload template click <a href="{%  url 'admin:bulk_upload_template' %}">here</a></p>
+    <p>Note: A user can only upload a CSV file</p>
     {% if errors %}
         <ul class="errorlist">
         {% for row_index, error in errors %}
@@ -33,7 +34,6 @@
                     <li>{{ file_error }}</li>
                 </ul>
             {% endif %}
-            <p>Note: A user can only upload a CSV file</p>
             <label class="usa-label font-body-sm" for="{{ form.file.id_for_label}}">Choose csv file containing monitoring locations</label>
             <input id="{{ form.file.id_for_label }}" class="usa-file-input" type="file"
                    name="{{ form.file.html_name }}" />
