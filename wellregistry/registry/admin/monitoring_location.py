@@ -545,5 +545,6 @@ class MonitoringLocationAdmin(ModelAdmin):
         return _has_permission('registry.delete_monitoringlocation', request.user, obj)
 
     def changelist_view(self, request, extra_context=None):
-        self.message_user(request, 'Note: additions/changes to monitoring locations may take up to a day to appear in NGWMN')
+        self.message_user(request,
+                          'Note: additions/changes to monitoring locations may take up to a day to appear in NGWMN')
         return super().changelist_view(request, extra_context=extra_context)
