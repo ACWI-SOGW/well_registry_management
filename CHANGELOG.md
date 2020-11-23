@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added Cancel button on edit screens
 -   Added tests for /registry/admin/registry/monitoringlocation/add/ and change
 -   Added message for bulk upload - Note: A user can only upload a CSV file
--   Added message for Site may no be available til next day
 ### Fixed
 -   Fixed the Delete button styling so button is full height.
 ### Changed 
