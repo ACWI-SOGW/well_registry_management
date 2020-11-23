@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added Filtering for site_no, state, county, dislplay_flag, and national aquifer 
 -   Added Cancel button on edit screens
 -   Added tests for /registry/admin/registry/monitoringlocation/add/ and change
+-   Added message for bulk upload - Note: A user can only upload a CSV file
+-   Added 
 ### Fixed
 -   Fixed the Delete button styling so button is full height.
 ### Changed 

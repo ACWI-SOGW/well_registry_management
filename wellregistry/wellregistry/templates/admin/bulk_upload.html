@@ -12,6 +12,7 @@
 
 {% block content %}
     <p>To get the bulk upload template click <a href="{%  url 'admin:bulk_upload_template' %}">here</a></p>
+    <p>Note: A user can only upload a CSV file</p>
     {% if errors %}
         <ul class="errorlist">
         {% for row_index, error in errors %}
