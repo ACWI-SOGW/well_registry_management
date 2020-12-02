@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.0](https://github.com/ACWI-SOGW/well_registry_management/compare/wellregistry-0.1.0...wellregistry-0.2.0) - 2020-12-02
 
 ### Added
--   Added Tooltips for all monitoring location input fields
--   Added Filtering for site_no, state, county, display_flag, and national aquifer 
+-   Added tooltips for all monitoring location input fields
+-   Added filtering for site_no, state, county, display_flag, and national aquifer 
 -   Added Cancel button on edit screens
 -   Added tests for /registry/admin/registry/monitoringlocation/add/ and change
 -   Added message for bulk upload - Note: A user can only upload a CSV file
