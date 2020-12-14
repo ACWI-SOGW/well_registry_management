@@ -29,13 +29,20 @@ SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 DEBUG = 'DEBUG' in os.environ
 
 allowed_hosts = os.getenv('ALLOWED_HOSTS', '[]')
-
 try:
     ALLOWED_HOSTS = ast.literal_eval(allowed_hosts)
     if not isinstance(ALLOWED_HOSTS, list):
         raise TypeError('ALLOWED_HOSTS must be a list.')
 except ValueError:
     ALLOWED_HOSTS = []
+
+csrf_trusted_origins = os.getenv('CSRF_TRUSTED_ORIGINS', '[]')
+try:
+    CSRF_TRUSTED_ORIGINS = ast.literal_eval(csrf_trusted_origins)
+    if not isinstance(CSRF_TRUSTED_ORIGINS, list):
+        raise TypeError('CSRF_TRUSTED_ORIGINS must be a list.')
+except ValueError:
+    CSRF_TRUSTED_ORIGINS = []
 
 # Application definition
 
