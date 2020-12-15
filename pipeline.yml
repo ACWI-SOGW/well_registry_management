@@ -40,7 +40,7 @@ containerPort: 8000
 # does not return or returns with a non-200 result then it triggers another to started up.
 # This should be a simple low resource response that is quick as possible to response to checks.
 # Long startup times for this URL will likely result in AWS improperly managing application deployment.
-healthCheck: "/registry/status/"
+healthCheck: "/location-registry/status/"
 
 # The private gitlab path to the configuration repository containing AWS secrets and
 # application specific environment variable that will be passed into the docker as env variables.
@@ -68,5 +68,5 @@ configCredentialsId: "wma-eto-eb-rsa"
 urlRules:
   - type: forward
     conditions:
-      - "/registry/*"
+      - "/location-registry/*"
     priority: 600
