@@ -11,7 +11,7 @@ from ...admin.bulk_upload import BulkUploadView
 
 
 class TestBulkUploadView(TestCase):
-    URL = '/registry/admin/registry/monitoringlocation/bulk_upload/'
+    URL = '/location-registry/admin/registry/monitoringlocation/bulk_upload/'
     fixtures = ['test_agencies', 'test_countries.json', 'test_states.json', 'test_counties.json',
                 'test_horizontal_datum.json', 'test_altitude_datum.json', 'test_nat_aquifer.json',
                 'test_units.json']
@@ -98,7 +98,7 @@ class TestBulkUploadTemplateView(TestCase):
         client = Client()
         user = get_user_model().objects.create(username='testuser', password='12345', is_staff=True, is_superuser=True)
         client.force_login(user)
-        response = client.get('/registry/admin/registry/monitoringlocation/bulk_upload_template/')
+        response = client.get('/location-registry/admin/registry/monitoringlocation/bulk_upload_template/')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

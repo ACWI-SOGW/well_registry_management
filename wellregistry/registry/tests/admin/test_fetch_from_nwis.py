@@ -14,7 +14,7 @@ from ..fake_data import TEST_RDB, TEST_NO_WELL_DEPTH_RDB, TEST_STREAM_RDB
 
 
 class TestFetchFromNwisView(TestCase):
-    FETCH_URL = '/registry/admin/registry/monitoringlocation/fetch_from_nwis/'
+    FETCH_URL = '/location-registry/admin/registry/monitoringlocation/fetch_from_nwis/'
     fixtures = ['test_agencies', 'test_countries.json', 'test_states.json', 'test_counties.json',
                 'test_horizontal_datum.json', 'test_altitude_datum.json', 'test_nat_aquifer.json', 'test_units.json']
 
@@ -43,7 +43,7 @@ class TestFetchFromNwisView(TestCase):
         self.assertTrue(MonitoringLocation.objects.filter(site_no='443053094591001', agency=self.usgs_agency).exists())
         monitoring_location = MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency)
         self.assertEqual(resp.status_code, 302)
-        self.assertRedirects(resp, f'/registry/admin/registry/monitoringlocation/{monitoring_location.id}/change/')
+        self.assertRedirects(resp, f'/location-registry/admin/registry/monitoringlocation/{monitoring_location.id}/change/')
 
     @Mocker()
     def test_post_with_existing_site(self, mock_request):
@@ -78,7 +78,7 @@ class TestFetchFromNwisView(TestCase):
         })
 
         self.assertEqual(resp2.status_code, 302)
-        self.assertRedirects(resp2, f'/registry/admin/registry/monitoringlocation/{monitoring_location.id}/change/')
+        self.assertRedirects(resp2, f'/location-registry/admin/registry/monitoringlocation/{monitoring_location.id}/change/')
         self.assertEqual(MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency).site_name,
                          'New Name')
 
@@ -103,7 +103,7 @@ class TestFetchFromNwisView(TestCase):
         })
 
         self.assertEqual(resp2.status_code, 302)
-        self.assertRedirects(resp2, f'/registry/admin/registry/monitoringlocation/{monitoring_location.id}/change/')
+        self.assertRedirects(resp2, f'/location-registry/admin/registry/monitoringlocation/{monitoring_location.id}/change/')
         self.assertNotEqual(
             MonitoringLocation.objects.get(site_no='443053094591001', agency=self.usgs_agency).site_name,
             'New Name')

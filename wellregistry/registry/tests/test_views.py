@@ -13,7 +13,7 @@ class TestBasePage(TestCase):
         self.factory = RequestFactory()
 
     def test_base_page(self):
-        req = self.factory.get('/registry')
+        req = self.factory.get('/location-registry')
         resp = BasePage.as_view()(req)
         self.assertEqual(resp.status_code, 200)
 
@@ -28,14 +28,14 @@ class TestMonitoringLocationsListView(TestCase):
         self.factory = RequestFactory()
 
     def test_all_monitoring_locations(self):
-        req = self.factory.get('/registry/monitoring-locations/?format=json')
+        req = self.factory.get('/location-registry/monitoring-locations/?format=json')
         resp = MonitoringLocationsListView.as_view()(req)
 
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(len(resp.data['results']), 3)
 
     def test_display_flag_true_monitoring_locations(self):
-        req = self.factory.get('/registry/monitoring-locations/?format=json&display_flag=true')
+        req = self.factory.get('/location-registry/monitoring-locations/?format=json&display_flag=true')
         resp = MonitoringLocationsListView.as_view()(req)
 
         self.assertEqual(resp.status_code, 200)
@@ -43,7 +43,7 @@ class TestMonitoringLocationsListView(TestCase):
         self.assertEqual(resp.data['results'][0]['site_no'], '11112222')
 
     def test_display_flag_false_monitoring_locations(self):
-        req = self.factory.get('/registry/monitoring-locations/?format=json&display_flag=false')
+        req = self.factory.get('/location-registry/monitoring-locations/?format=json&display_flag=false')
         resp = MonitoringLocationsListView.as_view()(req)
 
         self.assertEqual(resp.status_code, 200)
@@ -57,7 +57,7 @@ class TestStatusCheck(TestCase):
 
     def test_base_page(self):
         # TEST ACTION
-        req = self.factory.get('/registry/status')
+        req = self.factory.get('/location-registry/status')
 
         # VALUE EXTRACT
         resp = status_check(req)

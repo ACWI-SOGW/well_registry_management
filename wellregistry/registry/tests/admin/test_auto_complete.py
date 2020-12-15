@@ -35,11 +35,11 @@ class TestAutoCompleteView(TestCase):
     def test_site_no_auto_complete_view(self):
         client = Client()
         client.force_login(self.usgs_user)
-        resp = client.get('/registry/admin/registry/monitoringlocation/siteno/autocomplete/?term=12345678')
+        resp = client.get('/location-registry/admin/registry/monitoringlocation/siteno/autocomplete/?term=12345678')
         self.assertIn(b'12345678', resp.content)
 
     def test_site_no_not_exists_auto_complete_view(self):
         client = Client()
         client.force_login(self.usgs_user)
-        resp = client.get('/registry/admin/registry/monitoringlocation/siteno/autocomplete/?term=123456709')
+        resp = client.get('/location-registry/admin/registry/monitoringlocation/siteno/autocomplete/?term=123456709')
         self.assertIn(b'"results": []', resp.content)
