@@ -5,6 +5,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/ACWI-SOGW/well_registry_management/compare/wellregistry-0.2.0...master)
 
+### Changed
+-   Changed the url mapping from registry to location-registry.
+
 ## [0.2.0](https://github.com/ACWI-SOGW/well_registry_management/compare/wellregistry-0.1.0...wellregistry-0.2.0) - 2020-12-02
 
 ### Added

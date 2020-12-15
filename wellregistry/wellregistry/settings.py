@@ -257,7 +257,7 @@ STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
     ('uswds', os.path.join(BASE_DIR, 'node_modules/uswds/dist'))
 ]
-STATIC_URL = '/registry/static/'
+STATIC_URL = '/location-registry/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'wellregistry/staticfiles')
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
