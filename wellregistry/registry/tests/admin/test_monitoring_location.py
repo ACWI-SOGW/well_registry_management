@@ -144,7 +144,7 @@ class TestMonitoringLocationAdmin(TestCase):
     def test_changelist_view_with_usgs_user(self):
         client = Client()
         client.force_login(self.usgs_user)
-        resp = client.get('/location-registry/admin/registry/monitoringlocation/')
+        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/')
         self.assertIn(b'Fetch ML from NWIS', resp.content)
         self.assertNotIn(b'Add monitoring location', resp.content)
         self.assertNotIn(b'Bulk Upload', resp.content)
@@ -152,7 +152,7 @@ class TestMonitoringLocationAdmin(TestCase):
     def test_changelist_view_with_adwr_user(self):
         client = Client()
         client.force_login(self.adwr_user)
-        resp = client.get('/location-registry/admin/registry/monitoringlocation/')
+        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/')
         self.assertNotIn(b'Fetch ML from NWIS', resp.content)
         self.assertIn(b'Add monitoring location', resp.content)
         self.assertIn(b'Bulk Upload', resp.content)
@@ -160,35 +160,35 @@ class TestMonitoringLocationAdmin(TestCase):
     def test_add_monitoring_location_with_usgs_user(self):
         client = Client()
         client.force_login(self.usgs_user)
-        resp = client.get('/location-registry/admin/registry/monitoringlocation/add/')
+        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/add/')
         self.assertEqual(resp.status_code, 200)
 
     def test_add_monitoring_location_with_adwr_user(self):
         client = Client()
         client.force_login(self.adwr_user)
-        resp = client.get('/location-registry/admin/registry/monitoringlocation/add/')
+        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/add/')
         self.assertEqual(resp.status_code, 200)
 
     def test_add_monitoring_location_with_with_superuser(self):
         client = Client()
         client.force_login(self.superuser)
-        resp = client.get('/location-registry/admin/registry/monitoringlocation/add/')
+        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/add/')
         self.assertEqual(resp.status_code, 200)
 
     def test_change_monitoring_location_with_usgs_user(self):
         client = Client()
         client.force_login(self.usgs_user)
-        resp = client.get('/location-registry/admin/registry/monitoringlocation/3/change/')
+        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/3/change/')
         self.assertEqual(resp.status_code, 200)
 
     def test_change_monitoring_location_with_adwr_user(self):
         client = Client()
         client.force_login(self.adwr_user)
-        resp = client.get('/location-registry/admin/registry/monitoringlocation/5/change/')
+        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/5/change/')
         self.assertEqual(resp.status_code, 200)
 
     def test_change_monitoring_location_with_with_superuser(self):
         client = Client()
         client.force_login(self.superuser)
-        resp = client.get('/location-registry/admin/registry/monitoringlocation/3/change/')
+        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/3/change/')
         self.assertEqual(resp.status_code, 200)
