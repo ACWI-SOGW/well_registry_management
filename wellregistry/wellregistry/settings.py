@@ -261,7 +261,7 @@ STATIC_URL = '/location-registry/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'wellregistry/staticfiles')
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-USE_X_FORWARDED_HOST = False
+USE_X_FORWARDED_HOST = True
 
 # Rest framework configuration
 REST_FRAMEWORK = {
