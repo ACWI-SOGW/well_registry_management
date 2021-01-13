@@ -20,13 +20,13 @@ from django.urls import include, path
 
 urlpatterns = [
     # this is the django admin url which allows adding django users and table management
-    path('location-registry/admin/', admin.site.urls),
-    path('location-registry/chaining/', include('smart_selects.urls')),
+    path('apps/location-registry/admin/', admin.site.urls),
+    path('apps/location-registry/chaining/', include('smart_selects.urls')),
 
-    path('location-registry/', include('social_django.urls', namespace='social')),
-    path('location-registry/accounts/', include('django.contrib.auth.urls')),
+    path('apps/location-registry/', include('social_django.urls', namespace='social')),
+    path('apps/location-registry/accounts/', include('django.contrib.auth.urls')),
 
     # this is our registry page
-    path('location-registry/', include('registry.urls')),
+    path('apps/location-registry/', include('registry.urls')),
 ]
 urlpatterns += staticfiles_urlpatterns()
