@@ -70,3 +70,12 @@ urlRules:
     conditions:
       - "/apps/location-registry/*"
     priority: 600
+
+# These are the tags that will appear as part of the deployed ECS asset.
+# wma:applicationId, wma:environment, and Name come for free via the ecs deployment pipeline.
+tags:
+  wma:costCenter: TBD
+  wma:organization: IOW
+  wma:contact: "jkreft@usgs.gov"
+  wma:taggingVersion: 0.0.1
+  wma:project_id: iow
