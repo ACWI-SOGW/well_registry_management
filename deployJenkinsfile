@@ -1,4 +1,4 @@
-@Library(value='iow-ecs-pipeline@2.2.2', changelog=false) _
+@Library(value='iow-ecs-pipeline@3.0.0', changelog=false) _
 
 pipeline {
     agent {
@@ -7,6 +7,13 @@ pipeline {
         }
     }
     stages {
+        stage('Set Build Description') {
+            steps {
+                script {
+                    currentBuild.description = "Deploy to ${ENVIRONMENT}"
+                }
+             }
+        }
         stage('run migration') {
             agent {
                 dockerfile {
