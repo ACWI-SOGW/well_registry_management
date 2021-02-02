@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/ACWI-SOGW/well_registry_management#readme",
   "dependencies": {
-    "uswds": "2.8.0"
+    "uswds": "2.10.0"
   }
 }

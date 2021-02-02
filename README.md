@@ -62,7 +62,7 @@ make watch
 ```
 Another means to run local is the manage.py from within the wellregistry path:
 ```bash
-% python -m manage runserver
+env/bin/python wellregistry/manage.py runserver
 ```
 
 Use `localhost` instead of `127.0.0.1` for local development, otherwise a KeyCloak bug
@@ -71,7 +71,7 @@ regarding an invalid `redirect_uri` will be encountered when authenticating.
 ## Running in a docker container locally
 To build the container:
 ```bash
-% docker build ./ -t well_registry_app
+docker build ./ -t well_registry_app
 ```
 
 To run the container:
@@ -91,11 +91,11 @@ docker run --name registry_postgres -d -p 5432:5432 usgswma/well-registry-db:ci
 
 You can stop the container using:
 ```bash
-% docker stop registry_postgres
+docker stop registry_postgres
 ```
 You can start the container again:
 ```bash
-% docker start registry_postgres
+docker start registry_postgres
 ```
 
 ## Environment Variables
