@@ -3,7 +3,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/ACWI-SOGW/well_registry_management/compare/wellregistry-0.2.0...master)
+## [Unreleased](https://github.com/ACWI-SOGW/well_registry_management/compare/wellregistry-1.0.0...master)
+
+## [1.0.0](https://github.com/ACWI-SOGW/well_registry_management/compare/wellregistry-0.2.0...wellregistry-1.0.0) - 2021-02-02
 
 ### Changed
 -   Changed the url mapping from registry to apps/location-registry.
