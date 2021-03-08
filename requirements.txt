@@ -11,5 +11,5 @@ python-dotenv==0.15.0
 requests==2.25.1
 requests-mock==1.8.0
 social-auth-app-django==4.0.0
-social-auth-core==4.0.3
+social-auth-core==4.1.0
 whitenoise==5.2.0
