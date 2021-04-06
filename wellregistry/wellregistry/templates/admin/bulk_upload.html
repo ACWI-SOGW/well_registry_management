@@ -2,42 +2,55 @@
 {% load static %}
 
 {% block breadcrumbs %}
-    <div class="breadcrumbs">
-      <a href="{% url 'admin:index' %}">Home</a>
-        &rsaquo; <a href="{% url 'admin:registry_monitoringlocation_changelist' %}">Monitoring Location</a>
-        &rsaquo; Bulk Upload
-    </div>
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a>
+    &rsaquo; <a href="{% url 'admin:registry_monitoringlocation_changelist' %}">Monitoring Location</a>
+    &rsaquo; Bulk Upload
+</div>
 {% endblock %}
 
 
 {% block content %}
-    <p>To get the bulk upload template click <a href="{%  url 'admin:bulk_upload_template' %}">here</a></p>
-    <p>Note: A user can only upload a CSV file</p>
-    {% if errors %}
+<p>To get the bulk upload template click <a href="{%  url 'admin:bulk_upload_template' %}">here</a></p>
+<p>Note: A user can only upload a CSV file</p>
+{% if errors %}
+<ul class="errorlist">
+    {% for row_index, error in errors %}
+    <li>In row {{row_index}}
+        <ol>
+            {% for key, value in error.items %}
+            <li>{{ key }}: {{ value }}</li>
+            {% endfor %}
+        </ol>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% if warnings %}
+<ul class="errorlist">
+    {% for row_index, warning in warnings %}
+    <li>In row {{row_index}}
+        <ol>
+            {% for key, value in warning.items %}
+            <li>{{ key }}: {{ value }}</li>
+            {% endfor %}
+        </ol>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+<form action="{% url 'admin:bulk_upload' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="usa-form-group">
+        {% if file_error %}
         <ul class="errorlist">
-        {% for row_index, error in errors %}
-            <li>In row {{row_index}}
-                <ol>
-                    {% for key, value in error.items %}
-                        <li>{{ key }}: {{ value }}</li>
-                    {% endfor %}
-                </ol>
-            </li>
-        {% endfor %}
+            <li>{{ file_error }}</li>
         </ul>
-    {% endif %}
-    <form action="{% url 'admin:bulk_upload' %}" method="post" enctype="multipart/form-data">
-        {%  csrf_token %}
-        <div class="usa-form-group">
-            {% if file_error %}
-                <ul class="errorlist">
-                    <li>{{ file_error }}</li>
-                </ul>
-            {% endif %}
-            <label class="usa-label font-body-sm" for="{{ form.file.id_for_label}}">Choose csv file containing monitoring locations</label>
-            <input id="{{ form.file.id_for_label }}" class="usa-file-input" type="file"
-                   name="{{ form.file.html_name }}" />
-        </div>
-        <input class="margin-top-2" type="submit" value="Upload Monitoring Locations" />
-    </form>
+        {% endif %}
+        <label class="usa-label font-body-sm" for="{{ form.file.id_for_label}}">Choose csv file containing monitoring
+            locations</label>
+        <input id="{{ form.file.id_for_label }}" class="usa-file-input" type="file" name="{{ form.file.html_name }}" />
+    </div>
+    <input class="margin-top-2" type="submit" value="Upload Monitoring Locations" />
+</form>
 {% endblock %}
