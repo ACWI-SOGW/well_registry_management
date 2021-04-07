@@ -48,9 +48,11 @@ def _get_county_lookup(country, state, county_name):
 def _validate_decimal(field_name, dec_value, row_index, warning_messages):
     try:
         return Decimal(dec_value)
-    except:
+    except Exception:
         warning_messages.append(
             (row_index, {field_name: "Invalid Value '" + dec_value + "'"}))
+    return None
+
 
 def _get_monitoring_location(row_index, row, user, warning_messages):
     """
@@ -172,9 +174,8 @@ class BulkUploadView(View):
                 MonitoringLocation.objects.bulk_create(monitoring_locations)
                 if len(warning_messages) == 0:
                     return redirect(reverse('admin:registry_monitoringlocation_changelist'))
-                else:
-                    warning_messages.insert(
-                        0, (0, {'__overall__': 'Data was loaded with the following warnings'}))
+                warning_messages.insert(
+                    0, (0, {'__overall__': 'Data was loaded with the following warnings'}))
             context['errors'] = error_messages
             context['warnings'] = warning_messages
         else:
