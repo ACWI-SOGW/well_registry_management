@@ -136,11 +136,13 @@ class TestMonitoringLocationFullClean(TestCase):
         with self.assertRaises(ValidationError):
             self.monitoring_location.full_clean()
 
-    def test_invalid_depth_unit_not_blank(self):
-        self.monitoring_location.well_depth = ''
+    def test_accept_depth_none(self):
+        self.monitoring_location.well_depth = None
         self.monitoring_location.well_depth_units = UnitsLookup(unit_id=1)
-        with self.assertRaises(ValidationError):
+        try:
             self.monitoring_location.full_clean()
+        except ValidationError as errors:
+            self.fail(f'monitoring_location should be valid, missing depth ok. Found {errors.message_dict}')
 
     def test_valid_when_display_flag_true_and_wl_sn_flags_true(self):
         self.monitoring_location.display_flag = True

@@ -38,13 +38,23 @@ def _get_state_lookup(country, state_name):
 def _get_county_lookup(country, state, county_name):
     if not country or not state:
         return None
-    qs = CountyLookup.objects.filter(county_nm=county_name, state_id=state, country_cd=country)
+    qs = CountyLookup.objects.filter(
+        county_nm=county_name, state_id=state, country_cd=country)
     if len(qs) == 0:
         return None
     return qs[0]
 
 
-def _get_monitoring_location(row, user):
+def _validate_decimal(field_name, dec_value, row_index, warning_messages):
+    try:
+        return Decimal(dec_value)
+    except Exception:
+        warning_messages.append(
+            (row_index, {field_name: "Invalid Value '" + dec_value + "'"}))
+    return None
+
+
+def _get_monitoring_location(row_index, row, user, warning_messages):
     """
     Parses the list of strings that represent a row in the bulk upload template, validates and
     returns a MonitoringLocation instance. Raises Validation_Error if the row can not be converted
@@ -53,7 +63,8 @@ def _get_monitoring_location(row, user):
     :return: MonitoringLocation
     """
     if len(row) < 39:
-        raise ValidationError({'file_error': 'Does not contain the correct number of columns'}, code='invalid file')
+        raise ValidationError(
+            {'file_error': 'Does not contain the correct number of columns'}, code='invalid file')
 
     local_aquifer_code = f' ({row[15]})' if row[15] else ''
     country = _get_lookup(CountryLookup, 'country_nm', row[16])
@@ -63,12 +74,16 @@ def _get_monitoring_location(row, user):
         agency=_get_lookup(AgencyLookup, 'agency_cd', row[0]),
         site_no=row[1],
         site_name=row[2],
-        dec_lat_va=Decimal(row[3]) if row[3] else None,
-        dec_long_va=Decimal(row[4]) if row[4] else None,
-        horizontal_datum=_get_lookup(HorizontalDatumLookup, 'hdatum_cd', row[5]),
+        dec_lat_va=_validate_decimal(
+            'dec_lat_va', row[3], row_index, warning_messages),
+        dec_long_va=_validate_decimal(
+            'dec_long_va', row[4], row_index, warning_messages),
+        horizontal_datum=_get_lookup(
+            HorizontalDatumLookup, 'hdatum_cd', row[5]),
         horz_method=row[6],
         horz_acy=row[7],
-        alt_va=Decimal(row[8]) if row[8] else None,
+        alt_va=_validate_decimal(
+            'alt_va', row[8], row_index, warning_messages),
         altitude_units=_get_lookup(UnitsLookup, 'unit_desc', row[9]),
         altitude_datum=_get_lookup(AltitudeDatumLookup, 'adatum_cd', row[10]),
         alt_method=row[11],
@@ -78,7 +93,8 @@ def _get_monitoring_location(row, user):
         country=country,
         state=state,
         county=_get_county_lookup(country, state, row[18]),
-        well_depth=Decimal(row[19]) if row[19] else None,
+        well_depth=_validate_decimal(
+            'well_depth', row[19], row_index, warning_messages),
         well_depth_units=_get_lookup(UnitsLookup, 'unit_desc', row[20]),
         site_type=row[21],
         aqfr_type=row[22],
@@ -145,20 +161,25 @@ class BulkUploadView(View):
             next(data_stream)
             monitoring_locations = []
             error_messages = []
+            warning_messages = []
             row_index = 1
             for row in csv.reader(data_stream):
                 row_index += 1
                 try:
-                    monitoring_locations.append(_get_monitoring_location(row, request.user))
+                    monitoring_locations.append(_get_monitoring_location(
+                        row_index, row, request.user, warning_messages))
                 except ValidationError as error:
                     error_messages.append((row_index, error.message_dict))
             if len(error_messages) == 0:
                 MonitoringLocation.objects.bulk_create(monitoring_locations)
-                return redirect(reverse('admin:registry_monitoringlocation_changelist'))
+                if len(warning_messages) == 0:
+                    return redirect(reverse('admin:registry_monitoringlocation_changelist'))
+                warning_messages.insert(
+                    0, (0, {'__overall__': 'Data was loaded with the following warnings'}))
             context['errors'] = error_messages
+            context['warnings'] = warning_messages
         else:
             context['file_error'] = 'Please select a file to upload'
-
         context.update(dict(admin.site.each_context(self.request)))
         return render(request, self.template_name, context)
 
@@ -174,6 +195,7 @@ class BulkUploadTemplateView(View):
         """
         with open(settings.BULK_UPLOAD_TEMPLATE_PATH, 'rb') as excel:
             data = excel.read()
-        response = HttpResponse(data, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response = HttpResponse(
+            data, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=well_registry_bulk_update_template.xlsx'
         return response
