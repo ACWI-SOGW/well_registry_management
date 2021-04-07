@@ -44,13 +44,12 @@ def _get_county_lookup(country, state, county_name):
     return qs[0]
 
 def _validate_decimal(field_name, dec_value, row_index, warning_messages):
-    try: 
+    try:
         return Decimal(dec_value)
     except:
         warning_messages.append((row_index, {field_name:"Invalid Value '" + dec_value + "'"}))
         return None
   
-
 def _get_monitoring_location(row_index, row, user, warning_messages):
     """
     Parses the list of strings that represent a row in the bulk upload template, validates and
