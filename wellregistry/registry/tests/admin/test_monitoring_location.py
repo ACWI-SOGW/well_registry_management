@@ -77,7 +77,6 @@ class TestMonitoringLocationAdmin(TestCase):
     def test_has_view_permission_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
-
         self.assertTrue(self.admin.has_view_permission(request))
         self.assertTrue(self.admin.has_view_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
 
@@ -92,26 +91,22 @@ class TestMonitoringLocationAdmin(TestCase):
     def test_has_add_permission_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
-
         self.assertTrue(self.admin.has_add_permission(request))
 
     def test_has_add_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
-
         self.assertTrue(self.admin.has_add_permission(request))
 
     def test_has_change_permission_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
-
         self.assertTrue(self.admin.has_change_permission(request))
         self.assertTrue(self.admin.has_change_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_has_change_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
-
         self.assertTrue(self.admin.has_change_permission(request))
         self.assertTrue(self.admin.has_change_permission(request, MonitoringLocation.objects.get(site_no='44445555')))
         self.assertFalse(self.admin.has_change_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
@@ -119,14 +114,12 @@ class TestMonitoringLocationAdmin(TestCase):
     def test_has_delete_permission_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
-
         self.assertTrue(self.admin.has_delete_permission(request))
         self.assertTrue(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_has_delete_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
-
         self.assertTrue(self.admin.has_delete_permission(request))
         self.assertTrue(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='44445555')))
         self.assertFalse(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='12345678')))

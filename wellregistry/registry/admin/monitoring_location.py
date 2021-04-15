@@ -24,186 +24,186 @@ tooltips = [{
     'tooltip': 'Flag that controls whether the site will be displayed on the NGWMN Data Portal (Yes/No)'
 },
     {
-    'form_field': 'agency',
-    'tooltip': 'The name of the agency or organization that collects, owns andor manages the data. \
+        'form_field': 'agency',
+        'tooltip': 'The name of the agency or organization that collects, owns andor manages the data. \
  If you don\'t see your agency or organization in the list contact Candice Hopkins (chopkins@usgs.gov).'
-},
+    },
     {
-    'form_field': 'site_no',
-    'tooltip': 'The local unique well or spring identification number or code. We will be requesting water levels \
+        'form_field': 'site_no',
+        'tooltip': 'The local unique well or spring identification number or code. We will be requesting water levels \
  and water - quality data from(Organization) -owned  managed databases by this unique well identifier.\
  This identifier may be alphanumeric,but should not contain spaces.'
-},
+    },
     {
-    'form_field': 'site_name',
-    'tooltip': 'The local name of well or spring'
-},
+        'form_field': 'site_name',
+        'tooltip': 'The local name of well or spring'
+    },
     {
-    'form_field': 'country',
-    'tooltip': 'The name of the country within which the well or spring resides'
-},
+        'form_field': 'country',
+        'tooltip': 'The name of the country within which the well or spring resides'
+    },
     {
-    'form_field': 'state',
-    'tooltip': 'The U.S. State or Territory within which the well or spring resides'
-},
+        'form_field': 'state',
+        'tooltip': 'The U.S. State or Territory within which the well or spring resides'
+    },
     {
-    'form_field': 'county',
-    'tooltip': 'The name of the county within which the well or spring resides'
-},
+        'form_field': 'county',
+        'tooltip': 'The name of the county within which the well or spring resides'
+    },
     {
-    'form_field': 'dec_lat_va',
-    'tooltip': 'The site latitude, in decimal degrees to the accuracy of your measurement'
-},
+        'form_field': 'dec_lat_va',
+        'tooltip': 'The site latitude, in decimal degrees to the accuracy of your measurement'
+    },
     {
-    'form_field': 'dec_long_va',
-    'tooltip': 'The site longitude, in decimal degrees (negative for Western Hemisphere) to the accuracy of your\
+        'form_field': 'dec_long_va',
+        'tooltip': 'The site longitude, in decimal degrees (negative for Western Hemisphere) to the accuracy of your\
          measurement'
-},
+    },
     {
-    'form_field': 'horizontal_datum',
-    'tooltip': 'Horizontal reference datum for the latitude and longitude of a well (NAD83,NAD27, WGS84, etc.) \
+        'form_field': 'horizontal_datum',
+        'tooltip': 'Horizontal reference datum for the latitude and longitude of a well (NAD83,NAD27, WGS84, etc.) \
  If you don\'t see the datum you are looking for in the list contact Candice Hopkins (chopkins@usgs.gov)'
-},
+    },
     {
-    'form_field': 'horz_method',
-    'tooltip': 'A method used to obtain the site\'s latitude and longitude (horizontal location)'
-},
+        'form_field': 'horz_method',
+        'tooltip': 'A method used to obtain the site\'s latitude and longitude (horizontal location)'
+    },
     {
-    'form_field': 'horz_acy',
-    'tooltip': 'Accuracy of the site\'s latitude and longitude (horizontal location)'
-},
+        'form_field': 'horz_acy',
+        'tooltip': 'Accuracy of the site\'s latitude and longitude (horizontal location)'
+    },
     {
-    'form_field': 'alt_method',
-    'tooltip': 'A method used to obtain the site\'s latitude and longitude (horizontal location)'
-},
+        'form_field': 'alt_method',
+        'tooltip': 'A method used to obtain the site\'s latitude and longitude (horizontal location)'
+    },
     {
-    'form_field': 'alt_acy',
-    'tooltip': 'Accuracy of the site\'s latitude and longitude (horizontal location)'
-},
+        'form_field': 'alt_acy',
+        'tooltip': 'Accuracy of the site\'s latitude and longitude (horizontal location)'
+    },
     {
-    'form_field': 'alt_va',
-    'tooltip': 'Elevation of the land surface at the site'
-},
+        'form_field': 'alt_va',
+        'tooltip': 'Elevation of the land surface at the site'
+    },
     {
-    'form_field': 'altitude_units',
-    'tooltip': 'Units of measure associated with the Altitude field (ft, in, m, cm)'
-},
+        'form_field': 'altitude_units',
+        'tooltip': 'Units of measure associated with the Altitude field (ft, in, m, cm)'
+    },
     {
-    'form_field': 'altitude_datum',
-    'tooltip': 'Vertical reference datum for the altitude of a well (NGVD29, NAVD88, etc.)'
-},
+        'form_field': 'altitude_datum',
+        'tooltip': 'Vertical reference datum for the altitude of a well (NGVD29, NAVD88, etc.)'
+    },
     {
-    'form_field': 'well_depth',
-    'tooltip': 'Depth of the well from a specified point of reference'
-},
+        'form_field': 'well_depth',
+        'tooltip': 'Depth of the well from a specified point of reference'
+    },
     {
-    'form_field': 'well_depth_units',
-    'tooltip': 'Units of measure associated with the well depth field (ft, in, m, cm)'
-},
+        'form_field': 'well_depth_units',
+        'tooltip': 'Units of measure associated with the well depth field (ft, in, m, cm)'
+    },
     {
-    'form_field': 'nat_aqfr',
-    'tooltip': 'This is the national aquifer designation used by the USGS for U.S. Principal Aquifers.'
-},
+        'form_field': 'nat_aqfr',
+        'tooltip': 'This is the national aquifer designation used by the USGS for U.S. Principal Aquifers.'
+    },
     {
-    'form_field': 'local_aquifer_name',
-    'tooltip': 'The name used for the local aquifer designation'
-},
+        'form_field': 'local_aquifer_name',
+        'tooltip': 'The name used for the local aquifer designation'
+    },
     {
-    'form_field': 'site_type',
-    'tooltip': 'The type of groundwater site (Well or Spring)'
-},
+        'form_field': 'site_type',
+        'tooltip': 'The type of groundwater site (Well or Spring)'
+    },
     {
-    'form_field': 'aqfr_type',
-    'tooltip': 'Characteristic of the type of aquifer that the well is completed in (Confined or Unconfined).\
+        'form_field': 'aqfr_type',
+        'tooltip': 'Characteristic of the type of aquifer that the well is completed in (Confined or Unconfined).\
  For the NGWMN, shallow semi-confined wells can be considered to be unconfined if they respond to climatic\
  fluctuations in a relatively short period of time'
-},
+    },
     {
-    'form_field': 'wl_sn_flag',
-    'tooltip': 'Is the well part of the WL network (default is \'Yes\')? All wells, marked as \'Yes\' will be\
+        'form_field': 'wl_sn_flag',
+        'tooltip': 'Is the well part of the WL network (default is \'Yes\')? All wells, marked as \'Yes\' will be\
  included in the NGWMN WL network. (Yes/No)'
-},
+    },
     {
-    'form_field': 'wl_network_name',
-    'tooltip': 'The system from which water level data from the well or spring will be served to the portal'
-},
+        'form_field': 'wl_network_name',
+        'tooltip': 'The system from which water level data from the well or spring will be served to the portal'
+    },
     {
-    'form_field': 'wl_baseline_flag',
-    'tooltip': 'A \'baseline\' period of at least 5 years of data must be available to achieve\
+        'form_field': 'wl_baseline_flag',
+        'tooltip': 'A \'baseline\' period of at least 5 years of data must be available to achieve\
  the \'baseline period\' for a well or spring. Has the baseline period for water levels been satisfied\
  (are there 5 years of data)? (Yes/No) (See the NGWMN Subnetwork Tip Sheet for additional guidance)'
-},
+    },
     {
-    'form_field': 'wl_well_type',
-    'tooltip': 'Three choices are possible: (a) \'Trend\', (b) \'Surveillance\',\
+        'form_field': 'wl_well_type',
+        'tooltip': 'Three choices are possible: (a) \'Trend\', (b) \'Surveillance\',\
  or (c) \'Special Studies\'. \'Trend\' wells have a monitoring frequency appropriate\
  to determine long-trends and seasonal variability (quarterly), \'Surveillance\' wells are \'synoptic\' snapshots\
  of data used to tied together the \'Trend\' wells. \'Special Studies\' wells are likely to be local areas of depletion\
  or impairment. (See the NGWMN Monitoring Categories Tip Sheet for additional guidance)'
-},
+    },
     {
-    'form_field': 'wl_well_chars',
-    'tooltip': 'The characteristics of the aquifer that the well represents. There are 3 options:\
+        'form_field': 'wl_well_chars',
+        'tooltip': 'The characteristics of the aquifer that the well represents. There are 3 options:\
  (a) \'Background\', (b) \'Suspected/Anticipated Changes\', or (c) \'Known Changes\'.\
  This column is blank if the site is still in the baseline period. (See the NGWMN Subnetwork\
  Tip Sheet for additional guidance)'
-},
+    },
     {
-    'form_field': 'wl_well_purpose',
-    'tooltip': 'A two-category classification to document well\'s original purpose:\
+        'form_field': 'wl_well_purpose',
+        'tooltip': 'A two-category classification to document well\'s original purpose:\
  (a) \'Dedicated Monitoring/Observation\', or (b) \'Other\' (i.e. not a dedicated monitoring well)'
-},
+    },
     {
-    'form_field': 'wl_well_purpose_notes',
-    'tooltip': 'Description of a well\'s purpose or additional notes about the classification of a well\
+        'form_field': 'wl_well_purpose_notes',
+        'tooltip': 'Description of a well\'s purpose or additional notes about the classification of a well\
  within the WL subnetwork'
-},
+    },
     {
-    'form_field': 'qw_well_purpose_notes',
-    'tooltip': 'Description of a well\'s purpose or additional notes about the classification\
+        'form_field': 'qw_well_purpose_notes',
+        'tooltip': 'Description of a well\'s purpose or additional notes about the classification\
  of a well within the WL subnetwork'
-},
+    },
     {
-    'form_field': 'qw_sn_flag',
-    'tooltip': 'Is the well part of the QW network (default is \'Yes\')? All wells, marked as \'Yes\' will be\
+        'form_field': 'qw_sn_flag',
+        'tooltip': 'Is the well part of the QW network (default is \'Yes\')? All wells, marked as \'Yes\' will be\
  included in the NGWMN QW network. (Yes/No)'
-},
+    },
     {
-    'form_field': 'qw_well_type',
-    'tooltip': 'Three choices are possible: (a) \'Trend\', (b) \'Surveillance\',\
+        'form_field': 'qw_well_type',
+        'tooltip': 'Three choices are possible: (a) \'Trend\', (b) \'Surveillance\',\
  or (c) \'Special Studies\'. \'Trend\' wells have a monitoring frequency appropriate\
  to determine long-trends and seasonal variability (quarterly), \'Surveillance\' wells\
  are \'synoptic\' snapshots of data used to tied together the \'Trend\' wells. \'Special Studies\' wells\
  are likely to be local areas of depletion or impairment. (See the NGWMN Monitoring Categories Tip Sheet\
  for additional guidance)'
-},
+    },
     {
-    'form_field': 'qw_network_name',
-    'tooltip': 'The system from which water quality data from the well or spring will be served to the portal'
-},
+        'form_field': 'qw_network_name',
+        'tooltip': 'The system from which water quality data from the well or spring will be served to the portal'
+    },
     {
-    'form_field': 'qw_well_chars',
-    'tooltip': 'The characteristics of the aquifer that the well represents. There are 3 options:\
+        'form_field': 'qw_well_chars',
+        'tooltip': 'The characteristics of the aquifer that the well represents. There are 3 options:\
     (a) \'Background\', (b) \'Suspected/Anticipated Changes\', or (c) \'Known Changes\'.\
  This column is blank if the site is still in the baseline period. (See the NGWMN Subnetwork Tip Sheet for additional\
  guidance)'
-},
+    },
     {
-    'form_field': 'qw_baseline_flag',
-    'tooltip': 'A \'baseline\' period of at least 5 years of data must be available to achieve\
+        'form_field': 'qw_baseline_flag',
+        'tooltip': 'A \'baseline\' period of at least 5 years of data must be available to achieve\
  the \'baseline period\' for a well or spring. Has the baseline period for water quality been satisfied\
  (are there 5 years of data)? (Yes/No) (See the NGWMN Subnetwork Tip Sheet for additional guidance)'
-},
+    },
     {
-    'form_field': 'qw_well_purpose',
-    'tooltip': 'A two-category classification to document well\'s original purpose:\
+        'form_field': 'qw_well_purpose',
+        'tooltip': 'A two-category classification to document well\'s original purpose:\
  (a) \'Dedicated Monitoring/Observation\', or (b) \'Other\' (i.e. not a dedicated monitoring well)'
-},
+    },
     {
-    'form_field': 'link',
-    'tooltip': 'URL to a cooperators site or any other relevant site that contains additional information\
+        'form_field': 'link',
+        'tooltip': 'URL to a cooperators site or any other relevant site that contains additional information\
  about the well'
-}
+    }
 ]
 
 
@@ -241,10 +241,10 @@ def _get_where_clause(request, user_groups):
     if len(where_clause) > 0:
         if user_groups == "":
             where_clause = " where registry_monitoringlocation.id IN (" + \
-                where_clause + ") \n"
+                           where_clause + ") \n"
         else:
             where_clause = user_groups + " and registry_monitoringlocation.id IN (" + \
-                where_clause + ") \n"
+                           where_clause + ") \n"
     return where_clause
 
 
@@ -363,7 +363,7 @@ class CountyLookupFilter(AutocompleteFilter):  # pylint: disable=too-few-public-
         url_name = '%s:%s_%s_autocomplete'
         state_id = request.GET.get('state__id__exact')
         url = reverse(url_name % (admin_site.name,
-                      model._meta.app_label, model._meta.model_name))
+                                  model._meta.app_label, model._meta.model_name))
         return '%s?state_id=%s' % (url, state_id)
 
 
@@ -379,7 +379,7 @@ class SiteNoFilter(AutocompleteFilter):
 
     @staticmethod
     def get_queryset_for_field(model, name):
-        #pylint: disable=unused-argument
+        # pylint: disable=unused-argument
         """
         '''Get Current Queryset for field''
         """
@@ -392,20 +392,17 @@ class SiteNoFilter(AutocompleteFilter):
         """
         return model_admin.custom_urls['siteno_autocomplete']
 
-
 class SelectListFilter(RelatedFieldListFilter):
     """
     Django admin select list filter to implement a picker for the filter.
     """
     template = "admin/choice_list_filter.html"
 
-
 class SelectListFilterChoices(ChoicesFieldListFilter):
     """
     Django admin select list filter to implement a picker for the filter.
     """
     template = "admin/choice_list_filter.html"
-
 
 CSV_HEADERS = [
     'Agency',
@@ -449,13 +446,11 @@ CSV_HEADERS = [
     'Link'
 ]
 
-
 def to_yes_no(flag):
     """
     Return true if yes, otherwise no
     """
     return 'Yes' if flag else 'No'
-
 
 class CountyLookupAdmin(ModelAdmin):
     """
@@ -471,7 +466,6 @@ class CountyLookupAdmin(ModelAdmin):
     def has_view_permission(self, request, obj=None):
         """Overrides default implementation"""
         return True
-
 
 class MonitoringLocationAdmin(ModelAdmin):
     """
