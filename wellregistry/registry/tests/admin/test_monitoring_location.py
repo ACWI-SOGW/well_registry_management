@@ -53,8 +53,7 @@ class TestMonitoringLocationAdmin(TestCase):
         self.admin = MonitoringLocationAdmin(MonitoringLocation, self.site)
 
     def test_site_id(self):
-        reg_entry = MonitoringLocation.objects.get(site_no='44445555',
-                                                   agency='ADWR')
+        reg_entry = MonitoringLocation.objects.get(site_no='44445555',agency='ADWR')
         site_id = MonitoringLocationAdmin.site_id(reg_entry)
 
         self.assertEqual(site_id, "ADWR:44445555")
@@ -63,14 +62,12 @@ class TestMonitoringLocationAdmin(TestCase):
         request = HttpRequest()
         request.user = self.superuser
         qs = self.admin.get_queryset(request)
-
         self.assertEqual(qs.count(), 3)
 
     def test_get_queryset_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
         qs = self.admin.get_queryset(request)
-
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.filter(agency='ADWR').count(), 1)
 

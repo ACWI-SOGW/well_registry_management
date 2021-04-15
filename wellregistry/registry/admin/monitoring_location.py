@@ -10,13 +10,12 @@ from django.forms import ModelForm, Textarea, ModelChoiceField
 from django.http import HttpResponse
 from django.urls import path, reverse
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
+from django.db import connection
 from admin_auto_filters.filters import AutocompleteFilter
-
 from ..models import MonitoringLocation, AgencyLookup
 from .bulk_upload import BulkUploadView, BulkUploadTemplateView
 from .fetch_from_nwis import FetchFromNwisView
 from .auto_complete import SiteNoAutoCompleteView
-from django.db import connection
 
 USGS_AGENCY_CD = 'USGS'
 tooltips = [{
@@ -211,7 +210,6 @@ def _get_groups(user):
     """Return a list of upper case groups that this user belongs to"""
     return user.groups.all().values_list(Upper('name'), flat=True)
 
-
 def _has_permission(perm, user, obj=None):
     """Return true if the user has permission, perm, for the obj"""
     if user.is_superuser:
@@ -219,15 +217,12 @@ def _has_permission(perm, user, obj=None):
 
     return user.has_perm(perm) and (not obj or obj.agency.agency_cd in _get_groups(user))
 
-
 def _get_usergroups(request):
     user_groups = ""
     if not request.user.is_superuser:
-        user_groups = re.search(
-            "\[(.*)\]", str(_get_groups(request.user))).group(1)
+        user_groups = re.search("\[(.*)\]", str(_get_groups(request.user))).group(1)
         user_groups = " where agency.agency_cd IN (" + user_groups + ") "
     return user_groups
-
 
 def _get_where_clause(request, user_groups):
     where_clause = ""
@@ -240,18 +235,16 @@ def _get_where_clause(request, user_groups):
             sep = ","
     if len(where_clause) > 0:
         if user_groups == "":
-            where_clause = " where registry_monitoringlocation.id IN (" + \
-                           where_clause + ") \n"
+            where_clause = " where registry_monitoringlocation.id IN (" + where_clause + ") \n"
         else:
-            where_clause = user_groups + " and registry_monitoringlocation.id IN (" + \
-                           where_clause + ") \n"
+            where_clause = user_groups + " and registry_monitoringlocation.id IN (" + where_clause + ") \n"
     return where_clause
-
 
 def _get_monitoringlocation_queryset(request):
     user_groups = _get_usergroups(request)
     where_clause = _get_where_clause(request, user_groups)
-    query_ml = "SELECT agency.agency_cd, registry_monitoringlocation.site_no as site_no, \n\
+    query_ml = "SELECT agency.agency_cd, \n\
+        registry_monitoringlocation.site_no as site_no, \n\
         registry_monitoringlocation.site_name as site_name, \n\
         registry_monitoringlocation.dec_lat_va as dec_lat_va, \n\
         registry_monitoringlocation.dec_long_va as dec_long_va, \n\
@@ -308,7 +301,6 @@ def _get_monitoringlocation_queryset(request):
 
     return query_ml
 
-
 class MonitoringLocationAdminForm(ModelForm):
     """
     Registry admin form.
@@ -344,7 +336,6 @@ class MonitoringLocationAdminForm(ModelForm):
         }
         fields = '__all__'
 
-
 class CountyLookupFilter(AutocompleteFilter):  # pylint: disable=too-few-public-methods
     """
     '''AutoComplete Filter for State/County Filter Filter'''
@@ -362,10 +353,8 @@ class CountyLookupFilter(AutocompleteFilter):  # pylint: disable=too-few-public-
         admin_site = model_admin.admin_site
         url_name = '%s:%s_%s_autocomplete'
         state_id = request.GET.get('state__id__exact')
-        url = reverse(url_name % (admin_site.name,
-                                  model._meta.app_label, model._meta.model_name))
+        url = reverse(url_name % (admin_site.name, model._meta.app_label, model._meta.model_name))
         return '%s?state_id=%s' % (url, state_id)
-
 
 class SiteNoFilter(AutocompleteFilter):
     """
@@ -514,12 +503,9 @@ class MonitoringLocationAdmin(ModelAdmin):
             path('bulk_upload_template/',
                  self.admin_site.admin_view(BulkUploadTemplateView.as_view()),
                  name='bulk_upload_template'),
-            path('fetch_from_nwis/',
-                 self.admin_site.admin_view(FetchFromNwisView.as_view()),
-                 name='fetch_from_nwis'),
+            path('fetch_from_nwis/',self.admin_site.admin_view(FetchFromNwisView.as_view()),name='fetch_from_nwis'),
             path(self.custom_urls['siteno_autocomplete'],
-                 self.admin_site.admin_view(
-                     SiteNoAutoCompleteView.as_view(model_admin=self)),
+                 self.admin_site.admin_view(SiteNoAutoCompleteView.as_view(model_admin=self)),
                  name='siteno_autocomplete')
         ]
         return custom_urls + urls
