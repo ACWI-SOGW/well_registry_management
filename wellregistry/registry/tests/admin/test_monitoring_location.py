@@ -59,16 +59,6 @@ class TestMonitoringLocationAdmin(TestCase):
 
         self.assertEqual(site_id, "ADWR:44445555")
 
-    def test_download_monitoring_locations(self):
-        request = HttpRequest()
-        setattr(request, 'session', 'session')
-        setattr(request, '_messages', FallbackStorage(request))
-        response = self.admin.download_monitoring_locations(request, MonitoringLocation.objects.all())
-
-        self.assertEqual(response.status_code, 200)
-        resp_lines = response.content.split(b'\n')
-        self.assertEqual(len(resp_lines), 5)
-
     def test_get_queryset_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
