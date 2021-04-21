@@ -1,4 +1,4 @@
-FROM usgswma/python:3.8
+FROM artifactory.wma.chs.usgs.gov/docker-official-mirror/usgswma/python:3.8
 
 ENV PYTHONUNBUFFERED 1
 

@@ -1,6 +1,7 @@
 """
 Tests for admin.monitoring_location module
 """
+import re
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
@@ -22,10 +23,14 @@ class TestMonitoringLocationAdmin(TestCase):
         self.adwr_group = Group.objects.get(name='adwr')
         self.usgs_group = Group.objects.get(name='usgs')
 
-        self.add_permission = Permission.objects.get(codename='add_monitoringlocation')
-        self.view_permission = Permission.objects.get(codename='view_monitoringlocation')
-        self.change_permission = Permission.objects.get(codename='change_monitoringlocation')
-        self.delete_permission = Permission.objects.get(codename='delete_monitoringlocation')
+        self.add_permission = Permission.objects.get(
+            codename='add_monitoringlocation')
+        self.view_permission = Permission.objects.get(
+            codename='view_monitoringlocation')
+        self.change_permission = Permission.objects.get(
+            codename='change_monitoringlocation')
+        self.delete_permission = Permission.objects.get(
+            codename='delete_monitoringlocation')
 
         self.adwr_user = get_user_model().objects.create_user('adwruser')
         self.adwr_user.groups.add(self.adwr_group)
@@ -53,98 +58,173 @@ class TestMonitoringLocationAdmin(TestCase):
         self.admin = MonitoringLocationAdmin(MonitoringLocation, self.site)
 
     def test_site_id(self):
-        reg_entry = MonitoringLocation.objects.get(site_no='44445555',
-                                                   agency='ADWR')
+        reg_entry = MonitoringLocation.objects.get(
+            site_no='44445555', agency='ADWR')
         site_id = MonitoringLocationAdmin.site_id(reg_entry)
 
         self.assertEqual(site_id, "ADWR:44445555")
 
-    def test_download_monitoring_locations(self):
-        request = HttpRequest()
-        setattr(request, 'session', 'session')
-        setattr(request, '_messages', FallbackStorage(request))
-        response = self.admin.download_monitoring_locations(request, MonitoringLocation.objects.all())
+    # def test_download_monitoring_locations(self):
+    #     request = HttpRequest()
+    #     request.user = self.superuser
+    #     setattr(request, 'session', 'session')
+    #     setattr(request, '_read_started', '_read_started')
 
-        self.assertEqual(response.status_code, 200)
-        resp_lines = response.content.split(b'\n')
-        self.assertEqual(len(resp_lines), 5)
+    #     setattr(request, '_messages', FallbackStorage(request))
+    #     request._body = b'{"index": "0", "action": "download_monitoring_locations"}'
+    #     response = self.admin.download_monitoring_locations(
+    #         request, MonitoringLocation.objects.all())
+
+    #     self.assertEqual(response.status_code, 200)
+    #     resp_lines = response.content.split(b'\n')
+    #     self.assertEqual(len(resp_lines), 5)
+
+    def test_get_raw_queryset_with_superuser(self):
+        request = HttpRequest()
+        request.user = self.superuser
+        setattr(request, 'session', 'session')
+        setattr(request, '_read_started', '_read_started')
+        request._body = b'action=download_monitoring_locations&select_across=0&index=0&_selected_action=2394'
+        qs = self.admin.get_monitoringlocation_queryset(request)
+        self.assertIn("where", qs)
+        self.assertNotIn("and", qs)
+        self.assertIn("2394", qs)
+        self.assertNotIn("ADWR", qs)
+
+    def test_get_raw_queryset_with_adwr_user(self):
+        request = HttpRequest()
+        request.user = self.adwr_user
+        setattr(request, 'session', 'session')
+        setattr(request, '_read_started', '_read_started')
+        request._body = b'action=download_monitoring_locations&select_across=0&index=0&_selected_action=2394'
+        qs = self.admin.get_monitoringlocation_queryset(request)
+        self.assertIn("where", qs)
+        self.assertIn("and", qs)
+        self.assertIn("2394", qs)
+        self.assertIn("ADWR", qs)
+
+    def test_get_where_clause_with_superuser(self):
+        request = HttpRequest()
+        request.user = self.superuser
+        setattr(request, 'session', 'session')
+        setattr(request, '_read_started', '_read_started')
+        request._body = b'action=download_monitoring_locations&select_across=0&index=0&_selected_action=2394'
+        qs = self.admin.get_where_clause(request, "")
+        self.assertIn("where", qs)
+        self.assertNotIn("and", qs)
+        self.assertIn("2394", qs)
+
+    def test_get_where_clause_with_adwr_user(self):
+        request = HttpRequest()
+        request.user = self.adwr_user
+        setattr(request, 'session', 'session')
+        setattr(request, '_read_started', '_read_started')
+        user_groups = self.admin.get_usergroups(request)
+        request._body = b'action=download_monitoring_locations&select_across=0&index=0&_selected_action=2394'
+        qs = self.admin.get_where_clause(request, user_groups)
+        self.assertIn("where", qs)
+        self.assertIn("and", qs)
+        self.assertIn("2394", qs)
+
+    def test_get_user_groups_with_superuser(self):
+        request = HttpRequest()
+        request.user = self.superuser
+        setattr(request, 'session', 'session')
+        setattr(request, '_read_started', '_read_started')
+        request._body = b'action=download_monitoring_locations&select_across=0&index=0'
+        qs = self.admin.get_usergroups(request)
+        self.assertNotIn("where", qs)
+        self.assertNotIn("and", qs)
+        self.assertNotIn("ADWR", qs)
+
+    def test_user_groups_with_adwr_user(self):
+        request = HttpRequest()
+        request.user = self.adwr_user
+        setattr(request, 'session', 'session')
+        setattr(request, '_read_started', '_read_started')
+        request._body = b'action=download_monitoring_locations&select_across=0&index=0'
+        qs = self.admin.get_usergroups(request)
+        self.assertIn("where", qs)
+        self.assertNotIn("and", qs)
+        self.assertIn("ADWR", qs)
 
     def test_get_queryset_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
         qs = self.admin.get_queryset(request)
-
         self.assertEqual(qs.count(), 3)
 
     def test_get_queryset_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
         qs = self.admin.get_queryset(request)
-
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.filter(agency='ADWR').count(), 1)
 
     def test_has_view_permission_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
-
         self.assertTrue(self.admin.has_view_permission(request))
-        self.assertTrue(self.admin.has_view_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
+        self.assertTrue(self.admin.has_view_permission(
+            request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_has_view_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
 
         self.assertTrue(self.admin.has_view_permission(request))
-        self.assertTrue(self.admin.has_view_permission(request, MonitoringLocation.objects.get(site_no='44445555')))
-        self.assertFalse(self.admin.has_view_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
+        self.assertTrue(self.admin.has_view_permission(
+            request, MonitoringLocation.objects.get(site_no='44445555')))
+        self.assertFalse(self.admin.has_view_permission(
+            request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_has_add_permission_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
-
         self.assertTrue(self.admin.has_add_permission(request))
 
     def test_has_add_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
-
         self.assertTrue(self.admin.has_add_permission(request))
 
     def test_has_change_permission_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
-
         self.assertTrue(self.admin.has_change_permission(request))
-        self.assertTrue(self.admin.has_change_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
+        self.assertTrue(self.admin.has_change_permission(
+            request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_has_change_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
-
         self.assertTrue(self.admin.has_change_permission(request))
-        self.assertTrue(self.admin.has_change_permission(request, MonitoringLocation.objects.get(site_no='44445555')))
-        self.assertFalse(self.admin.has_change_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
+        self.assertTrue(self.admin.has_change_permission(
+            request, MonitoringLocation.objects.get(site_no='44445555')))
+        self.assertFalse(self.admin.has_change_permission(
+            request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_has_delete_permission_with_superuser(self):
         request = HttpRequest()
         request.user = self.superuser
-
         self.assertTrue(self.admin.has_delete_permission(request))
-        self.assertTrue(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
+        self.assertTrue(self.admin.has_delete_permission(
+            request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_has_delete_permission_with_adwr_user(self):
         request = HttpRequest()
         request.user = self.adwr_user
-
         self.assertTrue(self.admin.has_delete_permission(request))
-        self.assertTrue(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='44445555')))
-        self.assertFalse(self.admin.has_delete_permission(request, MonitoringLocation.objects.get(site_no='12345678')))
+        self.assertTrue(self.admin.has_delete_permission(
+            request, MonitoringLocation.objects.get(site_no='44445555')))
+        self.assertFalse(self.admin.has_delete_permission(
+            request, MonitoringLocation.objects.get(site_no='12345678')))
 
     def test_changelist_view_with_usgs_user(self):
         client = Client()
         client.force_login(self.usgs_user)
-        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/')
+        resp = client.get(
+            '/apps/location-registry/admin/registry/monitoringlocation/')
         self.assertIn(b'Fetch ML from NWIS', resp.content)
         self.assertNotIn(b'Add monitoring location', resp.content)
         self.assertNotIn(b'Bulk Upload', resp.content)
@@ -152,7 +232,8 @@ class TestMonitoringLocationAdmin(TestCase):
     def test_changelist_view_with_adwr_user(self):
         client = Client()
         client.force_login(self.adwr_user)
-        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/')
+        resp = client.get(
+            '/apps/location-registry/admin/registry/monitoringlocation/')
         self.assertNotIn(b'Fetch ML from NWIS', resp.content)
         self.assertIn(b'Add monitoring location', resp.content)
         self.assertIn(b'Bulk Upload', resp.content)
@@ -160,35 +241,41 @@ class TestMonitoringLocationAdmin(TestCase):
     def test_add_monitoring_location_with_usgs_user(self):
         client = Client()
         client.force_login(self.usgs_user)
-        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/add/')
+        resp = client.get(
+            '/apps/location-registry/admin/registry/monitoringlocation/add/')
         self.assertEqual(resp.status_code, 200)
 
     def test_add_monitoring_location_with_adwr_user(self):
         client = Client()
         client.force_login(self.adwr_user)
-        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/add/')
+        resp = client.get(
+            '/apps/location-registry/admin/registry/monitoringlocation/add/')
         self.assertEqual(resp.status_code, 200)
 
     def test_add_monitoring_location_with_with_superuser(self):
         client = Client()
         client.force_login(self.superuser)
-        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/add/')
+        resp = client.get(
+            '/apps/location-registry/admin/registry/monitoringlocation/add/')
         self.assertEqual(resp.status_code, 200)
 
     def test_change_monitoring_location_with_usgs_user(self):
         client = Client()
         client.force_login(self.usgs_user)
-        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/3/change/')
+        resp = client.get(
+            '/apps/location-registry/admin/registry/monitoringlocation/3/change/')
         self.assertEqual(resp.status_code, 200)
 
     def test_change_monitoring_location_with_adwr_user(self):
         client = Client()
         client.force_login(self.adwr_user)
-        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/5/change/')
+        resp = client.get(
+            '/apps/location-registry/admin/registry/monitoringlocation/5/change/')
         self.assertEqual(resp.status_code, 200)
 
     def test_change_monitoring_location_with_with_superuser(self):
         client = Client()
         client.force_login(self.superuser)
-        resp = client.get('/apps/location-registry/admin/registry/monitoringlocation/3/change/')
+        resp = client.get(
+            '/apps/location-registry/admin/registry/monitoringlocation/3/change/')
         self.assertEqual(resp.status_code, 200)
