@@ -1,5 +1,5 @@
 #!/bin/bash
-# Starts the well registry ci docker database container and waits for postgres database to be up.
+# Starts the Monitoring Locations Registry ci docker database container and waits for postgres database to be up.
 # Any existing container is first removed.
 
 ci_container_name="registry_postgres"

@@ -1,5 +1,5 @@
 """
-Well Registry ORM object.
+Monitoring Locations Registry ORM object.
 """
 
 from django.conf import settings

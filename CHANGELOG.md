@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added Validation for Decimal values in Bulk Upload. These appear as warnings. 
     
 ### Changed
+-   Rename/re-title Well Registry to Monitoring Locations Registry
 -   The well_depth field is now allowed to be blank.
 
 

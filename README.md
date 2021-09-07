@@ -1,4 +1,4 @@
-# Well Registry Management System
+# Monitoring Locations Registry Management System
 
 [![Build Status](https://travis-ci.org/ACWI-SOGW/well_registry_management.svg?branch=master)](https://travis-ci.org/ACWI-SOGW/well_registry_management)
 [![codecov](https://codecov.io/gh/ACWI-SOGW/well_registry_management/branch/master/graph/badge.svg)](https://codecov.io/gh/ACWI-SOGW/well_registry_management)
