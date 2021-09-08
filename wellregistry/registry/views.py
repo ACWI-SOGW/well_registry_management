@@ -33,7 +33,7 @@ def status_check(request):
 
 class MonitoringLocationsListView(ListAPIView):  # pylint: disable=too-few-public-methods
     """
-    REST API for monitoring locations
+    REST API for monitoring location registry
     """
     serializer_class = MonitoringLocationSerializer
     queryset = MonitoringLocation.objects.all().select_related('agency', 'country', 'state', 'county',

@@ -52,10 +52,10 @@
                 <li>{{ file_error }}</li>
             </ul>
             {% endif %}
-            <label class="usa-label font-body-sm" for="{{ form.file.id_for_label}}">Choose csv file containing monitoring locations</label>
+            <label class="usa-label font-body-sm" for="{{ form.file.id_for_label}}">Choose csv file containing monitoring location data</label>
             <input id="{{ form.file.id_for_label }}" class="usa-file-input" type="file" name="{{ form.file.html_name }}"/>										  
         </div>
-        <input class="margin-top-2" type="submit" value="Upload Monitoring Locations"
+        <input class="margin-top-2" type="submit" value="Upload Monitoring Location"
         />
     </form>
 {% endblock %}

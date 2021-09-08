@@ -22,7 +22,7 @@ class FetchForm(Form):
     Implements the form in the fetch_from_nwis view. Renders form fields
     needed to load monitoring location data from NWIS
     """
-    site_no = CharField(label='Enter NWIS site number to add to the Monitoring Locations Registry', max_length=16)
+    site_no = CharField(label='Enter NWIS site number to add to the Monitoring Location Registry', max_length=16)
     overwrite = ChoiceField(label='Do you want to overwrite the site\'s meta data',
                             choices=(('', '------'), ('y', 'Yes'), ('n', 'No')),
                             required=False)
