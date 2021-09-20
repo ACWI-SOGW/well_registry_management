@@ -3,7 +3,7 @@
     "name": "Monitoring Location Registry Management",
     "organization": "U.S. Geological Survey",
     "description": "Application for management of well metadata",
-    "version": "1.2.0",
+    "version": "1.3.0dev",
     "status": "Development",
 
     "permissions": {
